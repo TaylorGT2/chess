@@ -54,6 +54,257 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        //throw new RuntimeException("Not implemented");
+        ChessPiece pieceMoving = board.getPiece(myPosition);
+        if(pieceMoving.getPieceType() == PieceType.BISHOP){
+            return bishopMovesCalculator(myPosition);
+        }
+        if(pieceMoving.getPieceType() == PieceType.KING){
+            return kingMovesCalculator(myPosition);
+
+        }
+        if(pieceMoving.getPieceType() == PieceType.KNIGHT){
+            return knightMovesCalculator(myPosition);
+
+        }
+        //return new ArrayList<>();
+        return bishopMovesCalculator(myPosition);
     }
-}
+    //This maybe should not be static
+    public Collection<ChessMove> bishopMovesCalculator(ChessPosition myPosition) {
+
+        // current array theory, make a board and place a one if it is possible to move there
+
+        //int moveDiagonal = 1;
+        //ChessMove [] possibleMoves = {};
+        //possibleMoves = new ChessMove[100];
+
+        ArrayList<ChessMove> possibleMoves = new ArrayList<ChessMove>();
+
+        //int currentspot = possibleMoves.length-1;
+        int currentColumn = myPosition.getColumn();
+        int currentRow = myPosition.getRow();
+        ChessPosition Curpos = new ChessPosition(currentRow,currentColumn);
+      // Yes, this is a bad function, will change later maybe
+        for(int moveDiagonal = 1; moveDiagonal < 8; moveDiagonal++) {
+            int nextColumn = currentColumn + moveDiagonal;
+            int nextRow = currentRow + moveDiagonal;
+            if ((nextColumn < 9) && (nextRow < 9) && (nextColumn>0) && (nextRow>0)) {
+                // possibleMoves.append([nextColumn][nextRow]
+                //possibleMoves[nextColumn][nextRow] = 1;
+                ChessPosition addPos = new ChessPosition(nextRow,nextColumn);
+                ChessMove goodMove = new ChessMove(Curpos, addPos, PieceType.BISHOP);
+
+                possibleMoves.add(goodMove);
+            }
+
+
+        }
+        for(int moveDiagonal = 1; moveDiagonal < 8; moveDiagonal++) {
+            int nextColumn = currentColumn - moveDiagonal;
+            int nextRow = currentRow - moveDiagonal;
+            if ((nextColumn < 9) && (nextRow < 9) && (nextColumn>0) && (nextRow>0)) {
+                // possibleMoves.append([nextColumn][nextRow]
+                //possibleMoves[nextColumn][nextRow] = 1;
+                ChessPosition addPos = new ChessPosition(nextRow,nextColumn);
+                ChessMove goodMove = new ChessMove(Curpos, addPos, PieceType.BISHOP);
+//                possibleMoves[currentspot] = goodMove;
+//                currentspot -=1;
+                possibleMoves.add(goodMove);
+            }
+
+
+        }
+        for(int moveDiagonal = 1; moveDiagonal < 8; moveDiagonal++) {
+            int nextColumn = currentColumn + moveDiagonal;
+            int nextRow = currentRow - moveDiagonal;
+            if ((nextColumn < 9) && (nextRow < 9) && (nextColumn>0) && (nextRow>0)) {
+                // possibleMoves.append([nextColumn][nextRow]
+                //possibleMoves[nextColumn][nextRow] = 1;
+                ChessPosition addPos = new ChessPosition(nextRow,nextColumn);
+                ChessMove goodMove = new ChessMove(Curpos, addPos, PieceType.BISHOP);
+                //possibleMoves[currentspot] = goodMove;
+                //currentspot -= 1;
+                possibleMoves.add(goodMove);
+            }
+
+
+        }
+        for(int moveDiagonal = 1; moveDiagonal < 8; moveDiagonal++) {
+            int nextColumn = currentColumn - moveDiagonal;
+            int nextRow = currentRow + moveDiagonal;
+            if ((nextColumn < 9) && (nextRow < 9) && (nextColumn>0) && (nextRow>0)) {
+                // possibleMoves.append([nextColumn][nextRow]
+                //possibleMoves[nextColumn][nextRow] = 1;
+                ChessPosition addPos = new ChessPosition(nextRow,nextColumn);
+                ChessMove goodMove = new ChessMove(Curpos, addPos, PieceType.BISHOP);
+                //possibleMoves[currentspot] = goodMove;
+                //currentspot -= 1;
+                possibleMoves.add(goodMove);
+            }
+
+
+        }
+        //Collection<ChessMove> okayCollect = Arrays.asList(possibleMoves);
+        //List<ChessMove> okayCollect = Arrays.asList(possibleMoves);
+        return possibleMoves;
+        }
+
+        public Collection<ChessMove> kingMovesCalculator(ChessPosition myPosition) {
+            //int [][] possibleMoves = {};
+            // This move set is also probably wrong, I still can't think in matrixes
+            //possibleMoves = new int[8][8];
+            int a = myPosition.getColumn();
+            int b = myPosition.getRow();
+            ArrayList<ChessMove> possibleMoves = new ArrayList<ChessMove>();
+            ChessPosition Curpos = new ChessPosition(b,a);
+
+            for(int i = 0; i<3; i++) {
+                if (i==1) {
+                    a = a - 1;
+                }
+                if (i==2) {
+                    a = a+2;
+                }
+
+                for(int j = 0; j<3; j++) {
+                    if (j==0) {
+                        b = myPosition.getRow();
+                    }
+                    if (j==1) {
+                        b = myPosition.getRow()-1;
+                    }
+                    if (j==2) {
+                        b = myPosition.getRow()+1;
+                    }
+                    if ((!(a==myPosition.getColumn() && b==myPosition.getRow())) && ((a < 9) && (b<9)) && ((a>0 && b>0))) {
+                        ChessPosition addPos = new ChessPosition(b,a);
+                        ChessMove goodMove = new ChessMove(Curpos, addPos, PieceType.KING);
+
+                        possibleMoves.add(goodMove);
+                        //possibleMoves.append([a][b])
+                    }
+
+
+
+
+                }
+
+            }
+
+
+            return possibleMoves;
+        }
+
+        public Collection<ChessMove> knightMovesCalculator(ChessPosition myPosition) {
+            //int[][] possibleMoves = {};
+
+           // possibleMoves = new int[8][8];
+            ArrayList<ChessMove> possibleMoves = new ArrayList<ChessMove>();
+            //ChessPosition Curpos = new ChessPosition(b,a);
+            int a = myPosition.getColumn();
+            int b = myPosition.getRow();
+            int a2 = myPosition.getColumn();
+            int b2 = myPosition.getRow();
+            ChessPosition Curpos = new ChessPosition(b,a);
+;
+            for(int i=0;i<4;i++) {
+
+                if(i==0) {
+                    a = myPosition.getColumn()+1;
+                    a2 = myPosition.getColumn()+1;
+
+                }
+                if(i==1) {
+                    a=myPosition.getColumn()+2;
+                    a2 = myPosition.getColumn()+2;
+                }
+                if(i==2) {
+                    a= myPosition.getColumn()-1;
+                    a2 = myPosition.getColumn()+1;
+                }
+                if(i==3) {
+                    a= myPosition.getColumn()-2;
+                    a2 = myPosition.getColumn()+2;
+                }
+
+                for(int j=0;j<4;j++) {
+                    if(j==0) {
+                        b = myPosition.getRow()+1;
+                        b2 = myPosition.getRow()+1;
+                    }
+                    if(j==1) {
+                        b = myPosition.getRow()+2;
+                        b2 = myPosition.getRow()+2;
+                    }
+                    if(j==2) {
+                        b= myPosition.getRow()-1;
+                        b2=myPosition.getRow()+1;
+                    }
+                    if(j==3) {
+                        b = myPosition.getRow()-2;
+                        b2 = myPosition.getRow()+2;
+                    }
+
+                    if(((a>0) && (a<9)) && ((b>0) && (b<9)) && ((a2!=b2))) {
+                        //append [a][b]
+                        ChessPosition addPos = new ChessPosition(b,a);
+                        ChessMove goodMove = new ChessMove(Curpos, addPos, PieceType.KNIGHT);
+
+                        possibleMoves.add(goodMove);
+
+                    }
+
+
+
+                }
+
+            }
+            return possibleMoves;
+
+
+        }
+        public int[][] rookMovesCalculator(ChessPosition myPosition) {
+
+            int[][] possibleMoves = {};
+            // This move set is also probably wrong, I still can't think in matrixes
+            possibleMoves = new int[8][8];
+
+            for(int i=0;i<9;i++) {
+
+                int a = myPosition.getColumn() + i;
+                int a2 = myPosition.getColumn() - i;
+                if(a>0 && a<9) {
+
+                    //append[a][myPosition.getRow();
+                }
+                if(a2>0 && a2<9) {
+
+                    //append[a2][myPosition.getRow();
+                }
+
+
+            }
+            for(int j=0;j<9;j++) {
+
+                int b = myPosition.getRow() + j;
+                int b2 = myPosition.getRow() - j;
+                if(b>0 && b<9) {
+
+                    //append[a][myPosition.getRow();
+                }
+                if(b2>0 && b2<9) {
+
+                    //append[a2][myPosition.getRow();
+                }
+
+            }
+            return possibleMoves;
+
+
+
+        }
+
+    }
+
+//}
