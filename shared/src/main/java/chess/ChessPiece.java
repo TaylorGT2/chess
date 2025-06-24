@@ -74,11 +74,11 @@ public class ChessPiece {
             return bishopMovesCalculator(myPosition, board);
         }
         if(pieceMoving.getPieceType() == PieceType.KING){
-            return kingMovesCalculator(myPosition);
+            return kingMovesCalculator(myPosition, board);
 
         }
         if(pieceMoving.getPieceType() == PieceType.KNIGHT){
-            return knightMovesCalculator(myPosition);
+            return knightMovesCalculator(myPosition, board);
 
         }
         if(pieceMoving.getPieceType() == PieceType.ROOK){
@@ -219,7 +219,7 @@ public class ChessPiece {
         return possibleMoves;
         }
 
-        public Collection<ChessMove> kingMovesCalculator(ChessPosition myPosition) {
+        public Collection<ChessMove> kingMovesCalculator(ChessPosition myPosition, ChessBoard board) {
             //int [][] possibleMoves = {};
             // This move set is also probably wrong, I still can't think in matrixes
             //possibleMoves = new int[8][8];
@@ -285,7 +285,7 @@ public class ChessPiece {
             return possibleMoves;
         }
 
-        public Collection<ChessMove> knightMovesCalculator(ChessPosition myPosition) {
+        public Collection<ChessMove> knightMovesCalculator(ChessPosition myPosition, ChessBoard board) {
             //int[][] possibleMoves = {};
 
            // possibleMoves = new int[8][8];
@@ -301,46 +301,67 @@ public class ChessPiece {
 
                 if(i==0) {
                     a = myPosition.getColumn()+1;
-                    a2 = myPosition.getColumn()+1;
+                    a2 = 1;
 
                 }
                 if(i==1) {
                     a=myPosition.getColumn()+2;
-                    a2 = myPosition.getColumn()+2;
+                    a2 = 2;
                 }
                 if(i==2) {
                     a= myPosition.getColumn()-1;
-                    a2 = myPosition.getColumn()+1;
+                    a2 = 1;
                 }
                 if(i==3) {
                     a= myPosition.getColumn()-2;
-                    a2 = myPosition.getColumn()+2;
+                    a2 = 2;
                 }
 
                 for(int j=0;j<4;j++) {
                     if(j==0) {
                         b = myPosition.getRow()+1;
-                        b2 = myPosition.getRow()+1;
+                        b2 = 1;
                     }
                     if(j==1) {
                         b = myPosition.getRow()+2;
-                        b2 = myPosition.getRow()+2;
+                        b2 = 2;
                     }
                     if(j==2) {
                         b= myPosition.getRow()-1;
-                        b2=myPosition.getRow()+1;
+                        b2=1;
                     }
                     if(j==3) {
                         b = myPosition.getRow()-2;
-                        b2 = myPosition.getRow()+2;
+                        b2 = 2;
                     }
 
                     if(((a>0) && (a<9)) && ((b>0) && (b<9)) && ((a2!=b2))) {
                         //append [a][b]
                         ChessPosition addPos = new ChessPosition(b,a);
-                        ChessMove goodMove = new ChessMove(Curpos, addPos, PieceType.KNIGHT);
+                        //ChessMove goodMove = new ChessMove(Curpos, addPos, null);
 
-                        possibleMoves.add(goodMove);
+                        //possibleMoves.add(goodMove);
+
+
+                        //ChessPosition addPos = new ChessPosition(myPosition.getRow(), a);
+
+                        ChessPiece obstacle = board.getPiece(addPos);
+                        ChessPiece myColor = board.getPiece(Curpos);
+                        if (obstacle != null) {
+                            if (obstacle.getTeamColor() != myColor.getTeamColor()) {
+                                ChessMove goodMove = new ChessMove(Curpos, addPos, null);
+
+                                possibleMoves.add(goodMove);
+                                //break;
+                            }
+
+
+                        }
+                        else {
+                            ChessMove goodMove = new ChessMove(Curpos, addPos, null);
+
+                            possibleMoves.add(goodMove);
+                        }
 
 
 
@@ -375,11 +396,7 @@ public class ChessPiece {
 
                     //append[a][myPosition.getRow();
                     ChessPosition addPos = new ChessPosition(myPosition.getRow(), a);
-                    //ChessMove goodMove = new ChessMove(Curpos, addPos, null);
 
-                    //possibleMoves.add(goodMove);
-
-                    //ChessPosition addPos = new ChessPosition(nextRow,nextColumn);
                     ChessPiece obstacle = board.getPiece(addPos);
                     ChessPiece myColor = board.getPiece(Curpos);
                     if (obstacle != null) {
