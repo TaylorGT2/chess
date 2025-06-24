@@ -82,7 +82,7 @@ public class ChessPiece {
 
         }
         if(pieceMoving.getPieceType() == PieceType.ROOK){
-            return rookMovesCalculator(myPosition);
+            return rookMovesCalculator(myPosition, board);
 
         }
         //return new ArrayList<>();
@@ -248,9 +248,29 @@ public class ChessPiece {
                     }
                     if ((!(a==myPosition.getColumn() && b==myPosition.getRow())) && ((a < 9) && (b<9)) && ((a>0 && b>0))) {
                         ChessPosition addPos = new ChessPosition(b,a);
-                        ChessMove goodMove = new ChessMove(Curpos, addPos, PieceType.KING);
+                        //ChessMove goodMove = new ChessMove(Curpos, addPos, null);
 
-                        possibleMoves.add(goodMove);
+                        //possibleMoves.add(goodMove);
+                        //ChessPosition addPos = new ChessPosition(nextRow,nextColumn);
+                        ChessPiece obstacle = board.getPiece(addPos);
+                        ChessPiece myColor = board.getPiece(Curpos);
+                        if (obstacle!=null) {
+                            if (obstacle.getTeamColor() != myColor.getTeamColor()) {
+                                ChessMove goodMove = new ChessMove(Curpos, addPos, null);
+
+                                possibleMoves.add(goodMove);
+                                //break;
+                            }
+
+                        }
+                        else {
+                            ChessMove goodMove = new ChessMove(Curpos, addPos, null);
+
+                            possibleMoves.add(goodMove);
+
+                        }
+
+
                         //possibleMoves.append([a][b])
                     }
 
@@ -351,10 +371,10 @@ public class ChessPiece {
 
                 a = myPosition.getColumn() + i;
                 int a2 = myPosition.getColumn() - i;
-                if((a>0 && a<9)) {
+                if ((a > 0 && a < 9)) {
 
                     //append[a][myPosition.getRow();
-                    ChessPosition addPos = new ChessPosition(myPosition.getRow(),a);
+                    ChessPosition addPos = new ChessPosition(myPosition.getRow(), a);
                     //ChessMove goodMove = new ChessMove(Curpos, addPos, null);
 
                     //possibleMoves.add(goodMove);
@@ -362,14 +382,13 @@ public class ChessPiece {
                     //ChessPosition addPos = new ChessPosition(nextRow,nextColumn);
                     ChessPiece obstacle = board.getPiece(addPos);
                     ChessPiece myColor = board.getPiece(Curpos);
-                    if (obstacle!=null) {
+                    if (obstacle != null) {
                         if (obstacle.getTeamColor() != myColor.getTeamColor()) {
                             ChessMove goodMove = new ChessMove(Curpos, addPos, null);
 
                             possibleMoves.add(goodMove);
                             break;
-                        }
-                        else {
+                        } else {
                             break;
                         }
                     }
@@ -378,9 +397,14 @@ public class ChessPiece {
                     possibleMoves.add(goodMove);
 
 
-
-
                 }
+            }
+
+
+            for(int i=1;i<9;i++) {
+
+                a = myPosition.getColumn() + i;
+                int a2 = myPosition.getColumn() - i;
                 if(a2>0 && a2<9) {
                     ChessPosition addPos = new ChessPosition(myPosition.getRow(),a2);
                     //ChessMove goodMove = new ChessMove(Curpos, addPos, null);
@@ -414,10 +438,10 @@ public class ChessPiece {
 
                 b = myPosition.getRow() + j;
                 int b2 = myPosition.getRow() - j;
-                if(b>0 && b<9) {
+                if (b > 0 && b < 9) {
 
                     //append[a][myPosition.getRow();
-                    ChessPosition addPos = new ChessPosition(b,myPosition.getColumn());
+                    ChessPosition addPos = new ChessPosition(b, myPosition.getColumn());
                     //ChessMove goodMove = new ChessMove(Curpos, addPos, null);
 
                     //possibleMoves.add(goodMove);
@@ -425,14 +449,13 @@ public class ChessPiece {
                     //ChessPosition addPos = new ChessPosition(nextRow,nextColumn);
                     ChessPiece obstacle = board.getPiece(addPos);
                     ChessPiece myColor = board.getPiece(Curpos);
-                    if (obstacle!=null) {
+                    if (obstacle != null) {
                         if (obstacle.getTeamColor() != myColor.getTeamColor()) {
                             ChessMove goodMove = new ChessMove(Curpos, addPos, null);
 
                             possibleMoves.add(goodMove);
                             break;
-                        }
-                        else {
+                        } else {
                             break;
                         }
                     }
@@ -440,6 +463,12 @@ public class ChessPiece {
 
                     possibleMoves.add(goodMove);
                 }
+            }
+
+            for(int j=1;j<9;j++) {
+
+                b = myPosition.getRow() + j;
+                int b2 = myPosition.getRow() - j;
                 if(b2>0 && b2<9) {
                     ChessPosition addPos = new ChessPosition(b2,myPosition.getColumn());
                     //ChessMove goodMove = new ChessMove(Curpos, addPos, null);
