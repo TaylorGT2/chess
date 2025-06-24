@@ -30,6 +30,14 @@ public class ChessPiece {
     }
 
     @Override
+    public String toString() {
+        return "ChessPiece{" +
+                "pieceColor=" + pieceColor +
+                ", type=" + type +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(pieceColor, type);
     }
@@ -84,6 +92,10 @@ public class ChessPiece {
         if(pieceMoving.getPieceType() == PieceType.ROOK){
             return rookMovesCalculator(myPosition, board);
 
+        }
+        if(pieceMoving.getPieceType()== PieceType.QUEEN){
+
+            return queenMovesCalculator(myPosition, board);
         }
         //return new ArrayList<>();
         return bishopMovesCalculator(myPosition, board);
@@ -284,6 +296,15 @@ public class ChessPiece {
 
             return possibleMoves;
         }
+
+        public Collection<ChessMove> queenMovesCalculator(ChessPosition myPosition, ChessBoard board) {
+            ArrayList<ChessMove> queenmoves = new ArrayList<>();
+            queenmoves.addAll(bishopMovesCalculator(myPosition,board));
+            queenmoves.addAll(rookMovesCalculator(myPosition,board));
+            return queenmoves;
+
+        }
+
 
         public Collection<ChessMove> knightMovesCalculator(ChessPosition myPosition, ChessBoard board) {
             //int[][] possibleMoves = {};
