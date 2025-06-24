@@ -107,7 +107,7 @@ public class ChessPiece {
         for(int moveDiagonal = 1; moveDiagonal < 8; moveDiagonal++) {
             int nextColumn = currentColumn + moveDiagonal;
             int nextRow = currentRow + moveDiagonal;
-            if ((nextColumn < 8) && (nextRow < 8) && (nextColumn>0) && (nextRow>0)) {
+            if ((nextColumn < 9) && (nextRow < 9) && (nextColumn>0) && (nextRow>0)) {
                 // possibleMoves.append([nextColumn][nextRow]
                 //possibleMoves[nextColumn][nextRow] = 1;
                 //board.getPiece(addPos);
@@ -140,9 +140,21 @@ public class ChessPiece {
                 // possibleMoves.append([nextColumn][nextRow]
                 //possibleMoves[nextColumn][nextRow] = 1;
                 ChessPosition addPos = new ChessPosition(nextRow,nextColumn);
+                ChessPiece obstacle = board.getPiece(addPos);
+                ChessPiece myColor = board.getPiece(Curpos);
+                if (obstacle!=null) {
+                    if (obstacle.getTeamColor() != myColor.getTeamColor()) {
+                        ChessMove goodMove = new ChessMove(Curpos, addPos, null);
+
+                        possibleMoves.add(goodMove);
+                        break;
+                    }
+                    else {
+                        break;
+                    }
+                }
                 ChessMove goodMove = new ChessMove(Curpos, addPos, null);
-//                possibleMoves[currentspot] = goodMove;
-//                currentspot -=1;
+
                 possibleMoves.add(goodMove);
             }
 
@@ -155,9 +167,21 @@ public class ChessPiece {
                 // possibleMoves.append([nextColumn][nextRow]
                 //possibleMoves[nextColumn][nextRow] = 1;
                 ChessPosition addPos = new ChessPosition(nextRow,nextColumn);
+                ChessPiece obstacle = board.getPiece(addPos);
+                ChessPiece myColor = board.getPiece(Curpos);
+                if (obstacle!=null) {
+                    if (obstacle.getTeamColor() != myColor.getTeamColor()) {
+                        ChessMove goodMove = new ChessMove(Curpos, addPos, null);
+
+                        possibleMoves.add(goodMove);
+                        break;
+                    }
+                    else {
+                        break;
+                    }
+                }
                 ChessMove goodMove = new ChessMove(Curpos, addPos, null);
-                //possibleMoves[currentspot] = goodMove;
-                //currentspot -= 1;
+
                 possibleMoves.add(goodMove);
             }
 
@@ -170,9 +194,21 @@ public class ChessPiece {
                 // possibleMoves.append([nextColumn][nextRow]
                 //possibleMoves[nextColumn][nextRow] = 1;
                 ChessPosition addPos = new ChessPosition(nextRow,nextColumn);
+                ChessPiece obstacle = board.getPiece(addPos);
+                ChessPiece myColor = board.getPiece(Curpos);
+                if (obstacle!=null) {
+                    if (obstacle.getTeamColor() != myColor.getTeamColor()) {
+                        ChessMove goodMove = new ChessMove(Curpos, addPos, null);
+
+                        possibleMoves.add(goodMove);
+                        break;
+                    }
+                    else {
+                        break;
+                    }
+                }
                 ChessMove goodMove = new ChessMove(Curpos, addPos, null);
-                //possibleMoves[currentspot] = goodMove;
-                //currentspot -= 1;
+
                 possibleMoves.add(goodMove);
             }
 
