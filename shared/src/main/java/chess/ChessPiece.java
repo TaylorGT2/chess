@@ -388,7 +388,7 @@ public class ChessPiece {
             }
             ChessPosition marchOn = new ChessPosition(myPosition.getRow()+1,myPosition.getColumn());
             ChessPiece obstacleEnemy3 = board.getPiece(marchOn);
-            if (obstacleEnemy2 == null) {
+            if (obstacleEnemy3 == null) {
                 if (myPosition.getRow()+1!=8) {
 
                     ChessMove goodMove = new ChessMove(Curpos, marchOn, null);
@@ -418,6 +418,113 @@ public class ChessPiece {
             return possibleMoves;
 
         }
+
+
+    public Collection<ChessMove> pawnBlackMovesCalculator(ChessPosition myPosition, ChessBoard board) {
+
+        int rowcheck = myPosition.getRow();
+        ArrayList<ChessMove> possibleMoves = new ArrayList<>();
+        ChessPosition Curpos = new ChessPosition(myPosition.getRow(),myPosition.getColumn());
+        ChessPiece myColor = board.getPiece(Curpos);
+        if(rowcheck==7){
+            ChessPosition addPos = new ChessPosition(rowcheck+2,myPosition.getColumn());
+
+            ChessPiece obstacle = board.getPiece(addPos);
+            //ChessPiece myColor = board.getPiece(Curpos);
+            if (obstacle == null) {
+                ChessMove goodMove = new ChessMove(Curpos, addPos, null);
+
+                possibleMoves.add(goodMove);
+
+            }
+        }
+        ChessPosition attackLeft = new ChessPosition(myPosition.getRow()+1,myPosition.getColumn()-1);
+        ChessPiece obstacleEnemy = board.getPiece(attackLeft);
+        if (obstacleEnemy != null && (myPosition.getRow() < 8) && (myPosition.getColumn() > 1)) {
+            if (obstacleEnemy.getTeamColor() != myColor.getTeamColor()) {
+                if (myPosition.getRow()+1!=8) {
+
+                    ChessMove goodMove = new ChessMove(Curpos, attackLeft, null);
+
+                    possibleMoves.add(goodMove);
+                }
+                else {
+
+                    ChessMove goodMove = new ChessMove(Curpos, attackLeft, PieceType.QUEEN);
+                    possibleMoves.add(goodMove);
+                    ChessMove badMove = new ChessMove(Curpos, attackLeft, PieceType.ROOK);
+                    possibleMoves.add(badMove);
+                    ChessMove poorMove = new ChessMove(Curpos, attackLeft, PieceType.BISHOP);
+                    possibleMoves.add(poorMove);
+                    ChessMove bestMove = new ChessMove(Curpos, attackLeft, PieceType.KNIGHT);
+
+
+                    possibleMoves.add(bestMove);
+                }
+            }
+        }
+        ChessPosition attackRight = new ChessPosition(myPosition.getRow()+1,myPosition.getColumn()+1);
+        ChessPiece obstacleEnemy2 = board.getPiece(attackRight);
+        if ((obstacleEnemy2 != null) && (myPosition.getRow() < 8) && (myPosition.getColumn() < 8)) {
+            if (obstacleEnemy2.getTeamColor() != myColor.getTeamColor()) {
+                if (myPosition.getRow()+1!=8) {
+
+                    ChessMove goodMove = new ChessMove(Curpos, attackRight, null);
+
+                    possibleMoves.add(goodMove);
+                }
+                else {
+
+                    //ChessMove goodMove = new ChessMove(Curpos, attackRight, PieceType.QUEEN);
+
+                    //possibleMoves.add(goodMove);
+                    ChessMove goodMove = new ChessMove(Curpos, attackRight, PieceType.QUEEN);
+                    possibleMoves.add(goodMove);
+                    ChessMove badMove = new ChessMove(Curpos, attackRight, PieceType.ROOK);
+                    possibleMoves.add(badMove);
+                    ChessMove poorMove = new ChessMove(Curpos, attackRight, PieceType.BISHOP);
+                    possibleMoves.add(poorMove);
+                    ChessMove bestMove = new ChessMove(Curpos, attackRight, PieceType.KNIGHT);
+
+
+                    possibleMoves.add(bestMove);
+                }
+            }
+        }
+        ChessPosition marchOn = new ChessPosition(myPosition.getRow()+1,myPosition.getColumn());
+        ChessPiece obstacleEnemy3 = board.getPiece(marchOn);
+        if (obstacleEnemy3 == null) {
+            if (myPosition.getRow()+1!=8) {
+
+                ChessMove goodMove = new ChessMove(Curpos, marchOn, null);
+
+                possibleMoves.add(goodMove);
+            }
+
+            else {
+
+                //ChessMove goodMove = new ChessMove(Curpos, marchOn, PieceType.QUEEN);
+
+                //possibleMoves.add(goodMove);
+
+                ChessMove goodMove = new ChessMove(Curpos, marchOn, PieceType.QUEEN);
+                possibleMoves.add(goodMove);
+                ChessMove badMove = new ChessMove(Curpos, marchOn, PieceType.ROOK);
+                possibleMoves.add(badMove);
+                ChessMove poorMove = new ChessMove(Curpos, marchOn, PieceType.BISHOP);
+                possibleMoves.add(poorMove);
+                ChessMove bestMove = new ChessMove(Curpos, marchOn, PieceType.KNIGHT);
+
+
+                possibleMoves.add(bestMove);
+            }
+
+        }
+        return possibleMoves;
+
+    }
+
+
 
         public Collection<ChessMove> queenMovesCalculator(ChessPosition myPosition, ChessBoard board) {
             ArrayList<ChessMove> queenmoves = new ArrayList<>();
