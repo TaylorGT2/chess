@@ -327,10 +327,11 @@ public class ChessPiece {
             ChessPiece myColor = board.getPiece(Curpos);
             if(rowcheck==2){
                 ChessPosition addPos = new ChessPosition(rowcheck+2,myPosition.getColumn());
-
+                ChessPosition addPos2 = new ChessPosition(rowcheck+1,myPosition.getColumn());
                 ChessPiece obstacle = board.getPiece(addPos);
+                ChessPiece obstacle2 = board.getPiece(addPos2);
                 //ChessPiece myColor = board.getPiece(Curpos);
-                if (obstacle == null) {
+                if (obstacle == null && obstacle2 == null) {
                     ChessMove goodMove = new ChessMove(Curpos, addPos, null);
 
                     possibleMoves.add(goodMove);
@@ -431,11 +432,16 @@ public class ChessPiece {
         ChessPosition Curpos = new ChessPosition(myPosition.getRow(),myPosition.getColumn());
         ChessPiece myColor = board.getPiece(Curpos);
         if(rowcheck==7){
-            ChessPosition addPos = new ChessPosition(rowcheck-2,myPosition.getColumn());
 
+            ChessPosition addPos = new ChessPosition(rowcheck-2,myPosition.getColumn());
+            ChessPosition addPos2 = new ChessPosition(rowcheck-1,myPosition.getColumn());
             ChessPiece obstacle = board.getPiece(addPos);
+            ChessPiece obstacle2 = board.getPiece(addPos2);
+            //ChessPosition addPos = new ChessPosition(rowcheck-2,myPosition.getColumn());
+
+            //ChessPiece obstacle = board.getPiece(addPos);
             //ChessPiece myColor = board.getPiece(Curpos);
-            if (obstacle == null) {
+            if (obstacle == null && obstacle2==null) {
                 ChessMove goodMove = new ChessMove(Curpos, addPos, null);
 
                 possibleMoves.add(goodMove);

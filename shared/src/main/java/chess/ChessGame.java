@@ -10,7 +10,11 @@ import java.util.Collection;
  */
 public class ChessGame {
 
+    int turnNumber;
+    TeamColor turn;
+
     public ChessGame() {
+        turnNumber = 0;
 
     }
 
@@ -18,7 +22,14 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+
+        //throw new RuntimeException("Not implemented");
+        if(turnNumber%2==0) {
+            turnNumber++;
+            return TeamColor.WHITE;
+        }
+        turnNumber++;
+        return TeamColor.BLACK;
     }
 
     /**
@@ -27,7 +38,8 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        TeamColor turn = team;
+        //throw new RuntimeException("Not implemented");
     }
 
     /**
@@ -47,6 +59,12 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         throw new RuntimeException("Not implemented");
+
+        //return pieceMoves(this,startPosition);
+        //ChessPiece checkingPiece = getPiece(startPosition);
+
+
+
     }
 
     /**
@@ -56,7 +74,22 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        //throw new RuntimeException("Not implemented");
+
+        // I still need to set the end position as the new start position
+        ChessPosition newStart = move.getEndPosition();
+        //new ChessPosition(move.getRow(),move.getColumn());
+
+
+
+    }
+
+    @Override
+    public String toString() {
+        return "ChessGame{" +
+                "turnNumber=" + turnNumber +
+                ", turn=" + turn +
+                '}';
     }
 
     /**
