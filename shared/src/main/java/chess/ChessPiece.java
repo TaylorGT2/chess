@@ -309,6 +309,10 @@ public class ChessPiece {
 
                 pawnmoves = pawnWhiteMovesCalculator(myPosition, board);
             }
+            if (pawnType.getTeamColor()== ChessGame.TeamColor.BLACK){
+
+                pawnmoves = pawnBlackMovesCalculator(myPosition, board);
+            }
 
 
             return pawnmoves;
@@ -427,7 +431,7 @@ public class ChessPiece {
         ChessPosition Curpos = new ChessPosition(myPosition.getRow(),myPosition.getColumn());
         ChessPiece myColor = board.getPiece(Curpos);
         if(rowcheck==7){
-            ChessPosition addPos = new ChessPosition(rowcheck+2,myPosition.getColumn());
+            ChessPosition addPos = new ChessPosition(rowcheck-2,myPosition.getColumn());
 
             ChessPiece obstacle = board.getPiece(addPos);
             //ChessPiece myColor = board.getPiece(Curpos);
@@ -438,11 +442,11 @@ public class ChessPiece {
 
             }
         }
-        ChessPosition attackLeft = new ChessPosition(myPosition.getRow()+1,myPosition.getColumn()-1);
+        ChessPosition attackLeft = new ChessPosition(myPosition.getRow()-1,myPosition.getColumn()-1);
         ChessPiece obstacleEnemy = board.getPiece(attackLeft);
-        if (obstacleEnemy != null && (myPosition.getRow() < 8) && (myPosition.getColumn() > 1)) {
+        if (obstacleEnemy != null && (myPosition.getRow() > 1) && (myPosition.getColumn() > 1)) {
             if (obstacleEnemy.getTeamColor() != myColor.getTeamColor()) {
-                if (myPosition.getRow()+1!=8) {
+                if (myPosition.getRow()-1!=1) {
 
                     ChessMove goodMove = new ChessMove(Curpos, attackLeft, null);
 
@@ -463,11 +467,11 @@ public class ChessPiece {
                 }
             }
         }
-        ChessPosition attackRight = new ChessPosition(myPosition.getRow()+1,myPosition.getColumn()+1);
+        ChessPosition attackRight = new ChessPosition(myPosition.getRow()-1,myPosition.getColumn()+1);
         ChessPiece obstacleEnemy2 = board.getPiece(attackRight);
-        if ((obstacleEnemy2 != null) && (myPosition.getRow() < 8) && (myPosition.getColumn() < 8)) {
+        if ((obstacleEnemy2 != null) && (myPosition.getRow() > 1) && (myPosition.getColumn() < 8)) {
             if (obstacleEnemy2.getTeamColor() != myColor.getTeamColor()) {
-                if (myPosition.getRow()+1!=8) {
+                if (myPosition.getRow()-1!=1) {
 
                     ChessMove goodMove = new ChessMove(Curpos, attackRight, null);
 
@@ -491,10 +495,10 @@ public class ChessPiece {
                 }
             }
         }
-        ChessPosition marchOn = new ChessPosition(myPosition.getRow()+1,myPosition.getColumn());
+        ChessPosition marchOn = new ChessPosition(myPosition.getRow()-1,myPosition.getColumn());
         ChessPiece obstacleEnemy3 = board.getPiece(marchOn);
         if (obstacleEnemy3 == null) {
-            if (myPosition.getRow()+1!=8) {
+            if (myPosition.getRow()-1!=1) {
 
                 ChessMove goodMove = new ChessMove(Curpos, marchOn, null);
 
