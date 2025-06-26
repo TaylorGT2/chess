@@ -11,6 +11,8 @@ import static chess.ChessPiece.PieceType.*;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
+//the commits are not working
+
 public class ChessBoard {
     private final ChessPiece[][] squares = new ChessPiece[10][10];
     public ChessBoard() {
