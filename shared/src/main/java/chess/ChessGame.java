@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -12,9 +13,12 @@ public class ChessGame {
 
     int turnNumber;
     TeamColor turn;
+    ChessBoard board;
 
-    public ChessGame() {
-        turnNumber = 0;
+    public ChessGame(ChessBoard board) {
+        //turnNumber = 0;
+        this.board = board;
+
 
     }
 
@@ -24,12 +28,13 @@ public class ChessGame {
     public TeamColor getTeamTurn() {
 
         //throw new RuntimeException("Not implemented");
-        if(turnNumber%2==0) {
-            turnNumber++;
-            return TeamColor.WHITE;
-        }
-        turnNumber++;
-        return TeamColor.BLACK;
+//        if(turnNumber%2==0) {
+//            turnNumber++;
+//            return TeamColor.WHITE;
+//        }
+//        turnNumber++;
+//        return TeamColor.BLACK;
+        return turn;
     }
 
     /**
@@ -38,8 +43,10 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        TeamColor turn = team;
+        //TeamColor turn = team;
         //throw new RuntimeException("Not implemented");
+        turn = team;
+
     }
 
     /**
@@ -77,9 +84,16 @@ public class ChessGame {
         //throw new RuntimeException("Not implemented");
 
         // I still need to set the end position as the new start position
-        ChessPosition newStart = move.getEndPosition();
+        //ChessPosition newStart = move.getEndPosition();
         //new ChessPosition(move.getRow(),move.getColumn());
 
+
+        if(turn==TeamColor.WHITE){
+            setTeamTurn(TeamColor.BLACK);
+        }
+        else {
+            setTeamTurn(TeamColor.WHITE);
+        }
 
 
     }
@@ -99,7 +113,33 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+
+        //throw new RuntimeException("Not implemented");
+        ArrayList<ChessMove> allValidMoves = new ArrayList<>();
+        ChessPiece CurrentKing;
+        ChessPosition kingPos = new ChessPosition(30,30);
+        //board.squares;
+        for(int i = 0; i<9; i++){
+            for(int j = 0; j<9; j++){
+                if(board.squares[i][j].getPieceType()== ChessPiece.PieceType.KING && board.squares[i][j].getTeamColor()== teamColor){
+                    CurrentKing = board.squares[i][j];
+                    kingPos = new ChessPosition(i,j);
+                }
+                if(board.squares[i][j].getTeamColor()!=teamColor) {
+                    ChessPosition CurPos = new ChessPosition(i,j);
+                    allValidMoves.addAll(board.squares[i][j].pieceMoves(board,CurPos));
+
+                }
+
+
+            }
+        }
+        for(ChessMove aim:allValidMoves){
+            if(aim.getEndPosition()==kingPos){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -129,7 +169,8 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        //throw new RuntimeException("Not implemented");
+        this.board = board;
     }
 
     /**
@@ -138,6 +179,7 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        //throw new RuntimeException("Not implemented");
+        return board;
     }
 }
