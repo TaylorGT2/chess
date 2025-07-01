@@ -81,6 +81,10 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+
+
+
+
         //throw new RuntimeException("Not implemented");
 
         // I still need to set the end position as the new start position
@@ -94,6 +98,38 @@ public class ChessGame {
         else {
             setTeamTurn(TeamColor.WHITE);
         }
+
+
+    }
+
+
+    public ChessBoard makeFakeMove(ChessMove move) {
+
+        ChessBoard fakeboard = board;
+        ChessPiece movingPiece = board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()];
+        ChessPosition endPosition = move.getEndPosition();
+        ChessPiece.PieceType promote = move.getPromotionPiece();
+
+
+        fakeboard.addPiece(endPosition,movingPiece);
+        fakeboard.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()]=null;
+
+
+        //throw new RuntimeException("Not implemented");
+
+        // I still need to set the end position as the new start position
+        //ChessPosition newStart = move.getEndPosition();
+        //new ChessPosition(move.getRow(),move.getColumn());
+
+
+        if(turn==TeamColor.WHITE){
+            setTeamTurn(TeamColor.BLACK);
+        }
+        else {
+            setTeamTurn(TeamColor.WHITE);
+        }
+
+        return fakeboard;
 
 
     }
@@ -149,7 +185,12 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        //throw new RuntimeException("Not implemented");
+        //Movement rule is so isolated, how can I get the list from it?
+        if(isInCheck(teamColor==true && validMoves==null)){
+            return true;
+        }
+        return false;
     }
 
     /**
