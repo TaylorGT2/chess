@@ -17,7 +17,7 @@ public class ChessGame {
 
     Collection<ChessMove> validMoves;
 
-    public ChessGame(ChessBoard board, Collection<ChessMove> validMoves) {
+    public ChessGame(ChessBoard board,Collection<ChessMove> validMoves) {
         //turnNumber = 0;
         this.board = board;
         this.validMoves = validMoves;
@@ -68,8 +68,8 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
-
+        //throw new RuntimeException("Not implemented");
+        return validMoves2(board,startPosition,this);
         //return pieceMoves(this,startPosition);
         //ChessPiece checkingPiece = getPiece(startPosition);
 
@@ -94,7 +94,7 @@ public class ChessGame {
         //ChessPosition newStart = move.getEndPosition();
         //new ChessPosition(move.getRow(),move.getColumn());
 
-        validMoves = validMoves(board, move.getStartPosition(), this);
+        validMoves = validMoves2(board, move.getStartPosition(), this);
         boolean okaymove =false;
         for(ChessMove finderror:validMoves){
             if(finderror==move){
@@ -102,9 +102,10 @@ public class ChessGame {
                 break;
             }
         }
-        if(okaymove==false){
-            throw InvalidMoveException;
-        }
+//        if(okaymove==false){
+//            //throw InvalidMoveException;
+//            //return null;
+//        }
 
         if(move.getPromotionPiece()==null){
             ChessPiece movementPiece = board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()];
@@ -279,7 +280,7 @@ public class ChessGame {
 
         return validmoves;
     }
-    public Collection<ChessMove> validMoves(ChessBoard board, ChessPosition myPosition, ChessGame game) {
+    public Collection<ChessMove> validMoves2(ChessBoard board, ChessPosition myPosition, ChessGame game) {
         ChessPiece pieceMoving = board.getPiece(myPosition);
         Boolean initialCheckTest = game.isInCheck(game.getTeamTurn());
         ChessGame fakegame = game;
