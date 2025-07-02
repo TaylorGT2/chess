@@ -15,9 +15,12 @@ public class ChessGame {
     TeamColor turn;
     ChessBoard board;
 
-    public ChessGame(ChessBoard board) {
+    Collection<ChessMove> validMoves;
+
+    public ChessGame(ChessBoard board, Collection<ChessMove> validMoves) {
         //turnNumber = 0;
         this.board = board;
+        this.validMoves = validMoves;
 
 
     }
@@ -90,6 +93,32 @@ public class ChessGame {
         // I still need to set the end position as the new start position
         //ChessPosition newStart = move.getEndPosition();
         //new ChessPosition(move.getRow(),move.getColumn());
+
+        validMoves = validMoves(board, move.getStartPosition(), this);
+        boolean okaymove =false;
+        for(ChessMove finderror:validMoves){
+            if(finderror==move){
+                okaymove=true;
+                break;
+            }
+        }
+        if(okaymove==false){
+            throw InvalidMoveException;
+        }
+
+        if(move.getPromotionPiece()==null){
+            ChessPiece movementPiece = board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()];
+            board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()]=null;
+            board.squares[move.getEndPosition().getRow()][move.getEndPosition().getColumn()] = movementPiece;
+
+        }
+        if(move.getPromotionPiece()!=null){
+            ChessPiece movementPiece = board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()];
+            board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()]=null;
+            ChessPiece promo = new ChessPiece(movementPiece.getTeamColor(),move.getPromotionPiece());
+            board.squares[move.getEndPosition().getRow()][move.getEndPosition().getColumn()] = promo;
+
+        }
 
 
         if(turn==TeamColor.WHITE){
@@ -187,7 +216,7 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         //throw new RuntimeException("Not implemented");
         //Movement rule is so isolated, how can I get the list from it?
-        if(isInCheck(teamColor==true && validMoves==null)){
+        if(isInCheck(teamColor)==true && validMoves==null){
             return true;
         }
         return false;
@@ -201,7 +230,11 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        //throw new RuntimeException("Not implemented");
+        if(isInCheck(teamColor)==false&&validMoves==null){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -223,4 +256,51 @@ public class ChessGame {
         //throw new RuntimeException("Not implemented");
         return board;
     }
+
+
+    public Collection<ChessMove> SingleUnit(ChessPosition myPosition, ChessBoard board, ChessGame game){
+        ChessGame fakegame = game;
+        Collection<ChessMove> allmoves = new ArrayList<>();
+        ArrayList<ChessMove> validmoves = new ArrayList<>();
+        //dfakegame.getBoard();
+
+        ChessPiece thisIsNotByPiece = board.getPiece(myPosition);
+        //why does this not convert??
+        allmoves = thisIsNotByPiece.pieceMoves(board,myPosition);
+
+
+        for(ChessMove checkmove:allmoves){
+            ChessBoard checkboard = fakegame.makeFakeMove(checkmove);
+            ChessGame checkGame = new ChessGame(checkboard, validmoves);
+            if(checkGame.isInCheck(thisIsNotByPiece.getTeamColor())==false){
+                validmoves.add(checkmove);
+            }
+        }
+
+        return validmoves;
+    }
+    public Collection<ChessMove> validMoves(ChessBoard board, ChessPosition myPosition, ChessGame game) {
+        ChessPiece pieceMoving = board.getPiece(myPosition);
+        Boolean initialCheckTest = game.isInCheck(game.getTeamTurn());
+        ChessGame fakegame = game;
+
+        // if king is in check, kill or defend
+        // if king is not in check, but would be, cannot move
+
+
+
+        //make a new game, set the board with the new board after a move was made, and check if in check is false
+        if(initialCheckTest==true) {
+
+            return SingleUnit(myPosition, board, fakegame);
+
+
+        }
+        return SingleUnit(myPosition, board,fakegame);
+
+    }
+
+
+
+
 }
