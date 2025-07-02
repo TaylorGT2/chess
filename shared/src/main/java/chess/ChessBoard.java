@@ -14,9 +14,18 @@ import static chess.ChessPiece.PieceType.*;
 //the commits are not working
 
 public class ChessBoard {
-    private final ChessPiece[][] squares = new ChessPiece[10][10];
+    public ChessPiece[][] squares = new ChessPiece[20][20];
     public ChessBoard() {
         
+    }
+    public ChessBoard(ChessBoard board) {
+        this.squares = new ChessPiece[20][20];
+        for(int i=0;i<20;i++){
+            for(int j = 0;j<20;j++){
+                this.squares[i][j]=board.squares[i][j];
+            }
+        }
+
     }
 
     @Override

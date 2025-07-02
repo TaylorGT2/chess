@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -15,6 +16,7 @@ public class ChessGame {
     int turnNumber;
     TeamColor turn;
     ChessBoard board;
+    ChessGame game;
 
     Collection<ChessMove> validMoves;
 
@@ -29,6 +31,12 @@ public class ChessGame {
         //turnNumber = 0;
 
 
+
+    }
+    public ChessGame(ChessGame copy){
+       // game = Arrays.copyOf(copy.board,copy.turn);
+        this.setTeamTurn(copy.turn);
+        this.setBoard(copy.board);
 
     }
 
@@ -146,7 +154,7 @@ public class ChessGame {
 
     public ChessBoard makeFakeMove(ChessMove move) {
 
-        ChessBoard fakeboard = board;
+        ChessBoard fakeboard = new ChessBoard(board);
         ChessPiece movingPiece = board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()];
         ChessPosition endPosition = move.getEndPosition();
         ChessPiece.PieceType promote = move.getPromotionPiece();
@@ -162,13 +170,13 @@ public class ChessGame {
         //ChessPosition newStart = move.getEndPosition();
         //new ChessPosition(move.getRow(),move.getColumn());
 
-
-        if(turn==TeamColor.WHITE){
-            setTeamTurn(TeamColor.BLACK);
-        }
-        else {
-            setTeamTurn(TeamColor.WHITE);
-        }
+//
+//        if(turn==TeamColor.WHITE){
+//            setTeamTurn(TeamColor.BLACK);
+//        }
+//        else {
+//            setTeamTurn(TeamColor.WHITE);
+//        }
 
         return fakeboard;
 
@@ -214,7 +222,8 @@ public class ChessGame {
             }
         }
         for(ChessMove aim:allValidMoves){
-            if(aim.getEndPosition()==kingPos){
+            ChessPosition end = aim.getEndPosition();
+            if(end.getRow()==kingPos.getRow()&&end.getColumn()==kingPos.getColumn()){
                 return true;
             }
         }
@@ -272,8 +281,11 @@ public class ChessGame {
     }
 
 
+
+
+
     public Collection<ChessMove> SingleUnit(ChessPosition myPosition, ChessBoard board, ChessGame game){
-        ChessGame fakegame = game;
+        //ChessGame fakegame = game;
         Collection<ChessMove> allmoves = new ArrayList<>();
         ArrayList<ChessMove> validmoves = new ArrayList<>();
         //dfakegame.getBoard();
@@ -282,13 +294,24 @@ public class ChessGame {
         //why does this not convert??
         allmoves = thisIsNotByPiece.pieceMoves(board,myPosition);
 
+        TeamColor testcolor;
+
+        if(thisIsNotByPiece.getTeamColor()==TeamColor.WHITE){
+            testcolor=TeamColor.WHITE;
+        }
+        else{
+            testcolor = TeamColor.BLACK;
+        }
+
 
         for(ChessMove checkmove:allmoves){
+            ChessGame fakegame = new ChessGame(this);
             ChessBoard checkboard = fakegame.makeFakeMove(checkmove);
             ChessGame checkGame = new ChessGame(checkboard, validmoves);
-            if(checkGame.isInCheck(thisIsNotByPiece.getTeamColor())==false){
+            if(checkGame.isInCheck(testcolor)==false){
                 validmoves.add(checkmove);
             }
+
         }
 
         return validmoves;
@@ -301,6 +324,11 @@ public class ChessGame {
         ChessPiece pieceMoving = board.getPiece(myPosition);
         Boolean initialCheckTest = game.isInCheck(game.getTeamTurn());
         ChessGame fakegame = game;
+
+        //console.log("testing");
+
+        System.out.printf("testing");
+
 
         // if king is in check, kill or defend
         // if king is not in check, but would be, cannot move
