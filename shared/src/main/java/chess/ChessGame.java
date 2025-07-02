@@ -113,10 +113,10 @@ public class ChessGame {
                 break;
             }
         }
-//        if(okaymove==false){
-//            //throw InvalidMoveException;
-//            //return null;
-//        }
+        if(okaymove==false){
+            throw new InvalidMoveException();
+            //return null;
+        }
 
         if(move.getPromotionPiece()==null){
             ChessPiece movementPiece = board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()];
