@@ -24,6 +24,12 @@ public class ChessGame {
 
 
     }
+    public ChessGame() {
+        //turnNumber = 0;
+
+
+
+    }
 
     /**
      * @return Which team's turn it is
@@ -93,6 +99,10 @@ public class ChessGame {
         // I still need to set the end position as the new start position
         //ChessPosition newStart = move.getEndPosition();
         //new ChessPosition(move.getRow(),move.getColumn());
+        if(board==null){
+            board = new ChessBoard();
+            board.resetBoard();
+        }
 
         validMoves = validMoves2(board, move.getStartPosition(), this);
         boolean okaymove =false;
@@ -187,14 +197,16 @@ public class ChessGame {
         //board.squares;
         for(int i = 0; i<9; i++){
             for(int j = 0; j<9; j++){
-                if(board.squares[i][j].getPieceType()== ChessPiece.PieceType.KING && board.squares[i][j].getTeamColor()== teamColor){
-                    CurrentKing = board.squares[i][j];
-                    kingPos = new ChessPosition(i,j);
-                }
-                if(board.squares[i][j].getTeamColor()!=teamColor) {
-                    ChessPosition CurPos = new ChessPosition(i,j);
-                    allValidMoves.addAll(board.squares[i][j].pieceMoves(board,CurPos));
+                if(board.squares[i][j]!=null) {
+                    if (board.squares[i][j].getPieceType() == ChessPiece.PieceType.KING && board.squares[i][j].getTeamColor() == teamColor) {
+                        CurrentKing = board.squares[i][j];
+                        kingPos = new ChessPosition(i, j);
+                    }
+                    if (board.squares[i][j].getTeamColor() != teamColor) {
+                        ChessPosition CurPos = new ChessPosition(i, j);
+                        allValidMoves.addAll(board.squares[i][j].pieceMoves(board, CurPos));
 
+                    }
                 }
 
 
@@ -281,6 +293,10 @@ public class ChessGame {
         return validmoves;
     }
     public Collection<ChessMove> validMoves2(ChessBoard board, ChessPosition myPosition, ChessGame game) {
+        if(board==null){
+            board = new ChessBoard();
+            board.resetBoard();
+        }
         ChessPiece pieceMoving = board.getPiece(myPosition);
         Boolean initialCheckTest = game.isInCheck(game.getTeamTurn());
         ChessGame fakegame = game;
