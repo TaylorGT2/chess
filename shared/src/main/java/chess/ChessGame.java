@@ -98,8 +98,8 @@ public class ChessGame {
     /**
      * Makes a move in a chess game
      *
-     * @param move chess move to perform
-     * @throws InvalidMoveException if move is invalid
+     * @param //move chess move to perform
+     * @throws //InvalidMoveException if move is invalid
      */
 
     public boolean status(TeamColor team) {
@@ -285,7 +285,19 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         //throw new RuntimeException("Not implemented");
-        if(isInCheck(teamColor)==false&&validMoves==null){
+        Collection<ChessMove> valMove = new ArrayList<>();
+        for(int i = 0;i<20;i++){
+            for(int j = 0;j<20;j++){
+                if(board.squares[i][j]!=null){
+                    if(board.squares[i][j].getTeamColor()==teamColor){
+                        valMove.addAll(validMoves2(board,new ChessPosition(i,j), this));
+                    }
+                }
+
+            }
+        }
+
+        if(isInCheck(teamColor)==false&&valMove.size()==0){
             return true;
         }
         return false;
