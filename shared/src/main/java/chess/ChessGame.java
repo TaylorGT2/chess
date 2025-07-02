@@ -270,7 +270,19 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         //throw new RuntimeException("Not implemented");
         //Movement rule is so isolated, how can I get the list from it?
-        if(isInCheck(teamColor)==true && validMoves==null){
+        Collection<ChessMove> valMove = new ArrayList<>();
+        for(int i = 0;i<20;i++){
+            for(int j = 0;j<20;j++){
+                if(board.squares[i][j]!=null){
+                    if(board.squares[i][j].getTeamColor()==teamColor){
+                        valMove.addAll(validMoves2(board,new ChessPosition(i,j), this));
+                    }
+                }
+
+            }
+        }
+
+        if(isInCheck(teamColor)==true&&valMove.size()==0){
             return true;
         }
         return false;
