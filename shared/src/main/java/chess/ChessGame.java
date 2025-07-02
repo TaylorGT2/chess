@@ -29,6 +29,9 @@ public class ChessGame {
     }
     public ChessGame() {
         //turnNumber = 0;
+        board = new ChessBoard();
+        board.resetBoard();
+        turn = TeamColor.WHITE;
 
 
 
@@ -98,6 +101,13 @@ public class ChessGame {
      * @param move chess move to perform
      * @throws InvalidMoveException if move is invalid
      */
+
+    public boolean status(TeamColor team) {
+        if(isInCheckmate(team)||isInStalemate(team)){
+            return false;
+        }
+        return true;
+    }
     public void makeMove(ChessMove move) throws InvalidMoveException {
 
 
@@ -113,46 +123,61 @@ public class ChessGame {
             board.resetBoard();
         }
 
-        validMoves = validMoves2(board, move.getStartPosition(), this);
-        boolean okaymove =false;
-        for(ChessMove finderror:validMoves){
-            int moveEndRow = move.getEndPosition().getRow();
-            int moveEndCol = move.getEndPosition().getColumn();
 
-            int errorRow = finderror.getEndPosition().getRow();
-            int errorCol = finderror.getEndPosition().getColumn();
+        int rowTest = move.getStartPosition().getRow();
+        int colTest = move.getStartPosition().getColumn();
 
-            if(moveEndRow==errorRow&&moveEndCol==errorCol){
-                okaymove=true;
-                break;
+        ChessPiece testPiece = board.squares[rowTest][colTest];
+
+//        if(status(TeamColor.WHITE)==false||status(TeamColor.BLACK)==false){
+//            int thisIsEnd = 1;
+//        }
+        //else {
+
+            if (testPiece == null || testPiece.getTeamColor() != turn) {
+                throw new InvalidMoveException();
             }
-        }
-        if(okaymove==false){
-            throw new InvalidMoveException();
-            //return null;
-        }
 
-        if(move.getPromotionPiece()==null){
-            ChessPiece movementPiece = board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()];
-            board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()]=null;
-            board.squares[move.getEndPosition().getRow()][move.getEndPosition().getColumn()] = movementPiece;
+            validMoves = validMoves2(board, move.getStartPosition(), this);
+            boolean okaymove = false;
+            for (ChessMove finderror : validMoves) {
+                int moveEndRow = move.getEndPosition().getRow();
+                int moveEndCol = move.getEndPosition().getColumn();
 
-        }
-        if(move.getPromotionPiece()!=null){
-            ChessPiece movementPiece = board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()];
-            board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()]=null;
-            ChessPiece promo = new ChessPiece(movementPiece.getTeamColor(),move.getPromotionPiece());
-            board.squares[move.getEndPosition().getRow()][move.getEndPosition().getColumn()] = promo;
+                int errorRow = finderror.getEndPosition().getRow();
+                int errorCol = finderror.getEndPosition().getColumn();
 
-        }
+                if (moveEndRow == errorRow && moveEndCol == errorCol) {
+                    okaymove = true;
+                    break;
+                }
+            }
+            if (okaymove == false) {
+                throw new InvalidMoveException();
+                //return null;
+            }
+
+            if (move.getPromotionPiece() == null) {
+                ChessPiece movementPiece = board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()];
+                board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()] = null;
+                board.squares[move.getEndPosition().getRow()][move.getEndPosition().getColumn()] = movementPiece;
+
+            }
+            if (move.getPromotionPiece() != null) {
+                ChessPiece movementPiece = board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()];
+                board.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()] = null;
+                ChessPiece promo = new ChessPiece(movementPiece.getTeamColor(), move.getPromotionPiece());
+                board.squares[move.getEndPosition().getRow()][move.getEndPosition().getColumn()] = promo;
+
+            }
 
 
-        if(turn==TeamColor.WHITE){
-            setTeamTurn(TeamColor.BLACK);
-        }
-        else {
-            setTeamTurn(TeamColor.WHITE);
-        }
+            if (turn == TeamColor.WHITE) {
+                setTeamTurn(TeamColor.BLACK);
+            } else {
+                setTeamTurn(TeamColor.WHITE);
+            }
+      //  }
 
 
     }
