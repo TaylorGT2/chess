@@ -116,7 +116,13 @@ public class ChessGame {
         validMoves = validMoves2(board, move.getStartPosition(), this);
         boolean okaymove =false;
         for(ChessMove finderror:validMoves){
-            if(finderror==move){
+            int moveEndRow = move.getEndPosition().getRow();
+            int moveEndCol = move.getEndPosition().getColumn();
+
+            int errorRow = finderror.getEndPosition().getRow();
+            int errorCol = finderror.getEndPosition().getColumn();
+
+            if(moveEndRow==errorRow&&moveEndCol==errorCol){
                 okaymove=true;
                 break;
             }
@@ -327,7 +333,7 @@ public class ChessGame {
 
         //console.log("testing");
 
-        System.out.printf("testing");
+        //System.out.printf("testing");
 
 
         // if king is in check, kill or defend
