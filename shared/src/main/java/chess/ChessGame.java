@@ -113,11 +113,6 @@ public class ChessGame {
 
 
 
-        //throw new RuntimeException("Not implemented");
-
-        // I still need to set the end position as the new start position
-        //ChessPosition newStart = move.getEndPosition();
-        //new ChessPosition(move.getRow(),move.getColumn());
         if(board==null){
             board = new ChessBoard();
             board.resetBoard();
@@ -129,10 +124,6 @@ public class ChessGame {
 
         ChessPiece testPiece = board.squares[rowTest][colTest];
 
-//        if(status(TeamColor.WHITE)==false||status(TeamColor.BLACK)==false){
-//            int thisIsEnd = 1;
-//        }
-        //else {
 
             if (testPiece == null || testPiece.getTeamColor() != turn) {
                 throw new InvalidMoveException();
@@ -154,7 +145,7 @@ public class ChessGame {
             }
             if (okaymove == false) {
                 throw new InvalidMoveException();
-                //return null;
+
             }
 
             if (move.getPromotionPiece() == null) {
@@ -195,19 +186,7 @@ public class ChessGame {
         fakeboard.squares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()]=null;
 
 
-        //throw new RuntimeException("Not implemented");
 
-        // I still need to set the end position as the new start position
-        //ChessPosition newStart = move.getEndPosition();
-        //new ChessPosition(move.getRow(),move.getColumn());
-
-//
-//        if(turn==TeamColor.WHITE){
-//            setTeamTurn(TeamColor.BLACK);
-//        }
-//        else {
-//            setTeamTurn(TeamColor.WHITE);
-//        }
 
         return fakeboard;
 
@@ -230,16 +209,16 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
 
-        //throw new RuntimeException("Not implemented");
+
         ArrayList<ChessMove> allValidMoves = new ArrayList<>();
-        ChessPiece CurrentKing;
+
         ChessPosition kingPos = new ChessPosition(30,30);
-        //board.squares;
+
         for(int i = 0; i<9; i++){
             for(int j = 0; j<9; j++){
                 if(board.squares[i][j]!=null) {
                     if (board.squares[i][j].getPieceType() == ChessPiece.PieceType.KING && board.squares[i][j].getTeamColor() == teamColor) {
-                        CurrentKing = board.squares[i][j];
+
                         kingPos = new ChessPosition(i, j);
                     }
                     if (board.squares[i][j].getTeamColor() != teamColor) {
@@ -268,8 +247,6 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        //throw new RuntimeException("Not implemented");
-        //Movement rule is so isolated, how can I get the list from it?
         Collection<ChessMove> valMove = new ArrayList<>();
         for(int i = 0;i<20;i++){
             for(int j = 0;j<20;j++){
@@ -296,7 +273,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        //throw new RuntimeException("Not implemented");
+
         Collection<ChessMove> valMove = new ArrayList<>();
         for(int i = 0;i<20;i++){
             for(int j = 0;j<20;j++){
@@ -321,7 +298,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        //throw new RuntimeException("Not implemented");
+
         this.board = board;
     }
 
@@ -331,7 +308,7 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        //throw new RuntimeException("Not implemented");
+
         return board;
     }
 
@@ -339,14 +316,14 @@ public class ChessGame {
 
 
 
-    public Collection<ChessMove> SingleUnit(ChessPosition myPosition, ChessBoard board, ChessGame game){
-        //ChessGame fakegame = game;
+    public Collection<ChessMove> singleUnit(ChessPosition myPosition, ChessBoard board, ChessGame game){
+
         Collection<ChessMove> allmoves = new ArrayList<>();
         ArrayList<ChessMove> validmoves = new ArrayList<>();
-        //dfakegame.getBoard();
+
 
         ChessPiece thisIsNotByPiece = board.getPiece(myPosition);
-        //why does this not convert??
+
         allmoves = thisIsNotByPiece.pieceMoves(board,myPosition);
 
         TeamColor testcolor;
@@ -380,24 +357,14 @@ public class ChessGame {
         Boolean initialCheckTest = game.isInCheck(game.getTeamTurn());
         ChessGame fakegame = game;
 
-        //console.log("testing");
 
-        //System.out.printf("testing");
-
-
-        // if king is in check, kill or defend
-        // if king is not in check, but would be, cannot move
-
-
-
-        //make a new game, set the board with the new board after a move was made, and check if in check is false
         if(initialCheckTest==true) {
 
-            return SingleUnit(myPosition, board, fakegame);
+            return singleUnit(myPosition, board, fakegame);
 
 
         }
-        return SingleUnit(myPosition, board,fakegame);
+        return singleUnit(myPosition, board,fakegame);
 
     }
 
