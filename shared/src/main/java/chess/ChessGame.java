@@ -102,12 +102,7 @@ public class ChessGame {
      * @throws //InvalidMoveException if move is invalid
      */
 
-    public boolean status(TeamColor team) {
-        if(isInCheckmate(team)||isInStalemate(team)){
-            return false;
-        }
-        return true;
-    }
+
     public void makeMove(ChessMove move) throws InvalidMoveException {
 
 
