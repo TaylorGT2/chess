@@ -222,8 +222,8 @@ public class ChessGame {
                         kingPos = new ChessPosition(i, j);
                     }
                     if (board.squares[i][j].getTeamColor() != teamColor) {
-                        ChessPosition CurPos = new ChessPosition(i, j);
-                        allValidMoves.addAll(board.squares[i][j].pieceMoves(board, CurPos));
+                        ChessPosition curPos = new ChessPosition(i, j);
+                        allValidMoves.addAll(board.squares[i][j].pieceMoves(board, curPos));
 
                     }
                 }

@@ -9,16 +9,33 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessMove {
-
     ChessPosition startPosition;
     ChessPosition endPosition;
     ChessPiece.PieceType promotionPiece;
-
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.promotionPiece = promotionPiece;
+    }
+
+    /**
+     * @return ChessPosition of starting location
+     */
+    public ChessPosition getStartPosition() {
+
+        //throw new RuntimeException("Not implemented");
+
+        return startPosition;
+    }
+
+    @Override
+    public String toString() {
+        return "ChessMove{" +
+                "startPosition=" + startPosition +
+                ", endPosition=" + endPosition +
+                ", promotionPiece=" + promotionPiece +
+                '}';
     }
 
     @Override
@@ -33,24 +50,6 @@ public class ChessMove {
     @Override
     public int hashCode() {
         return Objects.hash(startPosition, endPosition, promotionPiece);
-    }
-
-    /**
-     * @return ChessPosition of starting location
-     */
-    public ChessPosition getStartPosition() {
-
-        //throw new RuntimeException("Not implemented");
-        return startPosition;
-    }
-
-    @Override
-    public String toString() {
-        return "ChessMove{" +
-                "startPosition=" + startPosition +
-                ", endPosition=" + endPosition +
-                ", promotionPiece=" + promotionPiece +
-                '}';
     }
 
     /**
@@ -72,5 +71,6 @@ public class ChessMove {
 
         //throw new RuntimeException("Not implemented");
         return promotionPiece;
+
     }
 }
