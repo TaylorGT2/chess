@@ -1,33 +1,19 @@
 package chess;
 
 import java.util.*;
-
-/**
- * Represents a single chess piece
- * <p>
- * Note: You can add to this class, but you may not alter
- * signature of the existing methods.
- */
 public class ChessPiece {
-
-
     private final ChessGame.TeamColor pieceColor;
     private final PieceType type;
-
     public ChessPiece(ChessGame.TeamColor pieceColor, PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
     }
-
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) {return false;}
         ChessPiece that = (ChessPiece) o;
         return pieceColor == that.pieceColor && type == that.type;
     }
-
     @Override
     public String toString() {
         return "ChessPiece{" +
@@ -35,15 +21,10 @@ public class ChessPiece {
                 ", type=" + type +
                 '}';
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(pieceColor, type);
     }
-
-    /**
-     * The various different chess piece options
-     */
     public enum PieceType {
         KING,
         QUEEN,
@@ -52,28 +33,12 @@ public class ChessPiece {
         ROOK,
         PAWN
     }
-
-    /**
-     * @return Which team this chess piece belongs to
-     */
     public ChessGame.TeamColor getTeamColor() {
         return pieceColor;
     }
-
-    /**
-     * @return which type of chess piece this piece is
-     */
     public PieceType getPieceType() {
         return type;
     }
-
-    /**
-     * Calculates all the positions a chess piece can move to
-     * Does not take into account moves that are illegal due to leaving the king in
-     * danger
-     *
-     * @return Collection of valid moves
-     */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece pieceMoving = board.getPiece(myPosition);
         if(pieceMoving.getPieceType() == PieceType.BISHOP){return bishopMovesCalculator(myPosition, board);}
@@ -181,22 +146,12 @@ public class ChessPiece {
             ArrayList<ChessMove> possibleMoves = new ArrayList<ChessMove>();
             ChessPosition Curpos = new ChessPosition(b,a);
             for(int i = 0; i<3; i++) {
-                if (i==1) {
-                    a = a - 1;
-                }
-                if (i==2) {
-                    a = a+2;
-                }
+                if (i==1) {a = a - 1;}
+                if (i==2) {a = a+2;}
                 for(int j = 0; j<3; j++) {
-                    if (j==0) {
-                        b = myPosition.getRow();
-                    }
-                    if (j==1) {
-                        b = myPosition.getRow()-1;
-                    }
-                    if (j==2) {
-                        b = myPosition.getRow()+1;
-                    }
+                    if (j==0) {b = myPosition.getRow();}
+                    if (j==1) {b = myPosition.getRow()-1;}
+                    if (j==2) {b = myPosition.getRow()+1;}
                     if ((!(a==myPosition.getColumn() && b==myPosition.getRow())) && ((a < 9) && (b<9)) && ((a>0 && b>0))) {
                         ChessPosition addPos = new ChessPosition(b,a);
                         ChessPiece obstacle = board.getPiece(addPos);
@@ -437,7 +392,6 @@ public class ChessPiece {
                         }
                         else {
                             ChessMove goodMove = new ChessMove(Curpos, addPos, null);
-
                             possibleMoves.add(goodMove);
                         }
                     }
