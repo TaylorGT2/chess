@@ -48,13 +48,6 @@ public class ChessGame {
      */
     public TeamColor getTeamTurn() {
 
-        //throw new RuntimeException("Not implemented");
-//        if(turnNumber%2==0) {
-//            turnNumber++;
-//            return TeamColor.WHITE;
-//        }
-//        turnNumber++;
-//        return TeamColor.BLACK;
         return turn;
     }
 
@@ -369,7 +362,8 @@ public class ChessGame {
             return false;
         }
         ChessGame chessGame = (ChessGame) o;
-        return turnNumber == chessGame.turnNumber && turn == chessGame.turn && Objects.equals(board, chessGame.board) && Objects.equals(validMoves, chessGame.validMoves);
+        return turnNumber == chessGame.turnNumber && turn == chessGame.turn
+                && Objects.equals(board, chessGame.board) && Objects.equals(validMoves, chessGame.validMoves);
     }
 
     @Override
