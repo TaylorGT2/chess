@@ -2,17 +2,17 @@ package dataaccess;
 
 import model.UserData;
 import model.AuthData;
-//import exception.ResponseException;
+import exception.ResponseException;
 //import model.Pet;
 
 import java.util.Collection;
 
 public interface UserDAO {
-    UserData adduser(UserData user);
-    UserData getUser(int authtoken);
-    AuthData createAuth(AuthData auth);
-    AuthData getAuth(int authtoken);
-    void deleteAuth(int authtoken);
+    UserData adduser(UserData user) throws ResponseException;
+    UserData getUser(String username) throws ResponseException;
+//    AuthData createAuth(AuthData auth);
+//    AuthData getAuth(int authtoken);
+//    void deleteAuth(int authtoken);
 
 }
 //public class UserDAO {
