@@ -10,6 +10,7 @@ import java.util.Collection;
 public interface UserDAO {
     UserData adduser(UserData user) throws ResponseException;
     UserData getUser(String username) throws ResponseException;
+    void clear() throws ResponseException;
 //    AuthData createAuth(AuthData auth);
 //    AuthData getAuth(int authtoken);
 //    void deleteAuth(int authtoken);

@@ -24,5 +24,9 @@ public class MemoryDataAccess implements UserDAO {
         return users.get(name);
     }
 
+    public void clear(){
+        users.clear();
+    }
+
 
 }

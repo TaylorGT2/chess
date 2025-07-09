@@ -15,18 +15,21 @@ public class UserService {
 
 
 
+    //private final UserDAO dataAccess = new UserDAO();
     private final UserDAO dataAccess;
 
     public UserService(UserDAO dataAccess) {
         this.dataAccess = dataAccess;
     }
 
+    //public UserService(){};
+
 
 
 
     //these both need coressponding return statements
-    public RegisterResult register(RegisterRequest registerRequest) {}
-    public LoginResult login(LoginRequest loginRequest) {}
+    //public RegisterResult register(RegisterRequest registerRequest) {}
+    //public LoginResult login(LoginRequest loginRequest) {}
     //public void logout(LogoutRequest logoutRequest) {}
 
     public UserData adduser(UserData user) throws ResponseException{
@@ -35,5 +38,8 @@ public class UserService {
     }
     public UserData getuser(String username) throws ResponseException{
         return dataAccess.getUser(username);
+    }
+    public void deleteAllUsers() throws ResponseException{
+        dataAccess.clear();
     }
 }
