@@ -49,6 +49,9 @@ public class AuthService {
     public Collection<AuthData> listUsers() throws ResponseException {
         return dataAccess.listUsers();
     }
+    public void deleteAuth(String auth){
+        dataAccess.deleteAuth(auth);
+    }
 }
 
 

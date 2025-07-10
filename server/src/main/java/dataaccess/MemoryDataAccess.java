@@ -20,10 +20,10 @@ public class MemoryDataAccess implements UserDAO {
 
     @Override
     public Boolean checkMatching(UserData checkUser) {
-        String name = checkUser.username();
+        String name = checkUser.password();
         UserData loginUser = getUser(name);
         if(loginUser!=null) {
-            if (!Objects.equals(loginUser.password(), checkUser.password())) {
+            if (!Objects.equals(loginUser.username(), checkUser.username())) {
                 return true;
             }
             return false;

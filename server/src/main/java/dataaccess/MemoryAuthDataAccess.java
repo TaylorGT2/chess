@@ -36,6 +36,9 @@ public class MemoryAuthDataAccess implements AuthDAO {
     public Collection<AuthData> listUsers() {
         return users.values();
     }
+    public void deleteAuth(String authToken){
+        users.remove(authToken);
+    }
 
 
 }

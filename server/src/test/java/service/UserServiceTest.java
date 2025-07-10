@@ -30,8 +30,8 @@ class UserServiceTest {
     void getuser() throws ResponseException {
         var user = new UserData("c", "b", "a");
         user = service.adduser(user);
-
-        var user2 = service.getuser("c");
+        var user2 = new UserData("c", "b", "a");
+        user2 = service.getuser("b");
 
         var users = service.listUsers();
         assertEquals(user, user2);

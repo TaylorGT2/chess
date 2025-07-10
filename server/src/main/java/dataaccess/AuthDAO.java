@@ -14,6 +14,7 @@ public interface AuthDAO {
     AuthData createAuth(AuthData auth);
     AuthData getAuth(String authToken);
     Collection<AuthData> listUsers() throws ResponseException;
+    void deleteAuth(String auth);
   //  void deleteAuth(int authtoken);
 
 }
