@@ -5,12 +5,11 @@ import RequestResult.LoginResult;
 import RequestResult.RegisterRequest;
 import RequestResult.RegisterResult;
 import model.UserData;
-import dataaccess.UserDAO;
+import model.AuthData;
+import dataaccess.AuthDAO;
 import exception.ResponseException;
 
-import java.util.Collection;
-
-public class UserService {
+public class AuthService {
 
 
 
@@ -18,9 +17,9 @@ public class UserService {
 
 
     //private final UserDAO dataAccess = new UserDAO();
-    private final UserDAO dataAccess;
+    private final AuthDAO dataAccess;
 
-    public UserService(UserDAO dataAccess) {
+    public AuthService(AuthDAO dataAccess) {
         this.dataAccess = dataAccess;
     }
 
@@ -34,17 +33,17 @@ public class UserService {
     //public LoginResult login(LoginRequest loginRequest) {}
     //public void logout(LogoutRequest logoutRequest) {}
 
-    public UserData adduser(UserData user) throws ResponseException{
+    public AuthData createAuth(AuthData user) throws ResponseException{
 
-        return dataAccess.adduser(user);
+        return dataAccess.createAuth(user);
     }
-    public UserData getuser(String username) throws ResponseException{
-        return dataAccess.getUser(username);
+    public AuthData getAuth(String username) throws ResponseException{
+        return dataAccess.getAuth(username);
     }
     public void deleteAllUsers() throws ResponseException{
         dataAccess.clear();
     }
-    public Collection<UserData> listUsers() throws ResponseException {
-        return dataAccess.listUsers();
-    }
 }
+
+
+

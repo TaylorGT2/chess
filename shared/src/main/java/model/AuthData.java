@@ -1,16 +1,29 @@
+
 package model;
 
-
-public class AuthData {
-
-    String username;
-    String authToken;
+import com.google.gson.*;
+import java.util.UUID;
 
 
-    private AuthData(String username, String authToken){
+public record AuthData(String username, String authtoken) {
 
-        this.authToken=authToken;
-        this.username=username;
+
+    //    public UserData getuser(String username){
+//
+//    }
+    public String toString() {
+        return new Gson().toJson(this);
     }
 
+    public static String generateToken() {
+        return UUID.randomUUID().toString();
+    }
+
+
+
+
 }
+
+
+
+
