@@ -47,4 +47,7 @@ public class UserService {
     public Collection<UserData> listUsers() throws ResponseException {
         return dataAccess.listUsers();
     }
+    public Boolean login(UserData loginUser) throws ResponseException{
+        return dataAccess.checkMatching(loginUser);
+    }
 }

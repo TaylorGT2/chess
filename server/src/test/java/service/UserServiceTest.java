@@ -24,4 +24,23 @@ class UserServiceTest {
         //
         assertTrue(users.contains(user));
     }
+
+
+    @Test
+    void getuser() throws ResponseException {
+        var user = new UserData("c", "b", "a");
+        user = service.adduser(user);
+
+        var user2 = service.getuser("c");
+
+        var users = service.listUsers();
+        assertEquals(user, user2);
+        //
+        //assertTrue(users.contains(user));
+    }
+
+
+
+
+
 }

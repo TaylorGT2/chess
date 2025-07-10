@@ -4,6 +4,7 @@ import model.UserData;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class MemoryDataAccess implements UserDAO {
     private int nextId = 1;
@@ -17,10 +18,21 @@ public class MemoryDataAccess implements UserDAO {
         return UData;
     }
 
-
-
+    @Override
+    public Boolean checkMatching(UserData checkUser) {
+        String name = checkUser.username();
+        UserData loginUser = getUser(name);
+        if(loginUser!=null) {
+            if (!Objects.equals(loginUser.password(), checkUser.password())) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
 
     public UserData getUser(String name) {
+        int i = users.size();
         return users.get(name);
     }
 
