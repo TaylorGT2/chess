@@ -1,6 +1,7 @@
 package dataaccess;
 
 import model.AuthData;
+import model.UserData;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class MemoryAuthDataAccess implements AuthDAO {
 
         UData = new AuthData(UData.username(), generateToken());
         // Create an Authtoken??
-        users.put(UData.authtoken(), UData);
+        users.put(UData.authToken(), UData);
         return UData;
     }
 
@@ -31,6 +32,9 @@ public class MemoryAuthDataAccess implements AuthDAO {
 
     public void clear(){
         users.clear();
+    }
+    public Collection<AuthData> listUsers() {
+        return users.values();
     }
 
 

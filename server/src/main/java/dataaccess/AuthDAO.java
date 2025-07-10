@@ -12,7 +12,8 @@ public interface AuthDAO {
     //UserData getUser(String username) throws ResponseException;
     void clear() throws ResponseException;
     AuthData createAuth(AuthData auth);
-    AuthData getAuth(String authtoken);
+    AuthData getAuth(String authToken);
+    Collection<AuthData> listUsers() throws ResponseException;
   //  void deleteAuth(int authtoken);
 
 }

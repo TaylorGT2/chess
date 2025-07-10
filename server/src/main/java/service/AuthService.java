@@ -9,6 +9,8 @@ import model.AuthData;
 import dataaccess.AuthDAO;
 import exception.ResponseException;
 
+import java.util.Collection;
+
 public class AuthService {
 
 
@@ -42,6 +44,10 @@ public class AuthService {
     }
     public void deleteAllUsers() throws ResponseException{
         dataAccess.clear();
+    }
+
+    public Collection<AuthData> listUsers() throws ResponseException {
+        return dataAccess.listUsers();
     }
 }
 
