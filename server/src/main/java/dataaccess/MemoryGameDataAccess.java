@@ -15,7 +15,6 @@ public class MemoryGameDataAccess implements GameDao {
     private int gameID = 1;
     final private HashMap<Integer, GameData> users = new HashMap<>();
 
-    //void clear() throws ResponseException;
 
 
     public void clear(){
@@ -26,6 +25,8 @@ public class MemoryGameDataAccess implements GameDao {
         GameData UData = new GameData(gameID,null,null,gameName,new ChessGame());
         // Create an Authtoken??
         users.put(gameID, UData);
+
+        gameID+=1;
 
         return UData;
     }
