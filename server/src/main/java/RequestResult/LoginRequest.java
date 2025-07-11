@@ -2,7 +2,7 @@ package RequestResult;
 
 
 public record LoginRequest(
-        String username,
-        String password){
+        int gameID,
+        String playerColor){
 }
 

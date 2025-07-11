@@ -1,3 +1,3 @@
 package RequestResult;
 
-public record LoginResult(String username, String authToken) {}
+public record LoginResult(int gameID, String playerColor) {}

@@ -33,4 +33,8 @@ public record GameData(int gameID, String whiteUsername, String blackUsername, S
         return new Gson().toJson(this);
     }
 
+//    public void setWhiteUsername(String username){
+//        whiteUsername = username;
+//    }
+
 }

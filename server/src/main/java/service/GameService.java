@@ -19,7 +19,16 @@ public class GameService {
 
         return dataAccess.createGame(gameName);
     }
-//    public GameData getGame(int gameID) throws ResponseException{
+    public Collection<GameData> listGames() throws ResponseException{
+        return dataAccess.listGames();
+    }
+    public void joinGame(int gameID, String playerColor, String username) throws ResponseException{
+        dataAccess.joinGame(gameID,playerColor,username);
+    }
+    public GameData getGame(int gameID) throws ResponseException
+    {
+        return dataAccess.getGame(gameID);
+    }//    public GameData getGame(int gameID) throws ResponseException{
 //        return dataAccess.getGame(gameID);
 //    }
 //    public void deleteAllUsers() throws ResponseException{

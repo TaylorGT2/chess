@@ -22,13 +22,48 @@ public class MemoryGameDataAccess implements GameDao {
     }
 
     public GameData createGame(String gameName){
-        GameData UData = new GameData(gameID,null,null,gameName,new ChessGame());
+
+        ChessGame c = new ChessGame();
+        GameData UData = new GameData(gameID,null,null,gameName,c);
         // Create an Authtoken??
         users.put(gameID, UData);
 
         gameID+=1;
 
         return UData;
+    }
+
+    public Collection<GameData> listGames() {
+        return users.values();
+    }
+
+    public GameData getGame(int gameID){
+        return users.get(gameID);
+    }
+
+    private void deleteGame(int gameID){
+        users.remove(gameID);
+    }
+
+    public void joinGame(int gameID, String playerColor, String username){
+        GameData joining = getGame(gameID);
+
+        if(playerColor.equals("WHITE")){
+            //users.get(gameID).whiteUsername()=username;
+            String whiteUsername = username;
+            GameData joined = new GameData(gameID,whiteUsername,joining.blackUsername(), joining.gameName(), joining.game());
+            deleteGame(gameID);
+            users.put(gameID,joined);
+        }
+        else if(playerColor.equals("BLACK")){
+            GameData joined = new GameData(gameID, joining.whiteUsername(), username, joining.gameName(), joining.game());
+            deleteGame(gameID);
+            users.put(gameID,joined);
+        }
+        else{
+            //you should throw something here
+            //return;
+        }
     }
     //GameData createGame(String gameName);
 //    GameData getGame(int gameID);
