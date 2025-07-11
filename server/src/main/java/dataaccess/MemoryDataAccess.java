@@ -13,7 +13,7 @@ public class MemoryDataAccess implements UserDAO {
 
     public UserData adduser(UserData UData) throws ResponseException{
 
-        if(UData.password()!=null&&UData.username()!=null) {
+        if(UData.password()!=null&&UData.username()!=null&&UData.email()!=null) {
 
             UData = new UserData(UData.password(), UData.username(), UData.email());
             // Create an Authtoken??
@@ -26,16 +26,23 @@ public class MemoryDataAccess implements UserDAO {
     }
 
     @Override
-    public Boolean checkMatching(UserData checkUser) {
+    public Boolean checkMatching(UserData checkUser) throws ResponseException{
         String name = checkUser.password();
         UserData loginUser = getUser(name);
-        if(loginUser!=null) {
-            if (!Objects.equals(loginUser.username(), checkUser.username())) {
-                return true;
+        if(checkUser.username()!=null&&checkUser.password()!=null) {
+            if (loginUser != null) {
+                if (!Objects.equals(loginUser.username(), checkUser.username())) {
+                    return true;
+                }
+                return false;
             }
             return false;
         }
-        return false;
+        else{
+            throw new ResponseException(400,"Error: bad request");
+        }
+
+
     }
 
     public UserData getUser(String name) {
