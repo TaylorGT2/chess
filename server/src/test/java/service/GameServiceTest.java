@@ -27,4 +27,19 @@ class GameServiceTest {
         assertEquals(service.getGame(gametest.gameID()).whiteUsername(),"hybob");
 
     }
+
+@Test
+    void listGames() throws ResponseException {
+
+        GameData gametest = service.createGame("testGame");
+
+        GameData gametest2 = service.createGame("testGame2");
+
+        assertEquals(service.listGames().size(),2);
+
+
+
+
+    }
+
 }
