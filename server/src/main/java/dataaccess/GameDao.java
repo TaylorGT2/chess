@@ -11,7 +11,7 @@ import java.util.Collection;
 public interface GameDao {
 
     void clear() throws ResponseException;
-    GameData createGame(String gameName);
+    GameData createGame(String gameName) throws ResponseException;
 //    GameData getGame(int gameID);
     Collection<GameData> listGames() throws ResponseException;
 //    GameData updateGame(int gameID, String gameName);

@@ -21,16 +21,21 @@ public class MemoryGameDataAccess implements GameDao {
         users.clear();
     }
 
-    public GameData createGame(String gameName){
+    public GameData createGame(String gameName) throws ResponseException{
 
-        ChessGame c = new ChessGame();
-        GameData UData = new GameData(gameID,null,null,gameName,c);
-        // Create an Authtoken??
-        users.put(gameID, UData);
+        if(gameName!=null) {
+            ChessGame c = new ChessGame();
+            GameData UData = new GameData(gameID, null, null, gameName, c);
+            // Create an Authtoken??
+            users.put(gameID, UData);
 
-        gameID+=1;
+            gameID += 1;
 
-        return UData;
+            return UData;
+        }
+        else{
+            throw new ResponseException(400,"Error: bad request");
+        }
     }
 
     public Collection<GameData> listGames() {
