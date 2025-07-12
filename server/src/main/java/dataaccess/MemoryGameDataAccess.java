@@ -42,8 +42,15 @@ public class MemoryGameDataAccess implements GameDao {
         return users.values();
     }
 
-    public GameData getGame(int gameID){
-        return users.get(gameID);
+    public GameData getGame(int gameID) throws ResponseException{
+        //return users.get(gameID);
+
+        if(users.get(gameID)!=null) {
+            return users.get(gameID);
+        }
+        else{
+            throw new ResponseException(400,"Error: unauthorized");
+        }
     }
 
     private void deleteGame(int gameID){
@@ -53,22 +60,38 @@ public class MemoryGameDataAccess implements GameDao {
     public void joinGame(int gameID, String playerColor, String username) throws ResponseException{
         GameData joining = getGame(gameID);
 
-        if(playerColor.equals("WHITE")){
-            //users.get(gameID).whiteUsername()=username;
-            String whiteUsername = username;
-            GameData joined = new GameData(gameID,whiteUsername,joining.blackUsername(), joining.gameName(), joining.game());
-            deleteGame(gameID);
-            users.put(gameID,joined);
+
+        if(playerColor!=null) {
+            if (playerColor.equals("WHITE")) {
+                //users.get(gameID).whiteUsername()=username;
+                if (joining.whiteUsername() == null) {
+                    String whiteUsername = username;
+                    GameData joined = new GameData(gameID, whiteUsername, joining.blackUsername(), joining.gameName(), joining.game());
+                    deleteGame(gameID);
+                    users.put(gameID, joined);
+                } else {
+                    throw new ResponseException(403, "Error: forbidden");
+                }
+            } else if (playerColor.equals("BLACK")) {
+                if (joining.blackUsername() == null) {
+                    GameData joined = new GameData(gameID, joining.whiteUsername(), username, joining.gameName(), joining.game());
+                    deleteGame(gameID);
+                    users.put(gameID, joined);
+                } else {
+                    throw new ResponseException(403, "Error: forbidden");
+                }
+            } else {
+                //you should throw something here
+                //return;
+                //throw new ResponseException(401,"Error: unauthorized")
+                throw new ResponseException(400, "Error: bad request");
+//                GameData joined = new GameData(gameID, joining.whiteUsername(), username, joining.gameName(), joining.game());
+//                deleteGame(gameID);
+//                users.put(gameID, joined);
+            }
         }
-        else if(playerColor.equals("BLACK")){
-            GameData joined = new GameData(gameID, joining.whiteUsername(), username, joining.gameName(), joining.game());
-            deleteGame(gameID);
-            users.put(gameID,joined);
-        }
-        else{
-            //you should throw something here
-            //return;
-            throw new ResponseException(401,"Error: unauthorized");
+        else {
+            throw new ResponseException(400, "Error: bad request");
         }
     }
     //GameData createGame(String gameName);

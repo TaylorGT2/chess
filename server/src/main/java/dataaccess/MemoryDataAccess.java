@@ -16,7 +16,7 @@ public class MemoryDataAccess implements UserDAO {
         if(UData.password()!=null&&UData.username()!=null&&UData.email()!=null) {
             UserData testUser = getUser(UData.username());
 
-            if(users.get(UData.username())==null) {
+            if(users.get(UData.password())==null) {
                 UData = new UserData(UData.password(), UData.username(), UData.email());
                 // Create an Authtoken??
                 users.put(UData.username(), UData);

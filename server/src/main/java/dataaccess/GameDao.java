@@ -18,6 +18,6 @@ public interface GameDao {
    // void joinGame()
     void joinGame(int gameID, String playerColor, String username) throws ResponseException;
 
-    GameData getGame(int gameID);
+    GameData getGame(int gameID) throws ResponseException;
 
 }
