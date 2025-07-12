@@ -50,7 +50,7 @@ public class MemoryGameDataAccess implements GameDao {
         users.remove(gameID);
     }
 
-    public void joinGame(int gameID, String playerColor, String username){
+    public void joinGame(int gameID, String playerColor, String username) throws ResponseException{
         GameData joining = getGame(gameID);
 
         if(playerColor.equals("WHITE")){
@@ -68,6 +68,7 @@ public class MemoryGameDataAccess implements GameDao {
         else{
             //you should throw something here
             //return;
+            throw new ResponseException(401,"Error: unauthorized");
         }
     }
     //GameData createGame(String gameName);

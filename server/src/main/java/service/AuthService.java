@@ -49,7 +49,7 @@ public class AuthService {
     public Collection<AuthData> listUsers() throws ResponseException {
         return dataAccess.listUsers();
     }
-    public void deleteAuth(String auth){
+    public void deleteAuth(String auth) throws ResponseException{
         dataAccess.deleteAuth(auth);
     }
 }

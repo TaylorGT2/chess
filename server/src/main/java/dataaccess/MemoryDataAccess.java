@@ -14,11 +14,17 @@ public class MemoryDataAccess implements UserDAO {
     public UserData adduser(UserData UData) throws ResponseException{
 
         if(UData.password()!=null&&UData.username()!=null&&UData.email()!=null) {
+            UserData testUser = getUser(UData.username());
 
-            UData = new UserData(UData.password(), UData.username(), UData.email());
-            // Create an Authtoken??
-            users.put(UData.username(), UData);
-            return UData;
+            if(users.get(UData.username())==null) {
+                UData = new UserData(UData.password(), UData.username(), UData.email());
+                // Create an Authtoken??
+                users.put(UData.username(), UData);
+                return UData;
+            }
+            else{
+                throw new ResponseException(403,"Error: already taken");
+            }
         }
         else{
             throw new ResponseException(400,"Error: bad request");
@@ -36,7 +42,7 @@ public class MemoryDataAccess implements UserDAO {
                 }
                 return false;
             }
-            return false;
+            throw new ResponseException(401,"Error: unauthorized");
         }
         else{
             throw new ResponseException(400,"Error: bad request");

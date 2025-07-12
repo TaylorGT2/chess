@@ -1,5 +1,6 @@
 package dataaccess;
 
+import exception.ResponseException;
 import model.AuthData;
 import model.UserData;
 
@@ -26,8 +27,15 @@ public class MemoryAuthDataAccess implements AuthDAO {
 
 
 
-    public AuthData getAuth(String name) {
-        return users.get(name);
+    public AuthData getAuth(String name) throws ResponseException{
+        if(users.get(name)!=null) {
+            return users.get(name);
+        }
+        else{
+            throw new ResponseException(401,"Error: unauthorized");
+        }
+        //return users.get(name);
+
     }
 
     public void clear(){
@@ -36,8 +44,15 @@ public class MemoryAuthDataAccess implements AuthDAO {
     public Collection<AuthData> listUsers() {
         return users.values();
     }
-    public void deleteAuth(String authToken){
-        users.remove(authToken);
+    public void deleteAuth(String authToken) throws ResponseException {
+        AuthData test = users.get(authToken);
+        int t = users.size();
+        if(test != null) {
+            users.remove(authToken);
+        }
+        else{
+            throw new ResponseException(401,"Error: unauthorized");
+        }
     }
 
 
