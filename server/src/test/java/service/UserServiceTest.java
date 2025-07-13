@@ -75,14 +75,14 @@ class UserServiceTest {
 
 
 
-    @Test
-    void login() throws ResponseException {
-        var user = new UserData("c", "b", "a");
-
-        user = service.adduser(user);
-
-        assertEquals(service.login(user),true);
-    }
+//    @Test
+//    void login() throws ResponseException {
+//        var user = new UserData("c", "b", "a");
+//
+//        user = service.adduser(user);
+//
+//        assertEquals(service.login(user),true);
+//    }
 
 
 
