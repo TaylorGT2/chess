@@ -54,6 +54,38 @@ class UserServiceTest {
         //assertTrue(users.contains(user));
     }
 
+    @Test
+    void clear() throws ResponseException {
+        //var user = new GameData("c","b");
+        //var user = service.adduser("test");
+        var user = new UserData("c", "b", "a");
+        var user2 = new UserData("c", "b", "a");
+        user = service.adduser(user);
+        service.deleteAllUsers();
+        assertEquals(service.listUsers().size(),0);
+    }
+    @Test
+    void listUsers() throws ResponseException {
+        var user = new UserData("c", "b", "a");
+
+        user = service.adduser(user);
+
+        assertEquals(service.listUsers().size(),1);
+    }
+
+
+
+    @Test
+    void login() throws ResponseException {
+        var user = new UserData("c", "b", "a");
+
+        user = service.adduser(user);
+
+        assertEquals(service.login(user),true);
+    }
+
+
+
 
 
 

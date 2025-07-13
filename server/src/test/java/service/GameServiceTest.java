@@ -3,6 +3,7 @@ package service;
 import dataaccess.MemoryAuthDataAccess;
 import dataaccess.MemoryGameDataAccess;
 import exception.ResponseException;
+import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.Test;
 
@@ -41,5 +42,24 @@ class GameServiceTest {
 
 
     }
+
+
+    @Test
+    void clear() throws ResponseException {
+        //var user = new GameData("c","b");
+        var user = service.createGame("test");
+        service.clear();
+        assertEquals(service.listGames().size(),0);
+    }
+
+@Test
+    void getGame() throws ResponseException {
+        //var user = new GameData("c","b");
+        var user = service.createGame("test");
+        //service.clear();
+        var g = service.getGame(user.gameID());
+        assertEquals(g.gameID(),user.gameID());
+    }
+
 
 }
