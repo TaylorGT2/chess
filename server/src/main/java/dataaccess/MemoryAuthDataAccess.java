@@ -12,12 +12,14 @@ public class MemoryAuthDataAccess implements AuthDAO {
     private int nextId = 1;
     final private HashMap<String, AuthData> users = new HashMap<>();
 
-    public AuthData createAuth(AuthData UData) {
-
-        UData = new AuthData(UData.username(), generateToken());
+    public AuthData createAuth(AuthData uData) throws ResponseException{
+        if(uData==null){
+            throw new ResponseException(401,"Error: bad request");
+        }
+        uData = new AuthData(uData.username(), generateToken());
         // Create an Authtoken??
-        users.put(UData.authToken(), UData);
-        return UData;
+        users.put(uData.authToken(), uData);
+        return uData;
     }
 
     public static String generateToken() {

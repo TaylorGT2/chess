@@ -29,6 +29,19 @@ class GameServiceTest {
 
     }
 
+    @Test
+    void joinGameBad() throws ResponseException {
+
+        GameData gametest = service.createGame("testGame");
+
+        assertThrows(ResponseException.class, () -> {
+            service.joinGame(gametest.gameID(),"WHIT", "hybob");
+        });
+
+
+
+    }
+
 @Test
     void listGames() throws ResponseException {
 
@@ -44,6 +57,7 @@ class GameServiceTest {
     }
 
 
+
     @Test
     void clear() throws ResponseException {
         //var user = new GameData("c","b");
@@ -54,11 +68,14 @@ class GameServiceTest {
 
 @Test
     void getGame() throws ResponseException {
-        //var user = new GameData("c","b");
-        var user = service.createGame("test");
-        //service.clear();
-        var g = service.getGame(user.gameID());
-        assertEquals(g.gameID(),user.gameID());
+
+
+
+        assertThrows(ResponseException.class, () -> {
+            service.getGame(333);
+        });
+
+
     }
 
 

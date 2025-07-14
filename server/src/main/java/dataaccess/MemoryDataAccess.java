@@ -51,8 +51,11 @@ public class MemoryDataAccess implements UserDAO {
 
     }
 
-    public UserData getUser(String name) {
+    private UserData getUser(String name) throws ResponseException {
         int i = users.size();
+//        if (users.get(name)==null){
+//            throw new ResponseException(400,"Error: bad request");
+//        }
         return users.get(name);
     }
 

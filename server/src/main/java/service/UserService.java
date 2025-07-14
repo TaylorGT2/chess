@@ -38,9 +38,9 @@ public class UserService {
 
         return dataAccess.adduser(user);
     }
-    public UserData getuser(String username) throws ResponseException{
-        return dataAccess.getUser(username);
-    }
+//    public UserData getuser(String username) throws ResponseException{
+//        return dataAccess.getUser(username);
+//    }
     public void deleteAllUsers() throws ResponseException{
         dataAccess.clear();
     }

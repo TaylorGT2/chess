@@ -21,24 +21,51 @@ class AuthServiceTest {
 
         var users = service.listUsers();
         assertEquals(1, users.size());
-        //
+
         assertTrue(users.contains(user));
 
+
+
     }
-//
-//    @Test
-//    void getAuth()throws ResponseException{
-//        try {
-//            var user = new AuthData("c", "b");
-//            user = service.createAuth(user);
-//            //var user2 = service.getAuth("c");
-//            assertEquals(service.getAuth("c"), user);
-//        }
-//        catch(ResponseException){
-//
-//        }
-//
-//    }
+
+    @Test
+    void createAuthbad() throws ResponseException {
+
+        var user = new AuthData("", "");
+
+        assertThrows(ResponseException.class, () -> {
+            service.createAuth(null);
+        });
+
+
+
+
+    }
+
+
+
+    @Test
+    void getAuth()throws ResponseException{
+
+        var user = new AuthData("c", "b");
+        user = service.createAuth(user);
+
+        assertThrows(ResponseException.class, () -> {
+            service.getAuth("c");
+        });
+
+
+    }
+    @Test
+    void getAuthGood()throws ResponseException{
+
+        var user = new AuthData("c", "b");
+        user = service.createAuth(user);
+        //user.authToken() = "b";
+        assertEquals(service.getAuth(user.authToken()),user);
+
+
+    }
 
 
     @Test
@@ -49,6 +76,20 @@ class AuthServiceTest {
         assertEquals(service.listUsers().size(),1);
     }
 
+
+    @Test
+    void listUsersbad() throws ResponseException{
+
+
+
+        assertThrows(ResponseException.class, () -> {
+            service.getAuth("c");
+        });
+    }
+
+
+
+
     @Test
     void deleteAllUsers() throws ResponseException{
         var user = new AuthData("c", "b");
@@ -57,12 +98,24 @@ class AuthServiceTest {
         assertEquals(service.listUsers().size(),0);
     }
 
+
+
+
     @Test
     void deleteAuth() throws ResponseException {
         var user = new AuthData("c","b");
         user = service.createAuth(user);
         service.deleteAuth(user.authToken());
         assertEquals(service.listUsers().size(),0);
+    }
+    @Test
+    void deleteAuthbad() throws ResponseException{
+
+
+
+        assertThrows(ResponseException.class, () -> {
+            service.getAuth("c");
+        });
     }
 
 

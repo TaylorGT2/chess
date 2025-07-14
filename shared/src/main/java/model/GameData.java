@@ -26,15 +26,10 @@ import chess.ChessGame;
 public record GameData(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
 
 
-    //    public UserData getuser(String username){
-//
-//    }
+
     public String toString() {
         return new Gson().toJson(this);
     }
 
-//    public void setWhiteUsername(String username){
-//        whiteUsername = username;
-//    }
 
 }
