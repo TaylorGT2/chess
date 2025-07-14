@@ -25,15 +25,7 @@ public class AuthService {
         this.dataAccess = dataAccess;
     }
 
-    //public UserService(){};
 
-
-
-
-    //these both need coressponding return statements
-    //public RegisterResult register(RegisterRequest registerRequest) {}
-    //public LoginResult login(LoginRequest loginRequest) {}
-    //public void logout(LogoutRequest logoutRequest) {}
 
     public AuthData createAuth(AuthData user) throws ResponseException{
 

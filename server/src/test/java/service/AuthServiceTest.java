@@ -61,7 +61,7 @@ class AuthServiceTest {
 
         var user = new AuthData("c", "b");
         user = service.createAuth(user);
-        //user.authToken() = "b";
+
         assertEquals(service.getAuth(user.authToken()),user);
 
 
@@ -70,7 +70,7 @@ class AuthServiceTest {
 
     @Test
     void listUsers() throws ResponseException{
-        //createAuth()
+
         var user = new AuthData("c", "b");
         user = service.createAuth(user);
         assertEquals(service.listUsers().size(),1);

@@ -18,7 +18,7 @@ public class MemoryDataAccess implements UserDAO {
 
             if(users.get(UData.password())==null) {
                 UData = new UserData(UData.password(), UData.username(), UData.email());
-                // Create an Authtoken??
+
                 users.put(UData.username(), UData);
                 return UData;
             }
@@ -53,9 +53,7 @@ public class MemoryDataAccess implements UserDAO {
 
     private UserData getUser(String name) throws ResponseException {
         int i = users.size();
-//        if (users.get(name)==null){
-//            throw new ResponseException(400,"Error: bad request");
-//        }
+
         return users.get(name);
     }
 

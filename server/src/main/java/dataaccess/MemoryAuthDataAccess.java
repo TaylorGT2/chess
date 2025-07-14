@@ -17,7 +17,7 @@ public class MemoryAuthDataAccess implements AuthDAO {
             throw new ResponseException(401,"Error: bad request");
         }
         uData = new AuthData(uData.username(), generateToken());
-        // Create an Authtoken??
+
         users.put(uData.authToken(), uData);
         return uData;
     }
@@ -36,7 +36,7 @@ public class MemoryAuthDataAccess implements AuthDAO {
         else{
             throw new ResponseException(401,"Error: unauthorized");
         }
-        //return users.get(name);
+
 
     }
 

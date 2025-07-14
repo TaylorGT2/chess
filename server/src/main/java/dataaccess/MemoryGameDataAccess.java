@@ -25,13 +25,13 @@ public class MemoryGameDataAccess implements GameDao {
 
         if(gameName!=null) {
             ChessGame c = new ChessGame();
-            GameData UData = new GameData(gameID, null, null, gameName, c);
-            // Create an Authtoken??
-            users.put(gameID, UData);
+            GameData uData = new GameData(gameID, null, null, gameName, c);
+
+            users.put(gameID, uData);
 
             gameID += 1;
 
-            return UData;
+            return uData;
         }
         else{
             throw new ResponseException(400,"Error: bad request");
@@ -43,7 +43,7 @@ public class MemoryGameDataAccess implements GameDao {
     }
 
     public GameData getGame(int gameID) throws ResponseException{
-        //return users.get(gameID);
+
 
         if(users.get(gameID)!=null) {
             return users.get(gameID);
@@ -63,7 +63,7 @@ public class MemoryGameDataAccess implements GameDao {
 
         if(playerColor!=null) {
             if (playerColor.equals("WHITE")) {
-                //users.get(gameID).whiteUsername()=username;
+
                 if (joining.whiteUsername() == null) {
                     String whiteUsername = username;
                     GameData joined = new GameData(gameID, whiteUsername, joining.blackUsername(), joining.gameName(), joining.game());
@@ -81,24 +81,15 @@ public class MemoryGameDataAccess implements GameDao {
                     throw new ResponseException(403, "Error: forbidden");
                 }
             } else {
-                //you should throw something here
-                //return;
-                //throw new ResponseException(401,"Error: unauthorized")
+
                 throw new ResponseException(400, "Error: bad request");
-//                GameData joined = new GameData(gameID, joining.whiteUsername(), username, joining.gameName(), joining.game());
-//                deleteGame(gameID);
-//                users.put(gameID, joined);
+
             }
         }
         else {
             throw new ResponseException(400, "Error: bad request");
         }
     }
-    //GameData createGame(String gameName);
-//    GameData getGame(int gameID);
-//    Collection<GameData> listGames() throws ResponseException;
-//    GameData updateGame(int gameID, String gameName);
-
 
 
 

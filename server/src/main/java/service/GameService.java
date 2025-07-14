@@ -34,16 +34,7 @@ public class GameService {
         dataAccess.clear();
     }
 
-    //    public GameData getGame(int gameID) throws ResponseException{
-//        return dataAccess.getGame(gameID);
-//    }
-//    public void deleteAllUsers() throws ResponseException{
-//        dataAccess.clear();
-//    }
-//
-//    public Collection<GameData> listGames() throws ResponseException {
-//        return dataAccess.listGames();
-//    }
+
 
 
 
