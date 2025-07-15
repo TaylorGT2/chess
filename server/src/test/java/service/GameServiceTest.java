@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameServiceTest {
-    static final GameService service = new GameService(new MemoryGameDataAccess());
+    static final GameService SERVICE = new GameService(new MemoryGameDataAccess());
     @Test
     void createGame() {
         assertEquals(2,1+1);
@@ -19,23 +19,23 @@ class GameServiceTest {
     @Test
     void joinGame() throws ResponseException {
 
-        GameData gametest = service.createGame("testGame");
+        GameData gametest = SERVICE.createGame("testGame");
 
-        service.joinGame(gametest.gameID(),"WHITE", "hybob");
+        SERVICE.joinGame(gametest.gameID(),"WHITE", "hybob");
 
-        assertEquals(service.listGames().size(),1);
+        assertEquals(SERVICE.listGames().size(),1);
 
-        assertEquals(service.getGame(gametest.gameID()).whiteUsername(),"hybob");
+        assertEquals(SERVICE.getGame(gametest.gameID()).whiteUsername(),"hybob");
 
     }
 
     @Test
     void joinGameBad() throws ResponseException {
 
-        GameData gametest = service.createGame("testGame");
+        GameData gametest = SERVICE.createGame("testGame");
 
         assertThrows(ResponseException.class, () -> {
-            service.joinGame(gametest.gameID(),"WHIT", "hybob");
+            SERVICE.joinGame(gametest.gameID(),"WHIT", "hybob");
         });
 
 
@@ -45,11 +45,11 @@ class GameServiceTest {
 @Test
     void listGames() throws ResponseException {
 
-        GameData gametest = service.createGame("testGame");
+        GameData gametest = SERVICE.createGame("testGame");
 
-        GameData gametest2 = service.createGame("testGame2");
+        GameData gametest2 = SERVICE.createGame("testGame2");
 
-        assertEquals(service.listGames().size(),2);
+        assertEquals(SERVICE.listGames().size(),2);
 
 
 
@@ -61,9 +61,9 @@ class GameServiceTest {
     @Test
     void clear() throws ResponseException {
         //var user = new GameData("c","b");
-        var user = service.createGame("test");
-        service.clear();
-        assertEquals(service.listGames().size(),0);
+        var user = SERVICE.createGame("test");
+        SERVICE.clear();
+        assertEquals(SERVICE.listGames().size(),0);
     }
 
 @Test
@@ -72,7 +72,7 @@ class GameServiceTest {
 
 
         assertThrows(ResponseException.class, () -> {
-            service.getGame(333);
+            SERVICE.getGame(333);
         });
 
 

@@ -11,15 +11,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AuthServiceTest {
 
-    static final AuthService service = new AuthService(new MemoryAuthDataAccess());
+    static final AuthService SERVICE = new AuthService(new MemoryAuthDataAccess());
 
     @Test
     void createAuth() throws ResponseException {
 
         var user = new AuthData("c", "b");
-        user = service.createAuth(user);
+        user = SERVICE.createAuth(user);
 
-        var users = service.listUsers();
+        var users = SERVICE.listUsers();
         assertEquals(1, users.size());
 
         assertTrue(users.contains(user));
@@ -34,7 +34,7 @@ class AuthServiceTest {
         var user = new AuthData("", "");
 
         assertThrows(ResponseException.class, () -> {
-            service.createAuth(null);
+            SERVICE.createAuth(null);
         });
 
 
@@ -48,10 +48,10 @@ class AuthServiceTest {
     void getAuth()throws ResponseException{
 
         var user = new AuthData("c", "b");
-        user = service.createAuth(user);
+        user = SERVICE.createAuth(user);
 
         assertThrows(ResponseException.class, () -> {
-            service.getAuth("c");
+            SERVICE.getAuth("c");
         });
 
 
@@ -60,9 +60,9 @@ class AuthServiceTest {
     void getAuthGood()throws ResponseException{
 
         var user = new AuthData("c", "b");
-        user = service.createAuth(user);
+        user = SERVICE.createAuth(user);
 
-        assertEquals(service.getAuth(user.authToken()),user);
+        assertEquals(SERVICE.getAuth(user.authToken()),user);
 
 
     }
@@ -72,8 +72,8 @@ class AuthServiceTest {
     void listUsers() throws ResponseException{
 
         var user = new AuthData("c", "b");
-        user = service.createAuth(user);
-        assertEquals(service.listUsers().size(),1);
+        user = SERVICE.createAuth(user);
+        assertEquals(SERVICE.listUsers().size(),1);
     }
 
 
@@ -83,7 +83,7 @@ class AuthServiceTest {
 
 
         assertThrows(ResponseException.class, () -> {
-            service.getAuth("c");
+            SERVICE.getAuth("c");
         });
     }
 
@@ -93,9 +93,9 @@ class AuthServiceTest {
     @Test
     void deleteAllUsers() throws ResponseException{
         var user = new AuthData("c", "b");
-        user = service.createAuth(user);
-        service.deleteAllUsers();
-        assertEquals(service.listUsers().size(),0);
+        user = SERVICE.createAuth(user);
+        SERVICE.deleteAllUsers();
+        assertEquals(SERVICE.listUsers().size(),0);
     }
 
 
@@ -104,9 +104,9 @@ class AuthServiceTest {
     @Test
     void deleteAuth() throws ResponseException {
         var user = new AuthData("c","b");
-        user = service.createAuth(user);
-        service.deleteAuth(user.authToken());
-        assertEquals(service.listUsers().size(),0);
+        user = SERVICE.createAuth(user);
+        SERVICE.deleteAuth(user.authToken());
+        assertEquals(SERVICE.listUsers().size(),0);
     }
     @Test
     void deleteAuthbad() throws ResponseException{
@@ -114,7 +114,7 @@ class AuthServiceTest {
 
 
         assertThrows(ResponseException.class, () -> {
-            service.getAuth("c");
+            SERVICE.getAuth("c");
         });
     }
 

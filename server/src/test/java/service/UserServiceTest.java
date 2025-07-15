@@ -12,15 +12,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceTest {
 
 
-    static final UserService serviceUser = new UserService(new MemoryDataAccess());
-    static final AuthService serviceAuth = new AuthService(new MemoryAuthDataAccess());
+    static final UserService SERVICE_USER = new UserService(new MemoryDataAccess());
+    static final AuthService SERVICE_AUTH = new AuthService(new MemoryAuthDataAccess());
 
     @Test
     void adduser() throws ResponseException {
         var user = new UserData("c", "b", "a");
-        user = serviceUser.adduser(user);
+        user = SERVICE_USER.adduser(user);
 
-        var users = serviceUser.listUsers();
+        var users = SERVICE_USER.listUsers();
         assertEquals(1, users.size());
 
         assertTrue(users.contains(user));
@@ -31,9 +31,9 @@ class UserServiceTest {
     void adduserFail() throws ResponseException {
         var user = new UserData("c", "b", "a");
         var user2 = new UserData("c", "b", "a");
-        user = serviceUser.adduser(user);
+        user = SERVICE_USER.adduser(user);
 
-        var users = serviceUser.listUsers();
+        var users = SERVICE_USER.listUsers();
         assertEquals(1, users.size());
 
         assertTrue(users.contains(user));
@@ -49,17 +49,17 @@ class UserServiceTest {
 
         var user = new UserData("c", "b", "a");
         var user2 = new UserData("c", "b", "a");
-        user = serviceUser.adduser(user);
-        serviceUser.deleteAllUsers();
-        assertEquals(serviceUser.listUsers().size(),0);
+        user = SERVICE_USER.adduser(user);
+        SERVICE_USER.deleteAllUsers();
+        assertEquals(SERVICE_USER.listUsers().size(),0);
     }
     @Test
     void listUsers() throws ResponseException {
         var user = new UserData("c", "b", "a");
 
-        user = serviceUser.adduser(user);
+        user = SERVICE_USER.adduser(user);
 
-        assertEquals(serviceUser.listUsers().size(),1);
+        assertEquals(SERVICE_USER.listUsers().size(),1);
     }
 
 
@@ -68,11 +68,11 @@ class UserServiceTest {
     void loginBad() throws ResponseException {
         var user = new UserData("c", "b", "a");
         var authData = new AuthData("c","b");
-        serviceAuth.createAuth(authData);
+        SERVICE_AUTH.createAuth(authData);
 
 
         assertThrows(ResponseException.class, () -> {
-            serviceUser.login(user);
+            SERVICE_USER.login(user);
         });
     }
 
@@ -81,13 +81,13 @@ class UserServiceTest {
         var user = new UserData("c", "b", "a");
         var user2 = new UserData("b", "c", "a");
         var authData = new AuthData("c","b");
-        serviceAuth.createAuth(authData);
+        SERVICE_AUTH.createAuth(authData);
 
-        user = serviceUser.adduser(user);
-        user = serviceUser.adduser(user2);
-        serviceUser.login(user);
+        user = SERVICE_USER.adduser(user);
+        user = SERVICE_USER.adduser(user2);
+        SERVICE_USER.login(user);
 
-        assertEquals(serviceUser.login(user),true);
+        assertEquals(SERVICE_USER.login(user),true);
 
     }
 

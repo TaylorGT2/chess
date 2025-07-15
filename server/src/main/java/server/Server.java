@@ -1,6 +1,6 @@
 package server;
 
-import RequestResult.LoginRequest;
+import reqres.LoginRequest;
 import com.google.gson.Gson;
 import dataaccess.*;
 import model.UserData;

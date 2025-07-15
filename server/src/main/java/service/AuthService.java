@@ -1,10 +1,5 @@
 package service;
 
-import RequestResult.LoginRequest;
-import RequestResult.LoginResult;
-import RequestResult.RegisterRequest;
-import RequestResult.RegisterResult;
-import model.UserData;
 import model.AuthData;
 import dataaccess.AuthDAO;
 import exception.ResponseException;

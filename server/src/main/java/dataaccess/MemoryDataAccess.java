@@ -11,16 +11,16 @@ public class MemoryDataAccess implements UserDAO {
     private int nextId = 1;
     final private HashMap<String, UserData> users = new HashMap<>();
 
-    public UserData adduser(UserData UData) throws ResponseException{
+    public UserData adduser(UserData uData) throws ResponseException{
 
-        if(UData.password()!=null&&UData.username()!=null&&UData.email()!=null) {
-            UserData testUser = getUser(UData.username());
+        if(uData.password()!=null&&uData.username()!=null&&uData.email()!=null) {
+            UserData testUser = getUser(uData.username());
 
-            if(users.get(UData.password())==null) {
-                UData = new UserData(UData.password(), UData.username(), UData.email());
+            if(users.get(uData.password())==null) {
+                uData = new UserData(uData.password(), uData.username(), uData.email());
 
-                users.put(UData.username(), UData);
-                return UData;
+                users.put(uData.username(), uData);
+                return uData;
             }
             else{
                 throw new ResponseException(403,"Error: already taken");
