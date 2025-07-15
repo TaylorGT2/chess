@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import exception.ResponseException;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 //import model.PetType;
 
 import java.util.ArrayList;
@@ -38,9 +39,29 @@ public class MySqlDataUser implements UserDAO{
 
     public UserData adduser(UserData user) throws ResponseException{
         var statement = "INSERT INTO auth (username, password, email, json) VALUES (?, ?, ?)";
+        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         var json = new Gson().toJson(user);
-        var id = executeUpdate(statement, user.username(), user.password(), user.email(), json);
+        //var cryptedPassword =
+        var id = executeUpdate(statement, user.username(), hashedPassword, user.email(), json);
         return new UserData(user.username(), user.password(), user.email());
+    }
+
+//    void storeUserPassword(String username, String clearTextPassword) {
+//        String hashedPassword = BCrypt.hashpw(clearTextPassword, BCrypt.gensalt());
+//
+//        // write the hashed password in database along with the user's other information
+//        writeHashedPasswordToDatabase(username, hashedPassword);
+//
+//    }
+
+
+
+    boolean verifyUser(String username, String providedClearTextPassword) {
+        // read the previously hashed password from the database
+        var hashedPassword = BCrypt.hashpw(providedClearTextPassword, BCrypt.gensalt());
+                //readHashedPasswordFromDatabase(username);
+
+        return BCrypt.checkpw(providedClearTextPassword, hashedPassword);
     }
 
     private int executeUpdate(String statement, Object... params) throws ResponseException {
@@ -68,20 +89,21 @@ public class MySqlDataUser implements UserDAO{
     }
 
     public Boolean checkMatching(UserData checkUser) throws ResponseException{
-        String name = checkUser.password();
-        UserData loginUser = getUser(name);
-        if(checkUser.username()!=null&&checkUser.password()!=null) {
-            if (loginUser != null) {
-                if (!Objects.equals(loginUser.username(), checkUser.username())) {
-                    return true;
-                }
-                return false;
-            }
-            throw new ResponseException(401,"Error: unauthorized");
-        }
-        else{
-            throw new ResponseException(400,"Error: bad request");
-        }
+//        String name = checkUser.password();
+//        UserData loginUser = getUser(name);
+//        if(checkUser.username()!=null&&checkUser.password()!=null) {
+//            if (loginUser != null) {
+//                if (!Objects.equals(loginUser.username(), checkUser.username())) {
+//                    return true;
+//                }
+//                return false;
+//            }
+//            throw new ResponseException(401,"Error: unauthorized");
+//        }
+//        else{
+//            throw new ResponseException(400,"Error: bad request");
+//        }
+        return verifyUser(checkUser.username(),checkUser.password());
 
 
     }
@@ -119,7 +141,7 @@ public class MySqlDataUser implements UserDAO{
 
     private final String[] createStatements = {
             """
-            CREATE TABLE IF NOT EXISTS  pet (
+            CREATE TABLE IF NOT EXISTS  user (
               `id` int NOT NULL AUTO_INCREMENT,
               `name` varchar(256) NOT NULL,
               

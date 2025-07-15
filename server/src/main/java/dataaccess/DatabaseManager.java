@@ -25,10 +25,10 @@ public class DatabaseManager {
                 Properties props = new Properties();
                 props.load(in);
                 DATABASE_NAME = props.getProperty("db.name");
-                //USER = props.getProperty("db.user");
-                USER = props.getProperty("let33");
-                //PASSWORD = props.getProperty("db.password");
-                PASSWORD = props.getProperty("1WillPassThisClass");
+                USER = props.getProperty("db.user");
+                //USER = props.getProperty("let33");
+                PASSWORD = props.getProperty("db.password");
+                //PASSWORD = props.getProperty("1WillPassThisClass");
                 var host = props.getProperty("db.host");
                 var port = Integer.parseInt(props.getProperty("db.port"));
                 CONNECTION_URL = String.format("jdbc:mysql://%s:%d", host, port);

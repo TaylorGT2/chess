@@ -1,0 +1,66 @@
+package dataaccess;
+
+import model.UserData;
+import org.junit.jupiter.api.Test;
+
+
+import exception.ResponseException;
+import model.AuthData;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import exception.ResponseException;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class MySqlDataAuthTest {
+
+
+    private AuthDAO getDataAccess(Class<? extends AuthDAO> databaseClass) throws ResponseException {
+        AuthDAO db;
+        if (databaseClass.equals(MySqlDataAuth.class)) {
+            db = new MySqlDataAuth();
+        } else {
+            db = new MemoryAuthDataAccess();
+        }
+        db.clear();
+        return db;
+    }
+
+
+
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataAuth.class, MemoryAuthDataAccess.class})
+    void createAuth(Class<? extends AuthDAO> dbClass) throws ResponseException {
+        AuthDAO dataAccess = getDataAccess(dbClass);
+
+        var user = new AuthData("a", "b");
+        assertDoesNotThrow(() -> dataAccess.createAuth(user));
+    }
+
+//    @Test
+//    void clear() {
+//    }
+//
+//    @Test
+//    void getAuth() {
+//    }
+//
+//    @Test
+//    void listUsers() {
+//    }
+//
+//    @Test
+//    void deleteAuth() {
+//    }
+}
