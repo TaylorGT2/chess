@@ -5,6 +5,7 @@ import dataaccess.MemoryDataAccess;
 import exception.ResponseException;
 import model.AuthData;
 import model.UserData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -96,6 +97,13 @@ class AuthServiceTest {
         user = SERVICE.createAuth(user);
         SERVICE.deleteAllUsers();
         assertEquals(SERVICE.listUsers().size(),0);
+    }
+
+    @BeforeEach
+    void deleteScrub() throws ResponseException{
+
+        SERVICE.deleteAllUsers();
+
     }
 
 

@@ -5,6 +5,7 @@ import dataaccess.MemoryDataAccess;
 import exception.ResponseException;
 import model.AuthData;
 import model.UserData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,6 +18,10 @@ class UserServiceTest {
 
     @Test
     void adduser() throws ResponseException {
+
+
+
+
         var user = new UserData("c", "b", "a");
         user = SERVICE_USER.adduser(user);
 
@@ -39,11 +44,18 @@ class UserServiceTest {
         assertTrue(users.contains(user));
     }
 
+    @BeforeEach
+    void scrub() throws ResponseException {
 
 
 
+        SERVICE_USER.deleteAllUsers();
+        //assertEquals(SERVICE_USER.listUsers().size(),0);
+    }
 
 
+
+    //@BeforeEach
     @Test
     void clear() throws ResponseException {
 
