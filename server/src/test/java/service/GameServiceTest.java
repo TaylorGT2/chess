@@ -64,6 +64,8 @@ class GameServiceTest {
 @Test
     void listGames() throws ResponseException {
 
+        SERVICE.clear();
+
         GameData gametest = SERVICE.createGame("testGame");
 
         GameData gametest2 = SERVICE.createGame("testGame2");
