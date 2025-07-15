@@ -16,11 +16,14 @@ import java.util.Map;
 
 public class Server {
     //public Server(){}
-    public UserDAO dataAccess = new MemoryDataAccess();
+    //public UserDAO dataAccess = new MemoryDataAccess();
+    public UserDAO dataAccess = new MySqlDataUser();
     public AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
     public GameDao dataGameAccess = new MemoryGameDataAccess();
 
     // this might need to be private and final
+    //public UserService service = new UserService(dataAccess);
+
     public UserService service = new UserService(dataAccess);
 
     public AuthService serviceAuth = new AuthService(dataAuthAccess);

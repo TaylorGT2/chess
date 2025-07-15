@@ -13,6 +13,10 @@ public record UserData(String username, String password, String email) {
         return new Gson().toJson(this);
     }
 
+    public UserData setUser(String username) {
+        return new UserData(username, this.password(),this.email());
+    }
+
 
 
 }
