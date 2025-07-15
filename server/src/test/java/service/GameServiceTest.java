@@ -12,9 +12,28 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameServiceTest {
     static final GameService SERVICE = new GameService(new MemoryGameDataAccess());
     @Test
-    void createGame() {
-        assertEquals(2,1+1);
+    void createGame() throws ResponseException{
+
+        GameData gametest = SERVICE.createGame("testGame");
+
+        GameData gametest2 = SERVICE.createGame("testGame2");
+
+        assertEquals(SERVICE.listGames().size(),2);
+
     }
+    @Test
+    void createGameBad() throws ResponseException{
+
+
+
+        assertThrows(ResponseException.class, () -> {
+            SERVICE.createGame(null);
+        });
+
+    }
+
+
+
 
     @Test
     void joinGame() throws ResponseException {
