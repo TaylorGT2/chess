@@ -13,6 +13,10 @@ public record AuthData(String username, String authToken) {
         return new Gson().toJson(this);
     }
 
+    public AuthData setAuth(String auth) {
+        return new AuthData(this.username, auth);
+    }
+
 
 
     public static String generateToken() {
