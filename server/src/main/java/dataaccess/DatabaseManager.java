@@ -11,8 +11,8 @@ import java.util.Properties;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class DatabaseManager {
-    private static final String dataBaseName;
-    private static final String User;
+    private static final String DATABASE_NAME;
+    private static final String USER;
     private static final String password;
     private static final String connectionUrl;
 
@@ -24,8 +24,8 @@ public class DatabaseManager {
             try (InputStream in = DatabaseManager.class.getClassLoader().getResourceAsStream("db.properties")) {
                 Properties props = new Properties();
                 props.load(in);
-                dataBaseName = props.getProperty("db.name");
-                User = props.getProperty("db.user");
+                DATABASE_NAME = props.getProperty("db.name");
+                USER = props.getProperty("db.user");
                 password = props.getProperty("db.password");
 
                 var host = props.getProperty("db.host");
@@ -43,8 +43,8 @@ public class DatabaseManager {
      */
     static void createDatabase() throws ResponseException {
         try {
-            var statement = "CREATE DATABASE IF NOT EXISTS " + dataBaseName;
-            var conn = DriverManager.getConnection(connectionUrl, User, password);
+            var statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
+            var conn = DriverManager.getConnection(connectionUrl, USER, password);
             try (var preparedStatement = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 preparedStatement.executeUpdate();
             }
@@ -67,8 +67,8 @@ public class DatabaseManager {
      */
     static Connection getConnection() throws ResponseException {
         try {
-            var conn = DriverManager.getConnection(connectionUrl, User, password);
-            conn.setCatalog(dataBaseName);
+            var conn = DriverManager.getConnection(connectionUrl, USER, password);
+            conn.setCatalog(DATABASE_NAME);
             return conn;
         } catch (SQLException e) {
             throw new ResponseException(500, e.getMessage());
