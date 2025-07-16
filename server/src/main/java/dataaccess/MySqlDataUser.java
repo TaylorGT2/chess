@@ -38,11 +38,12 @@ public class MySqlDataUser implements UserDAO{
     }
 
     public UserData adduser(UserData user) throws ResponseException{
-        var statement = "INSERT INTO auth (username, password, email, json) VALUES (?, ?, ?)";
-        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+        var statement = "INSERT INTO user (username, password, email, json) VALUES (?, ?, ?, ?)";
+        //var statement = "INSERT INTO auth VALUES (?, ?, ?, ?)";
+        //String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         var json = new Gson().toJson(user);
         //var cryptedPassword =
-        var id = executeUpdate(statement, user.username(), hashedPassword, user.email(), json);
+        var id = executeUpdate(statement, user.username(), user.password(), user.email(), json);
         return new UserData(user.username(), user.password(), user.email());
     }
 
@@ -142,8 +143,10 @@ public class MySqlDataUser implements UserDAO{
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  user (
-              `id` int NOT NULL AUTO_INCREMENT,
-              `name` varchar(256) NOT NULL,
+              
+              `username` varchar(256) NOT NULL,
+              `password` varchar(256) NOT NULL,
+              `email` varchar(256) NOT NULL,
               
               `json` TEXT DEFAULT NULL,
               PRIMARY KEY (`username`),
@@ -153,7 +156,7 @@ public class MySqlDataUser implements UserDAO{
             """
     };
 
-    private void configureDatabase() throws ResponseException {
+    public void configureDatabase() throws ResponseException {
         DatabaseManager.createDatabase();
         try (var conn = DatabaseManager.getConnection()) {
             for (var statement : createStatements) {

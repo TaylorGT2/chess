@@ -1,5 +1,6 @@
 package dataaccess;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 
@@ -30,6 +31,9 @@ class MySqlDataUserTest {
         db.clear();
         return db;
     }
+
+//    @BeforeAll
+//    static
 //
 //    @Test
 //    void listUsers() {
@@ -43,10 +47,44 @@ class MySqlDataUserTest {
         UserDAO dataAccess = getDataAccess(dbClass);
 
 
-
+        //dataAccess.adduser(user);
         var user = new UserData("a", "b", "c");
-        assertDoesNotThrow(() -> dataAccess.adduser(user));
+        var user2 = new UserData("aa", "bb", "cc");
+        dataAccess.adduser(user);
+        assertDoesNotThrow(() -> dataAccess.adduser(user2));
     }
+
+
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataUser.class, MemoryDataAccess.class})
+    void deleteAllUsers(Class<? extends UserDAO> dbClass) throws Exception {
+        UserDAO dataAccess = getDataAccess(dbClass);
+
+        dataAccess.adduser(new UserData("a", "b", "c"));
+        //dataAccess.addPet(new Pet(0, "sally", PetType.CAT));
+
+        dataAccess.clear();
+
+        var actual = dataAccess.listUsers();
+        assertEquals(0, actual.size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataUser.class, MemoryDataAccess.class})
+    void login(Class<? extends UserDAO> dbClass) throws Exception {
+        UserDAO dataAccess = getDataAccess(dbClass);
+
+        dataAccess.adduser(new UserData("a", "b", "c"));
+        //dataAccess.addPet(new Pet(0, "sally", PetType.CAT));
+
+        assertEquals(dataAccess.checkMatching(new UserData("a","b","c")),true);
+
+        //var actual = dataAccess.listUsers();
+        //assertEquals(0, actual.size());
+    }
+
+
+
 //
 //    @Test
 //    void adduser() {

@@ -105,7 +105,7 @@ public class MySqlDataGame implements GameDao{
     }
 
     public GameData createGame(String gameName) throws ResponseException {
-        var statement = "INSERT INTO pet (gameName, gameID, , whiteUsername, blackUsername, game, json) VALUES (?, ?, ?)";
+        var statement = "INSERT INTO game (gameName, gameID, whiteUsername, blackUsername, game, json) VALUES (?, ?, ?, ?, ?, ?)";
         var json = new Gson().toJson(gameName);
         var id = executeUpdate(statement, gameName, json);
         return new GameData(id, null, null, gameName, new ChessGame());
@@ -142,6 +142,7 @@ public class MySqlDataGame implements GameDao{
         } catch (SQLException e) {
             throw new ResponseException(500, String.format("unable to update database: %s, %s", statement, e.getMessage()));
         }
+
     }
 
 
@@ -149,15 +150,16 @@ public class MySqlDataGame implements GameDao{
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  game (
-              `id` int NOT NULL AUTO_INCREMENT,
-              `name` varchar(256) NOT NULL,
+              `gameID` int NOT NULL AUTO_INCREMENT,
+              `gameName` varchar(256) NOT NULL,
               `whiteUsername` varchar(256) DEFAULT NULL,
               `blackUsername` varchar(256) DEFAULT NULL,
+              `game` varchar(256) DEFAULT NULL,
               
               `json` TEXT DEFAULT NULL,
-              PRIMARY KEY (`username`),
+              PRIMARY KEY (`gameID`),
               
-              INDEX(password)
+              INDEX(gameName)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
     };

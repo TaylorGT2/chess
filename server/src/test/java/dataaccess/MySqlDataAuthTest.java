@@ -48,6 +48,30 @@ class MySqlDataAuthTest {
         assertDoesNotThrow(() -> dataAccess.createAuth(user));
     }
 
+
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataAuth.class})
+    void logout(Class<? extends AuthDAO> dbClass) throws ResponseException {
+        AuthDAO dataAccess = getDataAccess(dbClass);
+
+        var user = new AuthData("a", "b");
+        dataAccess.createAuth(user);
+        var user2 = new AuthData("aa", "bb");
+        dataAccess.createAuth(user2);
+
+        dataAccess.deleteAuth("bb");
+
+        var actual = dataAccess.listUsers();
+        assertEquals(1, actual.size());
+
+
+
+        //assertDoesNotThrow(() -> dataAccess.createAuth(user));
+    }
+
+
+
+
 //    @Test
 //    void clear() {
 //    }
