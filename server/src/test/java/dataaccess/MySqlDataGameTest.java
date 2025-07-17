@@ -41,6 +41,27 @@ class MySqlDataGameTest {
     }
 
 
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataGame.class, MemoryGameDataAccess.class})
+    void listGame(Class<? extends GameDao> dbClass) throws ResponseException {
+        GameDao dataAccess = getDataAccess(dbClass);
+
+        //int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game
+        //var user = new GameData(123, "","","mygame", new ChessGame());
+        dataAccess.createGame("mygame");
+        var games = dataAccess.listGames();
+        assertEquals(1,games.size());
+
+
+        //assertDoesNotThrow(() -> dataAccess.createGame("mygame"));
+
+
+    }
+
+
+
+
+
 //
 //    @Test
 //    void joinGame() {

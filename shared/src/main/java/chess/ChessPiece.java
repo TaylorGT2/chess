@@ -39,6 +39,9 @@ public class ChessPiece {
     public PieceType getPieceType() {
         return type;
     }
+//    public void setPieceType(PieceType p) {
+//        this.type = p;
+//    }
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece pieceMoving = board.getPiece(myPosition);
         if(pieceMoving.getPieceType() == PieceType.BISHOP){return bishopMovesCalculator(myPosition, board);}

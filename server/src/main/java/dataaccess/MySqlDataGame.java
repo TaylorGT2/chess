@@ -2,7 +2,10 @@ package dataaccess;
 
 
 import chess.ChessGame;
+import chess.ChessPiece;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import exception.ResponseException;
 import model.AuthData;
 import model.GameData;
@@ -15,6 +18,7 @@ import java.util.Collection;
 import java.sql.*;
 import java.util.Objects;
 
+import static chess.ChessPiece.PieceType.PAWN;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
@@ -44,6 +48,27 @@ public class MySqlDataGame implements GameDao{
 
     public void joinGame(int gameID, String playerColor, String username) throws ResponseException{
         GameData joining = getGame(gameID);
+        //var statement = "INSERT gameID, json FROM game WHERE gameID=?";
+
+
+        try (var conn = DatabaseManager.getConnection()) {
+
+
+           // INSERT INTO game (gameName, gameID, chessGame, json) VALUES (?, ?, ?, ?)
+            var statement = "INSERT INTO game (whiteUsername) VALUES (?) WHERE gameID=?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setInt(1, gameID);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        //return readGame(rs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
+        }
+        //return null;
+
 
 
 //        if(playerColor!=null) {
@@ -105,11 +130,36 @@ public class MySqlDataGame implements GameDao{
     }
 
     public GameData createGame(String gameName) throws ResponseException {
-        var statement = "INSERT INTO game (gameName, gameID, whiteUsername, blackUsername, game, json) VALUES (?, ?, ?, ?, ?, ?)";
+        var statement = "INSERT INTO game (gameName, gameID, chessGame, json) VALUES (?, ?, ?, ?)";
         var json = new Gson().toJson(gameName);
-        var id = executeUpdate(statement, gameName, json);
+        var id = executeUpdate(statement, gameName, null, null, json);
+        String bigChess = "I need to learn serialization";
         return new GameData(id, null, null, gameName, new ChessGame());
     }
+
+
+//    public static Gson createSerializer() {
+//        GsonBuilder gsonBuilder = new GsonBuilder();
+//
+//        gsonBuilder.registerTypeAdapter(ChessPiece.class,
+//                (JsonDeserializer<ChessPiece>) (el, type, ctx) -> {
+//                    ChessPiece chessPiece = null;
+//                    if (el.isJsonObject()) {
+//                        String pieceType = el.getAsJsonObject().get("type").getAsString();
+//                        switch (ChessPiece.PieceType.valueOf(pieceType)) {
+//                            case PAWN -> chessPiece = ctx.deserialize(el, ChessPiece.setChessPiece.(PAWN));
+//                            case ROOK -> chessPiece = ctx.deserialize(el, Rook.class);
+//                            case KNIGHT -> chessPiece = ctx.deserialize(el, Knight.class);
+//                            case BISHOP -> chessPiece = ctx.deserialize(el, Bishop.class);
+//                            case QUEEN -> chessPiece = ctx.deserialize(el, Queen.class);
+//                            case KING -> chessPiece = ctx.deserialize(el, King.class);
+//                        }
+//                    }
+//                    return chessPiece;
+//                });
+//
+//        return gsonBuilder.create();
+//    }
 
 
 
@@ -154,7 +204,7 @@ public class MySqlDataGame implements GameDao{
               `gameName` varchar(256) NOT NULL,
               `whiteUsername` varchar(256) DEFAULT NULL,
               `blackUsername` varchar(256) DEFAULT NULL,
-              `game` varchar(256) DEFAULT NULL,
+              `chessGame` varchar(256) DEFAULT NULL,
               
               `json` TEXT DEFAULT NULL,
               PRIMARY KEY (`gameID`),

@@ -24,25 +24,40 @@ public class Server {
     // this might need to be private and final
     //public UserService service = new UserService(dataAccess);
 
-    public UserService service= new UserService(dataAccess);
+    public UserService service;//= new UserService(dataAccess);
 
-    public AuthService serviceAuth= new AuthService(dataAuthAccess);
+    public AuthService serviceAuth;//= new AuthService(dataAuthAccess);
 
-    public GameService serviceGame= new GameService(dataGameAccess);
+    public GameService serviceGame;//= new GameService(dataGameAccess);
 
-//    public Server(UserService service, AuthService serviceAuth, GameService serviceGame) {
-//
-//        try{
-//            this.service = service;
-//        }
+    public Server(UserService service, AuthService serviceAuth, GameService serviceGame) {
+
+   //     try{
+            this.service = service;
+            this.serviceAuth = serviceAuth;
+            this.serviceGame = serviceGame;
+      //  }
 //        catch(ResponseException ex){
 //
 //        }
-//        //webSocketHandler = new WebSocketHandler();
-//    }
+        //webSocketHandler = new WebSocketHandler();
+    }
 
    public Server() {
-       this.service = service;
+       //this.service = service;
+       UserDAO dataAccess = new MemoryDataAccess();
+       //public UserDAO dataAccess = new MySqlDataUser();
+       AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
+       GameDao dataGameAccess = new MemoryGameDataAccess();
+
+       // this might need to be private and final
+       //public UserService service = new UserService(dataAccess);
+
+       this.service= new UserService(dataAccess);
+
+       this.serviceAuth= new AuthService(dataAuthAccess);
+
+       this.serviceGame= new GameService(dataGameAccess);
 
 //       try {
 //           AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
