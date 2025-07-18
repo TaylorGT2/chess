@@ -34,7 +34,7 @@ public class MySqlDataGame implements GameDao{
 
     public GameData getGame(int gameID) throws ResponseException {
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT gameID, json FROM game WHERE gameID=?";
+            var statement = "SELECT gameName, json FROM game WHERE gameID=?";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setInt(1, gameID);
                 try (var rs = ps.executeQuery()) {
@@ -44,10 +44,18 @@ public class MySqlDataGame implements GameDao{
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
         }
         return null;
     }
+
+    public void deleteGame(int gameID) throws ResponseException {
+        var statement = "DELETE FROM game WHERE gameID=?";
+        executeUpdate(statement, gameID);
+    }
+
+
 
     public void joinGame(int gameID, String playerColor, String username) throws ResponseException{
         //GameData joining = getGame(gameID);
@@ -58,19 +66,26 @@ public class MySqlDataGame implements GameDao{
 
             if(playerColor == "White") {
                 // INSERT INTO game (gameName, gameID, chessGame, json) VALUES (?, ?, ?, ?)
-                var statement = "INSERT INTO game (whiteUsername) VALUE (?) WHERE gameID=?";
+                //var statement = "INSERT INTO game (whiteUsername) VALUE (?) WHERE gameID=?";
+                //var statement = "UPDATE game SET whiteUsername = (?) WHERE gameID=(?)";
                 GameData joining = getGame(gameID);
-                GameData joined = joining.setWhite(username);
-                var id = executeUpdate(statement, joined.whiteUsername());
-//                try (var ps = conn.prepareStatement(statement)) {
-//                    ps.setInt(1, gameID);
-//                    try (var rs = ps.executeQuery()) {
-//                        if (rs.next()) {
-//                            //return readGame(rs);
-//                        }
-//                    }
-//                }
+                deleteGame(gameID);
+                updateGame(username,gameID, joining.gameName(),joining.blackUsername(),joining.game());
+
             }
+            else if(playerColor == "Black") {
+                // INSERT INTO game (gameName, gameID, chessGame, json) VALUES (?, ?, ?, ?)
+                //var statement = "INSERT INTO game (whiteUsername) VALUE (?) WHERE gameID=?";
+                //var statement = "UPDATE game SET whiteUsername = (?) WHERE gameID=(?)";
+                GameData joining = getGame(gameID);
+                deleteGame(gameID);
+                updateGame(joining.blackUsername(),gameID, joining.gameName(),username,joining.game());
+
+            }
+            else{
+                throw new ResponseException(500, "wrong color");
+            }
+
 //            if(playerColor=="Black"){
 //                var statement = "INSERT INTO game (blackUsername) VALUES (?) WHERE gameID=?";
 //                try (var ps = conn.prepareStatement(statement)) {
@@ -158,6 +173,19 @@ public class MySqlDataGame implements GameDao{
         String bigChess = "I need to learn serialization";
         gameID = gameID+1;
         return new GameData(gameID, null, null, gameName, game);
+    }
+
+
+    public void updateGame(String whiteUsername, int gameID, String name, String blackUsername, ChessGame chess) throws ResponseException {
+        var statement = "INSERT INTO game (gameName, gameID, whiteUsername, blackUsername, chessGame, json) VALUES (?, ?, ?, ?, ?, ?)";
+        //var game = new ChessGame();
+        var board = new Gson().toJson(chess);
+        GameData current = new GameData(gameID,whiteUsername,blackUsername,name,chess);
+        var json = new Gson().toJson(current);
+        var id = executeUpdate(statement, name, gameID, whiteUsername, blackUsername, board, json);
+        //String bigChess = "I need to learn serialization";
+        //gameID = gameID+1;
+        //return new GameData(gameID, null, null, gameName, game);
     }
 
 

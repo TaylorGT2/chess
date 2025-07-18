@@ -71,8 +71,9 @@ class MySqlDataGameTest {
         //var user = new GameData(123, "","","mygame", new ChessGame());
         GameData gameOn= dataAccess.createGame("mygame");
         dataAccess.joinGame(gameOn.gameID(),"White",  "thisIsAUser");
+        GameData done = dataAccess.getGame(gameOn.gameID());
         //var games = dataAccess.listGames();
-        assertEquals("thisIsAUser",gameOn.whiteUsername());
+        assertEquals("thisIsAUser",dataAccess.getGame(gameOn.gameID()).whiteUsername());
 
 
         //assertDoesNotThrow(() -> dataAccess.createGame("mygame"));
