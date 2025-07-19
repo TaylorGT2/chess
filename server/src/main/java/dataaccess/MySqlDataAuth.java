@@ -8,6 +8,7 @@ import model.AuthData;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.sql.*;
+import java.util.UUID;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
@@ -21,10 +22,18 @@ public class MySqlDataAuth implements AuthDAO{
 
 
     public AuthData createAuth(AuthData auth) throws ResponseException {
+        if(auth.username()==null){
+            throw new ResponseException(400,"Error: bad request");
+        }
         var statement = "INSERT INTO auth (username, authToken, json) VALUES (?, ?, ?)";
         var json = new Gson().toJson(auth);
-        var id = executeUpdate(statement, auth.username(), auth.authToken(), json);
-        return new AuthData(auth.username(), auth.authToken());
+        String t = generateToken();
+        var id = executeUpdate(statement, auth.username(), t, json);
+        return new AuthData(auth.username(), t);
+    }
+
+    public static String generateToken() {
+        return UUID.randomUUID().toString();
     }
 
     public void clear() throws ResponseException {

@@ -35,8 +35,8 @@ public class Main {
 //        System.out.printf("Server started on port %d with %s%n", port, dataAccess.getClass());
 //        return;
 
-            Server s = new Server();
-            s.run(8080);
+            //Server s = new Server();
+            all.run(8080);
         }catch (Throwable ex) {
             System.out.printf("Unable to start server: %s%n", ex.getMessage());
         }

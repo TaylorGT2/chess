@@ -70,7 +70,7 @@ class MySqlDataGameTest {
         //int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game
         //var user = new GameData(123, "","","mygame", new ChessGame());
         GameData gameOn= dataAccess.createGame("mygame");
-        dataAccess.joinGame(gameOn.gameID(),"White",  "thisIsAUser");
+        dataAccess.joinGame(gameOn.gameID(),"WHITE",  "thisIsAUser");
         GameData done = dataAccess.getGame(gameOn.gameID());
         //var games = dataAccess.listGames();
         assertEquals("thisIsAUser",dataAccess.getGame(gameOn.gameID()).whiteUsername());

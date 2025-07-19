@@ -45,19 +45,38 @@ public class Server {
 
    public Server() {
        //this.service = service;
-       UserDAO dataAccess = new MemoryDataAccess();
-       //public UserDAO dataAccess = new MySqlDataUser();
-       AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
-       GameDao dataGameAccess = new MemoryGameDataAccess();
+//       UserDAO dataAccess = new MemoryDataAccess();
+//       //public UserDAO dataAccess = new MySqlDataUser();
+//       AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
+//       GameDao dataGameAccess = new MemoryGameDataAccess();
 
-       // this might need to be private and final
-       //public UserService service = new UserService(dataAccess);
+       try {
 
-       this.service= new UserService(dataAccess);
 
-       this.serviceAuth= new AuthService(dataAuthAccess);
+           UserDAO dataAccess = new MySqlDataUser();
+           //public UserDAO dataAccess = new MySqlDataUser();
+           AuthDAO dataAuthAccess = new MySqlDataAuth();
+           GameDao dataGameAccess = new MySqlDataGame();
 
-       this.serviceGame= new GameService(dataGameAccess);
+//
+//           UserDAO dataAccess = new MemoryDataAccess();
+//       //public UserDAO dataAccess = new MySqlDataUser();
+//           AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
+//           GameDao dataGameAccess = new MemoryGameDataAccess();
+
+
+           // this might need to be private and final
+           //public UserService service = new UserService(dataAccess);
+
+           this.service = new UserService(dataAccess);
+
+           this.serviceAuth = new AuthService(dataAuthAccess);
+
+           this.serviceGame = new GameService(dataGameAccess);
+
+       }catch(Exception ex){
+//          exception
+       }
 
 //       try {
 //           AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
@@ -123,6 +142,9 @@ public class Server {
 
     private String register(Request req, Response res) throws ResponseException{
         var user = new Gson().fromJson(req.body(), UserData.class);
+        if(user.email()==null||user.password()==null||user.username()==null){
+            throw new ResponseException(400, "Error: bad request");
+        }
         user = service.adduser(user);
 
         var authToken = new Gson().fromJson(req.body(), AuthData.class);
@@ -187,7 +209,11 @@ public class Server {
         var authToken = new Gson().fromJson(req.body(), AuthData.class);
         authToken = serviceAuth.createAuth(authToken);
 
-         boolean legal = service.login(user);
+        if(user.email()==null||user.password()==null||user.username()==null){
+            throw new ResponseException(401, "Error: bad request");
+        }
+
+        boolean legal = service.login(user);
 
 
         if(legal==true){

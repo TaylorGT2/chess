@@ -38,6 +38,15 @@ public class MySqlDataUser implements UserDAO{
     }
 
     public UserData adduser(UserData user) throws ResponseException{
+
+        if(user.password()==""||user.username()==""||user.email()==""){
+            throw new ResponseException(400, "Error: bad request");
+        }
+
+        if(getUser(user.username())!=null){
+            throw new ResponseException(403,"Error: username already taken");
+        }
+
         var statement = "INSERT INTO user (username, password, email, json) VALUES (?, ?, ?, ?)";
         //var statement = "INSERT INTO auth VALUES (?, ?, ?, ?)";
         //String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
