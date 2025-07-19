@@ -39,6 +39,7 @@ public class AuthService {
     public void deleteAuth(String auth) throws ResponseException{
         dataAccess.deleteAuth(auth);
     }
+
 }
 
 

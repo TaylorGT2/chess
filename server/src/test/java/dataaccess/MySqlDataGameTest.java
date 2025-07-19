@@ -49,8 +49,10 @@ class MySqlDataGameTest {
         //int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game
         //var user = new GameData(123, "","","mygame", new ChessGame());
         dataAccess.createGame("mygame");
+        dataAccess.createGame("mygame2");
+
         var games = dataAccess.listGames();
-        assertEquals(1,games.size());
+        assertEquals(2,games.size());
 
 
         //assertDoesNotThrow(() -> dataAccess.createGame("mygame"));
@@ -80,6 +82,8 @@ class MySqlDataGameTest {
 
 
     }
+
+
 
 
 

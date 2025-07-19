@@ -53,6 +53,7 @@ public class MySqlDataUser implements UserDAO{
         var json = new Gson().toJson(user);
         //var cryptedPassword =
         var id = executeUpdate(statement, user.username(), hashedPassword, user.email(), json);
+
         return new UserData(user.username(), user.password(), user.email());
     }
 
@@ -99,7 +100,7 @@ public class MySqlDataUser implements UserDAO{
                     var param = params[i];
                     if (param instanceof String p){ ps.setString(i + 1, p);}
                     else if (param instanceof Integer p){ ps.setInt(i + 1, p);}
-                        //else if (param instanceof PetType p) ps.setString(i + 1, p.toString());
+                    //else if (param instanceof PetType p) ps.setString(i + 1, p.toString());
                     else if (param == null){ ps.setNull(i + 1, NULL);}
                 }
                 ps.executeUpdate();

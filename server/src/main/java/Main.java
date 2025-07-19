@@ -18,6 +18,11 @@ public class Main {
             AuthDAO dataAuth = new MemoryAuthDataAccess();
             GameDao dataGame = new MemoryGameDataAccess();
 
+
+            dataUser = new MySqlDataUser();
+            dataAuth = new MySqlDataAuth();
+            dataGame = new MySqlDataGame();
+
             if (args.length >= 2 && args[1].equals("sql")) {
                 dataUser = new MySqlDataUser();
                 dataAuth = new MySqlDataAuth();
@@ -36,7 +41,7 @@ public class Main {
 //        return;
 
             Server s = new Server();
-            s.run(8080);
+            all.run(8080);
         }catch (Throwable ex) {
             System.out.printf("Unable to start server: %s%n", ex.getMessage());
         }

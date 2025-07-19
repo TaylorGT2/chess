@@ -73,8 +73,13 @@ public class MySqlDataGame implements GameDao{
                 //var statement = "INSERT INTO game (whiteUsername) VALUE (?) WHERE gameID=?";
                 //var statement = "UPDATE game SET whiteUsername = (?) WHERE gameID=(?)";
                 GameData joining = getGame(gameID);
-                deleteGame(gameID);
-                updateGame(username,gameID, joining.gameName(),joining.blackUsername(),joining.game());
+                if(joining.whiteUsername()==null) {
+                    deleteGame(gameID);
+                    updateGame(username, gameID, joining.gameName(), joining.blackUsername(), joining.game());
+                }
+                else{
+                    throw new ResponseException(403,"Error: color taken");
+                }
                 //GameData  checkGame = getGame(gameID);
                 //String b = checkGame.blackUsername();
 
@@ -84,8 +89,13 @@ public class MySqlDataGame implements GameDao{
                 //var statement = "INSERT INTO game (whiteUsername) VALUE (?) WHERE gameID=?";
                 //var statement = "UPDATE game SET whiteUsername = (?) WHERE gameID=(?)";
                 GameData joining = getGame(gameID);
-                deleteGame(gameID);
-                updateGame(joining.whiteUsername(),gameID, joining.gameName(),username,joining.game());
+                if(joining.blackUsername()==null) {
+                    deleteGame(gameID);
+                    updateGame(joining.whiteUsername(), gameID, joining.gameName(), username, joining.game());
+                }
+                else{
+                    throw new ResponseException(403,"Error: color taken");
+                }
 
             }
             else{
@@ -178,15 +188,15 @@ public class MySqlDataGame implements GameDao{
 
 
 
-        var statement = "INSERT INTO game (gameName, gameID, chessGame, json, whiteUsername, blackUsername) VALUES (?, ?, ?, ?, ?, ?)";
+        var statement = "INSERT INTO game (gameName, chessGame, json, whiteUsername, blackUsername) VALUES (?, ?, ?, ?, ?)";
         var game = new ChessGame();
         var chess = new Gson().toJson(game);
         GameData current = new GameData(gameID,null,null,gameName,game);
         var json = new Gson().toJson(current);
-        var id = executeUpdate(statement, gameName, gameID, chess, json, null, null);
+        var id = executeUpdate(statement, gameName, chess, json, null, null);
         String bigChess = "I need to learn serialization";
-        gameID = gameID+1;
-        return new GameData(gameID, null, null, gameName, game);
+        gameID = gameID+4;
+        return new GameData(id, null, null, gameName, game);
     }
 
 

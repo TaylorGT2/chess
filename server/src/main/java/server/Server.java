@@ -16,15 +16,16 @@ import java.util.Map;
 
 public class Server {
     //public Server(){}
-    public UserDAO dataAccess = new MemoryDataAccess();
+    //public UserDAO dataAccess = new MemoryDataAccess();
     //public UserDAO dataAccess = new MySqlDataUser();
-    public AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
-    public GameDao dataGameAccess = new MemoryGameDataAccess();
+    //public AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
+    //public AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
+    //public GameDao dataGameAccess = new MemoryGameDataAccess();
 
     // this might need to be private and final
     //public UserService service = new UserService(dataAccess);
 
-    public UserService service;//= new UserService(dataAccess);
+    public UserService service;// = new UserService(dataAccess);
 
     public AuthService serviceAuth;//= new AuthService(dataAuthAccess);
 
@@ -187,8 +188,8 @@ public class Server {
     private String listGames(Request req, Response res) throws ResponseException{
 
         var authToken = req.headers("Authorization");
-        serviceAuth.getAuth(authToken);
-        if(authToken!=null){
+        AuthData a = serviceAuth.getAuth(authToken);
+        if(a!=null){
 
 
 
@@ -197,8 +198,11 @@ public class Server {
             res.body(new Gson().toJson(Map.of("games", list)));
             return new Gson().toJson(Map.of("games", list));
         }
+        else{
+            throw new ResponseException(401, "Error: Unauthorized");
+        }
 
-        return null;
+        //return null;
     }
 
 
@@ -244,23 +248,35 @@ public class Server {
         var gameTicket = req.body();
         var game2 = new Gson().fromJson(req.body(), LoginRequest.class);
         int gameID = game2.gameID();
+
+
         Integer idCheck = game2.gameID();
         if(idCheck==null){
             throw new ResponseException(400,"Error: bad request");
         }
         String playerColor = game2.playerColor();
 
-        if(auth!=null){
-            String username = auth.username();
-            serviceGame.joinGame(gameID,playerColor,username);
 
-            res.body(new Gson().toJson(username));
-            return "{}";
+
+        if(auth!=null){
+            if(playerColor==null){
+                throw new ResponseException(400,"Error: bad request");
+            }
+            if(playerColor.equals("WHITE")||playerColor.equals("BLACK")) {
+                String username = auth.username();
+                serviceGame.joinGame(gameID, playerColor, username);
+
+                res.body(new Gson().toJson(username));
+                return "{}";
+            }
+            else{
+                throw new ResponseException(400,"Error: bad request");
+            }
 
 
         }
         else{
-            throw new ResponseException(400,"Error:Unauthorized");
+            throw new ResponseException(401,"Error:Unauthorized");
         }
     }
 
