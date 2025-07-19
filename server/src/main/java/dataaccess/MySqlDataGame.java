@@ -58,7 +58,11 @@ public class MySqlDataGame implements GameDao{
 
 
     public void joinGame(int gameID, String playerColor, String username) throws ResponseException{
-        //GameData joining = getGame(gameID);
+
+        GameData joining2 = getGame(gameID);
+        if(joining2==null){
+            throw new ResponseException(400, "Error: Unauthorized");
+        }
         //var statement = "INSERT gameID, json FROM game WHERE gameID=?";
 
 
@@ -71,6 +75,8 @@ public class MySqlDataGame implements GameDao{
                 GameData joining = getGame(gameID);
                 deleteGame(gameID);
                 updateGame(username,gameID, joining.gameName(),joining.blackUsername(),joining.game());
+                //GameData  checkGame = getGame(gameID);
+                //String b = checkGame.blackUsername();
 
             }
             else if(playerColor.equals("BLACK")) {
@@ -83,7 +89,7 @@ public class MySqlDataGame implements GameDao{
 
             }
             else{
-                throw new ResponseException(500, "wrong color");
+                throw new ResponseException(400, "wrong color");
             }
 
 //            if(playerColor=="Black"){
@@ -140,7 +146,7 @@ public class MySqlDataGame implements GameDao{
     public Collection<GameData> listGames() throws ResponseException {
         var result = new ArrayList<GameData>();
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, json FROM game";
+            var statement = "SELECT gameID, gameName, json FROM game";
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -164,6 +170,14 @@ public class MySqlDataGame implements GameDao{
     }
 
     public GameData createGame(String gameName) throws ResponseException {
+
+        if(gameName==null){
+            throw new ResponseException(400, "Error: bad request");
+        }
+
+
+
+
         var statement = "INSERT INTO game (gameName, gameID, chessGame, json, whiteUsername, blackUsername) VALUES (?, ?, ?, ?, ?, ?)";
         var game = new ChessGame();
         var chess = new Gson().toJson(game);
@@ -177,12 +191,12 @@ public class MySqlDataGame implements GameDao{
 
 
     public void updateGame(String whiteUsername, int gameID, String name, String blackUsername, ChessGame chess) throws ResponseException {
-        var statement = "INSERT INTO game (gameName, gameID, whiteUsername, blackUsername, chessGame, json) VALUES (?, ?, ?, ?, ?, ?)";
+        var statement = "INSERT INTO game (json, gameName, gameID, whiteUsername, blackUsername, chessGame) VALUES (?, ?, ?, ?, ?, ?)";
         //var game = new ChessGame();
         var board = new Gson().toJson(chess);
         GameData current = new GameData(gameID,whiteUsername,blackUsername,name,chess);
         var json = new Gson().toJson(current);
-        var id = executeUpdate(statement, name, gameID, whiteUsername, blackUsername, board, json);
+        var id = executeUpdate(statement, json, name, gameID, whiteUsername, blackUsername, board);
         //String bigChess = "I need to learn serialization";
         //gameID = gameID+1;
         //return new GameData(gameID, null, null, gameName, game);

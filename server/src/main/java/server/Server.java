@@ -162,6 +162,11 @@ public class Server {
 
         var authToken = req.headers("Authorization");
         AuthData g = serviceAuth.getAuth(authToken);
+
+        if(g==null){
+            throw new ResponseException(401,"Error: unauthorized");
+        }
+
         if(g!=null || g==null){
             var game = new Gson().fromJson(req.body(), GameData.class);
             String realgame = game.gameName();
@@ -209,8 +214,8 @@ public class Server {
         var authToken = new Gson().fromJson(req.body(), AuthData.class);
         authToken = serviceAuth.createAuth(authToken);
 
-        if(user.email()==null||user.password()==null||user.username()==null){
-            throw new ResponseException(401, "Error: bad request");
+        if(user.password()==null||user.username()==null){
+            throw new ResponseException(400, "Error: bad request");
         }
 
         boolean legal = service.login(user);
@@ -224,7 +229,9 @@ public class Server {
         }
 
 
-        return null;
+        else{
+            throw new ResponseException(401, "Error: unauthorized");
+        }
 
 
     }
@@ -233,9 +240,14 @@ public class Server {
         var authToken = req.headers("Authorization");
         AuthData auth = serviceAuth.getAuth(authToken);
 
+
         var gameTicket = req.body();
         var game2 = new Gson().fromJson(req.body(), LoginRequest.class);
         int gameID = game2.gameID();
+        Integer idCheck = game2.gameID();
+        if(idCheck==null){
+            throw new ResponseException(400,"Error: bad request");
+        }
         String playerColor = game2.playerColor();
 
         if(auth!=null){
@@ -247,7 +259,9 @@ public class Server {
 
 
         }
-        return null;
+        else{
+            throw new ResponseException(400,"Error:Unauthorized");
+        }
     }
 
     private String logout(Request req, Response res) throws ResponseException {

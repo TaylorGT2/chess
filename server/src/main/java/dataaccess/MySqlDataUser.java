@@ -49,10 +49,10 @@ public class MySqlDataUser implements UserDAO{
 
         var statement = "INSERT INTO user (username, password, email, json) VALUES (?, ?, ?, ?)";
         //var statement = "INSERT INTO auth VALUES (?, ?, ?, ?)";
-        //String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         var json = new Gson().toJson(user);
         //var cryptedPassword =
-        var id = executeUpdate(statement, user.username(), user.password(), user.email(), json);
+        var id = executeUpdate(statement, user.username(), hashedPassword, user.email(), json);
         return new UserData(user.username(), user.password(), user.email());
     }
 
@@ -66,12 +66,30 @@ public class MySqlDataUser implements UserDAO{
 
 
 
-    boolean verifyUser(String username, String providedClearTextPassword) {
+    boolean verifyUser(String username, String providedClearTextPassword) throws ResponseException {
         // read the previously hashed password from the database
+
+        UserData userLog = getUser(username);
+        if(userLog==null){
+            throw new ResponseException(401, "Error: unauthorized");
+        }
+
+
         var hashedPassword = BCrypt.hashpw(providedClearTextPassword, BCrypt.gensalt());
+
+        String checkWord = userLog.password();
+
+
+        //boolean check = BCrypt.checkpw(providedClearTextPassword, userLog.password());
+        if(providedClearTextPassword.equals(checkWord)){
+            return true;
+        }
+        else{
+            throw new ResponseException(401,"Error: unauthorized");
+        }
                 //readHashedPasswordFromDatabase(username);
 
-        return BCrypt.checkpw(providedClearTextPassword, hashedPassword);
+        //return BCrypt.checkpw(providedClearTextPassword, hashedPassword);
     }
 
     private int executeUpdate(String statement, Object... params) throws ResponseException {
@@ -99,6 +117,10 @@ public class MySqlDataUser implements UserDAO{
     }
 
     public Boolean checkMatching(UserData checkUser) throws ResponseException{
+
+        if (checkUser.username()==null || checkUser.password()==null){
+            throw new ResponseException(400, "Error: bad request");
+        }
 //        String name = checkUser.password();
 //        UserData loginUser = getUser(name);
 //        if(checkUser.username()!=null&&checkUser.password()!=null) {
