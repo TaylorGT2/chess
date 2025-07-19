@@ -181,12 +181,12 @@ public class MySqlDataGame implements GameDao{
         var statement = "INSERT INTO game (gameName, gameID, chessGame, json, whiteUsername, blackUsername) VALUES (?, ?, ?, ?, ?, ?)";
         var game = new ChessGame();
         var chess = new Gson().toJson(game);
-        GameData current = new GameData(gameID,"","",gameName,game);
+        GameData current = new GameData(gameID,null,null,gameName,game);
         var json = new Gson().toJson(current);
-        var id = executeUpdate(statement, gameName, gameID, chess, json, "", "");
+        var id = executeUpdate(statement, gameName, gameID, chess, json, null, null);
         String bigChess = "I need to learn serialization";
         gameID = gameID+1;
-        return new GameData(gameID, "", "", gameName, game);
+        return new GameData(gameID, null, null, gameName, game);
     }
 
 
@@ -240,10 +240,10 @@ public class MySqlDataGame implements GameDao{
             try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 for (var i = 0; i < params.length; i++) {
                     var param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p);
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
+                    if (param instanceof String p){ ps.setString(i + 1, p);}
+                    else if (param instanceof Integer p){ ps.setInt(i + 1, p);}
                         //else if (param instanceof PetType p) ps.setString(i + 1, p.toString());
-                    else if (param == null) ps.setNull(i + 1, NULL);
+                    else if (param == null) {ps.setNull(i + 1, NULL);}
                 }
                 ps.executeUpdate();
 
