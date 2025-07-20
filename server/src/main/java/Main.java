@@ -34,11 +34,7 @@ public class Main {
             var gameSer = new GameService(dataGame);
             Server all = new Server(userSer, authSer, gameSer);
 
-//        var service = new PetService(dataAccess);
-//        var server = new PetServer(service).run(port);
-//        port = server.port();
-//        System.out.printf("Server started on port %d with %s%n", port, dataAccess.getClass());
-//        return;
+
 
             Server s = new Server();
             all.run(8080);
@@ -46,8 +42,6 @@ public class Main {
             System.out.printf("Unable to start server: %s%n", ex.getMessage());
         }
 
-        //run(args[1]);
 
-        // new Server testrun;
     }
 }
