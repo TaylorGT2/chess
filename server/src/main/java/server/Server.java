@@ -15,15 +15,7 @@ import service.AuthService;
 import java.util.Map;
 
 public class Server {
-    //public Server(){}
-    //public UserDAO dataAccess = new MemoryDataAccess();
-    //public UserDAO dataAccess = new MySqlDataUser();
-    //public AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
-    //public AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
-    //public GameDao dataGameAccess = new MemoryGameDataAccess();
 
-    // this might need to be private and final
-    //public UserService service = new UserService(dataAccess);
 
     public UserService service;// = new UserService(dataAccess);
 
@@ -33,41 +25,25 @@ public class Server {
 
     public Server(UserService service, AuthService serviceAuth, GameService serviceGame) {
 
-   //     try{
+
             this.service = service;
             this.serviceAuth = serviceAuth;
             this.serviceGame = serviceGame;
-      //  }
-//        catch(ResponseException ex){
-//
-//        }
-        //webSocketHandler = new WebSocketHandler();
+
     }
 
    public Server() {
-       //this.service = service;
-//       UserDAO dataAccess = new MemoryDataAccess();
-//       //public UserDAO dataAccess = new MySqlDataUser();
-//       AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
-//       GameDao dataGameAccess = new MemoryGameDataAccess();
+
 
        try {
 
 
            UserDAO dataAccess = new MySqlDataUser();
-           //public UserDAO dataAccess = new MySqlDataUser();
+
            AuthDAO dataAuthAccess = new MySqlDataAuth();
            GameDao dataGameAccess = new MySqlDataGame();
 
-//
-//           UserDAO dataAccess = new MemoryDataAccess();
-//       //public UserDAO dataAccess = new MySqlDataUser();
-//           AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
-//           GameDao dataGameAccess = new MemoryGameDataAccess();
 
-
-           // this might need to be private and final
-           //public UserService service = new UserService(dataAccess);
 
            this.service = new UserService(dataAccess);
 
@@ -76,29 +52,10 @@ public class Server {
            this.serviceGame = new GameService(dataGameAccess);
 
        }catch(Exception ex){
-//          exception
+
        }
 
-//       try {
-//           AuthDAO dataAuthAccess = new MemoryAuthDataAccess();
-//           GameDao dataGameAccess = new MemoryGameDataAccess();
-//
-//           // this might need to be private and final
-//           //public UserService service = new UserService(dataAccess);
-//
-//           UserService service = new UserService(new MySqlDataUser());
-//
-//           AuthService serviceAuth = new AuthService(dataAuthAccess);
-//
-//           GameService serviceGame = new GameService(dataGameAccess);
-//       }
-//       catch (ResponseException ex){
-//           UserService service = new UserService(new MemoryDataAccess());
-//
-//           AuthService serviceAuth = new AuthService(dataAuthAccess);
-//
-//           GameService serviceGame = new GameService(dataGameAccess);
-//       }
+
    }
 
     public int run(int desiredPort) {
@@ -202,7 +159,6 @@ public class Server {
             throw new ResponseException(401, "Error: Unauthorized");
         }
 
-        //return null;
     }
 
 
@@ -282,7 +238,7 @@ public class Server {
 
     private String logout(Request req, Response res) throws ResponseException {
 
-       // var authToken = req.params("authorization:");
+
         var authToken = req.headers("Authorization");
 
         serviceAuth.deleteAuth(authToken);
