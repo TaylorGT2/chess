@@ -1,12 +1,12 @@
 package dataaccess;
-//package dataaccess;
+
 
 import com.google.gson.Gson;
 import exception.ResponseException;
 import model.AuthData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
-//import model.PetType;
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,18 +57,11 @@ public class MySqlDataUser implements UserDAO{
         return new UserData(user.username(), user.password(), user.email());
     }
 
-//    void storeUserPassword(String username, String clearTextPassword) {
-//        String hashedPassword = BCrypt.hashpw(clearTextPassword, BCrypt.gensalt());
-//
-//        // write the hashed password in database along with the user's other information
-//        writeHashedPasswordToDatabase(username, hashedPassword);
-//
-//    }
 
 
 
     boolean verifyUser(String username, String providedClearTextPassword) throws ResponseException {
-        // read the previously hashed password from the database
+
 
         UserData userLog = getUser(username);
         if(userLog==null){
@@ -81,16 +74,14 @@ public class MySqlDataUser implements UserDAO{
         String checkWord = userLog.password();
 
 
-        //boolean check = BCrypt.checkpw(providedClearTextPassword, userLog.password());
+
         if(providedClearTextPassword.equals(checkWord)){
             return true;
         }
         else{
             throw new ResponseException(401,"Error: unauthorized");
         }
-                //readHashedPasswordFromDatabase(username);
 
-        //return BCrypt.checkpw(providedClearTextPassword, hashedPassword);
     }
 
     private int executeUpdate(String statement, Object... params) throws ResponseException {
@@ -100,7 +91,7 @@ public class MySqlDataUser implements UserDAO{
                     var param = params[i];
                     if (param instanceof String p){ ps.setString(i + 1, p);}
                     else if (param instanceof Integer p){ ps.setInt(i + 1, p);}
-                    //else if (param instanceof PetType p) ps.setString(i + 1, p.toString());
+
                     else if (param == null){ ps.setNull(i + 1, NULL);}
                 }
                 ps.executeUpdate();
@@ -122,20 +113,7 @@ public class MySqlDataUser implements UserDAO{
         if (checkUser.username()==null || checkUser.password()==null){
             throw new ResponseException(400, "Error: bad request");
         }
-//        String name = checkUser.password();
-//        UserData loginUser = getUser(name);
-//        if(checkUser.username()!=null&&checkUser.password()!=null) {
-//            if (loginUser != null) {
-//                if (!Objects.equals(loginUser.username(), checkUser.username())) {
-//                    return true;
-//                }
-//                return false;
-//            }
-//            throw new ResponseException(401,"Error: unauthorized");
-//        }
-//        else{
-//            throw new ResponseException(400,"Error: bad request");
-//        }
+
         return verifyUser(checkUser.username(),checkUser.password());
 
 

@@ -11,7 +11,7 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
-//import model.PetType;
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,15 +63,10 @@ public class MySqlDataGame implements GameDao{
         if(joining2==null){
             throw new ResponseException(400, "Error: Unauthorized");
         }
-        //var statement = "INSERT gameID, json FROM game WHERE gameID=?";
 
-
-        //try (var conn = DatabaseManager.getConnection()) {
 
             if(playerColor.equals("WHITE")) {
-                // INSERT INTO game (gameName, gameID, chessGame, json) VALUES (?, ?, ?, ?)
-                //var statement = "INSERT INTO game (whiteUsername) VALUE (?) WHERE gameID=?";
-                //var statement = "UPDATE game SET whiteUsername = (?) WHERE gameID=(?)";
+
                 GameData joining = getGame(gameID);
                 if(joining.whiteUsername()==null) {
                     deleteGame(gameID);
@@ -80,14 +75,11 @@ public class MySqlDataGame implements GameDao{
                 else{
                     throw new ResponseException(403,"Error: color taken");
                 }
-                //GameData  checkGame = getGame(gameID);
-                //String b = checkGame.blackUsername();
+
 
             }
             else if(playerColor.equals("BLACK")) {
-                // INSERT INTO game (gameName, gameID, chessGame, json) VALUES (?, ?, ?, ?)
-                //var statement = "INSERT INTO game (whiteUsername) VALUE (?) WHERE gameID=?";
-                //var statement = "UPDATE game SET whiteUsername = (?) WHERE gameID=(?)";
+
                 GameData joining = getGame(gameID);
                 if(joining.blackUsername()==null) {
                     deleteGame(gameID);
@@ -102,52 +94,7 @@ public class MySqlDataGame implements GameDao{
                 throw new ResponseException(400, "wrong color");
             }
 
-//            if(playerColor=="Black"){
-//                var statement = "INSERT INTO game (blackUsername) VALUES (?) WHERE gameID=?";
-//                try (var ps = conn.prepareStatement(statement)) {
-//                    ps.setInt(1, gameID);
-//                    try (var rs = ps.executeQuery()) {
-//                        if (rs.next()) {
-//                            //return readGame(rs);
-//                        }
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
-//        }
-        //return null;
 
-
-
-//        if(playerColor!=null) {
-//            if (playerColor.equals("WHITE")) {
-//
-//                if (joining.whiteUsername() == null) {
-//                    String whiteUsername = username;
-//                    GameData joined = new GameData(gameID, whiteUsername, joining.blackUsername(), joining.gameName(), joining.game());
-//                    deleteGame(gameID);
-//                    users.put(gameID, joined);
-//                } else {
-//                    throw new ResponseException(403, "Error: forbidden");
-//                }
-//            } else if (playerColor.equals("BLACK")) {
-//                if (joining.blackUsername() == null) {
-//                    GameData joined = new GameData(gameID, joining.whiteUsername(), username, joining.gameName(), joining.game());
-//                    deleteGame(gameID);
-//                    users.put(gameID, joined);
-//                } else {
-//                    throw new ResponseException(403, "Error: forbidden");
-//                }
-//            } else {
-//
-//                throw new ResponseException(400, "Error: bad request");
-//
-//            }
-//        }
-//        else {
-//            throw new ResponseException(400, "Error: bad request");
-//        }
     }
 
 
@@ -202,39 +149,15 @@ public class MySqlDataGame implements GameDao{
 
     public void updateGame(String whiteUsername, int gameID, String name, String blackUsername, ChessGame chess) throws ResponseException {
         var statement = "INSERT INTO game (json, gameName, gameID, whiteUsername, blackUsername, chessGame) VALUES (?, ?, ?, ?, ?, ?)";
-        //var game = new ChessGame();
+
         var board = new Gson().toJson(chess);
         GameData current = new GameData(gameID,whiteUsername,blackUsername,name,chess);
         var json = new Gson().toJson(current);
         var id = executeUpdate(statement, json, name, gameID, whiteUsername, blackUsername, board);
-        //String bigChess = "I need to learn serialization";
-        //gameID = gameID+1;
-        //return new GameData(gameID, null, null, gameName, game);
+
     }
 
 
-//    public static Gson createSerializer() {
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//
-//        gsonBuilder.registerTypeAdapter(ChessPiece.class,
-//                (JsonDeserializer<ChessPiece>) (el, type, ctx) -> {
-//                    ChessPiece chessPiece = null;
-//                    if (el.isJsonObject()) {
-//                        String pieceType = el.getAsJsonObject().get("type").getAsString();
-//                        switch (ChessPiece.PieceType.valueOf(pieceType)) {
-//                            case PAWN -> chessPiece = ctx.deserialize(el, ChessPiece.setChessPiece.(PAWN));
-//                            case ROOK -> chessPiece = ctx.deserialize(el, Rook.class);
-//                            case KNIGHT -> chessPiece = ctx.deserialize(el, Knight.class);
-//                            case BISHOP -> chessPiece = ctx.deserialize(el, Bishop.class);
-//                            case QUEEN -> chessPiece = ctx.deserialize(el, Queen.class);
-//                            case KING -> chessPiece = ctx.deserialize(el, King.class);
-//                        }
-//                    }
-//                    return chessPiece;
-//                });
-//
-//        return gsonBuilder.create();
-//    }
 
 
 
@@ -252,7 +175,7 @@ public class MySqlDataGame implements GameDao{
                     var param = params[i];
                     if (param instanceof String p){ ps.setString(i + 1, p);}
                     else if (param instanceof Integer p){ ps.setInt(i + 1, p);}
-                        //else if (param instanceof PetType p) ps.setString(i + 1, p.toString());
+
                     else if (param == null) {ps.setNull(i + 1, NULL);}
                 }
                 ps.executeUpdate();
