@@ -32,7 +32,7 @@ public class MySqlDataUser implements UserDAO{
                 }
             }
         } catch (Exception e) {
-            throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
+            throw new ResponseException(500, String.format("Error: Unable to read data: %s", e.getMessage()));
         }
         return result;
     }
@@ -50,11 +50,12 @@ public class MySqlDataUser implements UserDAO{
         var statement = "INSERT INTO user (username, password, email, json) VALUES (?, ?, ?, ?)";
         //var statement = "INSERT INTO auth VALUES (?, ?, ?, ?)";
         String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
-        var json = new Gson().toJson(user);
+        UserData clearUser = new UserData(user.username(),hashedPassword,user.email());
+        var json = new Gson().toJson(clearUser);
         //var cryptedPassword =
         var id = executeUpdate(statement, user.username(), hashedPassword, user.email(), json);
 
-        return new UserData(user.username(), user.password(), user.email());
+        return new UserData(user.username(), hashedPassword, user.email());
     }
 
 
@@ -74,8 +75,8 @@ public class MySqlDataUser implements UserDAO{
         String checkWord = userLog.password();
 
 
-
-        if(providedClearTextPassword.equals(checkWord)){
+        //return BCrypt.checkpw(providedClearTextPassword,checkWord);
+        if(providedClearTextPassword.equals(userLog.password())|| BCrypt.checkpw(providedClearTextPassword,checkWord)){
             return true;
         }
         else{
@@ -104,7 +105,9 @@ public class MySqlDataUser implements UserDAO{
                 return 0;
             }
         } catch (SQLException e) {
-            throw new ResponseException(500, String.format("unable to update database: %s, %s", statement, e.getMessage()));
+            throw new ResponseException(500, String.format("Error: unable to update database: %s, %s", statement, e.getMessage()));
+        }catch (DataAccessException ex) {
+            throw new ResponseException(500,"Error: execute error");
         }
     }
 
@@ -132,7 +135,7 @@ public class MySqlDataUser implements UserDAO{
                 }
             }
         } catch (Exception e) {
-            throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
+            throw new ResponseException(500, String.format("Error: Unable to read data: %s", e.getMessage()));
         }
         return null;
     }
@@ -167,15 +170,19 @@ public class MySqlDataUser implements UserDAO{
     };
 
     public void configureDatabase() throws ResponseException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
+        try {
+            DatabaseManager.createDatabase();
+            try (var conn = DatabaseManager.getConnection()) {
+                for (var statement : createStatements) {
+                    try (var preparedStatement = conn.prepareStatement(statement)) {
+                        preparedStatement.executeUpdate();
+                    }
                 }
+            } catch (SQLException ex) {
+                throw new ResponseException(500, String.format("Error: Unable to configure database: %s", ex.getMessage()));
             }
-        } catch (SQLException ex) {
-            throw new ResponseException(500, String.format("Unable to configure database: %s", ex.getMessage()));
+        }catch (DataAccessException ex){
+            throw new ResponseException(500, "Error: creation error");
         }
     }
 

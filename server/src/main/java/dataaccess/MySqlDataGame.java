@@ -45,7 +45,7 @@ public class MySqlDataGame implements GameDao{
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
+            throw new ResponseException(500, String.format("Error: Unable to read data: %s", e.getMessage()));
         }
         return null;
     }
@@ -113,7 +113,7 @@ public class MySqlDataGame implements GameDao{
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
+            throw new ResponseException(500, String.format("Error: Unable to read data: %s", e.getMessage()));
         }
         return result;
     }
@@ -188,7 +188,9 @@ public class MySqlDataGame implements GameDao{
                 return 0;
             }
         } catch (SQLException e) {
-            throw new ResponseException(500, String.format("unable to update database: %s, %s", statement, e.getMessage()));
+            throw new ResponseException(500, String.format("Error: unable to update database: %s, %s", statement, e.getMessage()));
+        }catch (DataAccessException ex) {
+            throw new ResponseException(500,"Error: execute error");
         }
 
     }
@@ -213,17 +215,22 @@ public class MySqlDataGame implements GameDao{
     };
 
     private void configureDatabase() throws ResponseException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
+        try {
+            DatabaseManager.createDatabase();
+            try (var conn = DatabaseManager.getConnection()) {
+                for (var statement : createStatements) {
+                    try (var preparedStatement = conn.prepareStatement(statement)) {
+                        preparedStatement.executeUpdate();
+                    }
                 }
+            } catch (SQLException ex) {
+                throw new ResponseException(500, String.format("Error: Unable to configure database: %s", ex.getMessage()));
             }
-        } catch (SQLException ex) {
-            throw new ResponseException(500, String.format("Unable to configure database: %s", ex.getMessage()));
+        }catch (DataAccessException ex){
+            throw new ResponseException(500, "Error: creation error");
         }
     }
+
 
 
 }
