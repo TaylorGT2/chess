@@ -57,9 +57,9 @@ class MySqlDataAuthTest {
         var user = new AuthData("a", "b");
         dataAccess.createAuth(user);
         var user2 = new AuthData("aa", "bb");
-        dataAccess.createAuth(user2);
+        AuthData d = dataAccess.createAuth(user2);
 
-        dataAccess.deleteAuth("bb");
+        dataAccess.deleteAuth(d.authToken());
 
         var actual = dataAccess.listUsers();
         assertEquals(1, actual.size());
