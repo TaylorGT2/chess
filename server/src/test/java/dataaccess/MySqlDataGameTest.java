@@ -40,6 +40,20 @@ class MySqlDataGameTest {
 
     }
 
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataGame.class, MemoryGameDataAccess.class})
+    void createGameBad(Class<? extends GameDao> dbClass) throws ResponseException {
+        GameDao dataAccess = getDataAccess(dbClass);
+
+
+
+        assertThrows(ResponseException.class, () -> {
+            dataAccess.createGame(null);
+        });
+
+
+    }
+
 
     @ParameterizedTest
     @ValueSource(classes = {MySqlDataGame.class, MemoryGameDataAccess.class})
@@ -84,7 +98,26 @@ class MySqlDataGameTest {
     }
 
 
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataGame.class})
+    void joinGameBad(Class<? extends GameDao> dbClass) throws ResponseException {
 
+
+        GameDao dataAccess = getDataAccess(dbClass);
+
+        //int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game
+        //var user = new GameData(123, "","","mygame", new ChessGame());
+        GameData gameOn= dataAccess.createGame("mygame");
+        //dataAccess.joinGame(gameOn.gameID(),"WHITE",  "thisIsAUser");
+        assertThrows(ResponseException.class, () -> {
+            dataAccess.joinGame(gameOn.gameID(),"WHIT", "hybob");
+        });
+
+
+        //assertDoesNotThrow(() -> dataAccess.createGame("mygame"));
+
+
+    }
 
 
 
