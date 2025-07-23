@@ -41,6 +41,11 @@ public class Client {
         this.r = r;
     }
 
+    public Client(String serverUrl){
+        this.server = new ServerFacade(serverUrl);
+        this.serverUrl = serverUrl;
+    }
+
     public String eval(String input) {
         try {
             var tokens = input.toLowerCase().split(" ");
