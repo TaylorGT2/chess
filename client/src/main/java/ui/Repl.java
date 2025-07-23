@@ -39,6 +39,7 @@ public class Repl implements NotificationHandler {
 
     public void notify(Notification notification) {
         System.out.println("\u001b[" + "31m" + notification.message());
+
         printPrompt();
     }
 

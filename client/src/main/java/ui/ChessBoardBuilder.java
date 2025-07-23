@@ -111,6 +111,8 @@ public class ChessBoardBuilder {
 
     private static void drawChessBoard(PrintStream out) {
 
+        printPlayer(out,K);
+
         for(int second = 0; second<BOARD_SIZE_IN_SQUARES;++second) {
 
             for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; ++boardRow) {

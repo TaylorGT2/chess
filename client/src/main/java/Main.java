@@ -11,7 +11,11 @@ public class Main {
             serviceUrl = args[0];
         }
 
-        new Repl(serviceUrl).run();
+        Repl thing = new Repl(serviceUrl);
+        thing.run();
+        thing.notify(null);
+
+
 
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);

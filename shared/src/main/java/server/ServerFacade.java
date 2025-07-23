@@ -44,17 +44,17 @@ public class ServerFacade {
 
     public GameData[] listGames() throws ResponseException {
         var path = "/game";
-        record listPetResponse(GameData[] games) {
+        record ListPetResponse(GameData[] games) {
         }
-        var response = this.makeRequest("GET", path, null, listPetResponse.class);
+        var response = this.makeRequest("GET", path, null, ListPetResponse.class);
         return response.games();
     }
 
     public UserData[] listUsers() throws ResponseException {
         var path = "/session";
-        record listPetResponse(UserData[] user) {
+        record ListPetResponse(UserData[] user) {
         }
-        var response = this.makeRequest("GET", path, null, listPetResponse.class);
+        var response = this.makeRequest("GET", path, null, ListPetResponse.class);
         return response.user();
     }
 

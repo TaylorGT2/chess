@@ -48,12 +48,11 @@ public class Client {
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
                 case "help" -> login(params);
-               // case "quit" -> rescuePet(params);
-             //   case "list" -> listPets();
+
                 case "login" -> signOut();
                 case "register" -> register(params);
                 case "r" -> register(params);
-             //   case "adoptall" -> adoptAllPets();
+
 
                 case "quit" -> "quit";
                 default -> help();
@@ -137,17 +136,7 @@ public class Client {
     }
 
 
-//    public String rescuePet(String... params) throws ResponseException {
-//        assertSignedIn();
-//        if (params.length >= 2) {
-//            var name = params[0];
-//            var type = PetType.valueOf(params[1].toUpperCase());
-//            var pet = new Pet(0, name, type);
-//            pet = server.addPet(pet);
-//            return String.format("You rescued %s. Assigned ID: %d", pet.name(), pet.id());
-//        }
-//        throw new ResponseException(400, "Expected: <name> <CAT|DOG|FROG>");
-//    }
+
 
 
     private void assertSignedIn() throws ResponseException {
