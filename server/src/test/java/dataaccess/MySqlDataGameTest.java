@@ -12,9 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MySqlDataGameTest {
 
-//    @Test
-//    void getGame() {
-//    }
+
 
     private GameDao getDataAccess(Class<? extends GameDao> databaseClass) throws ResponseException {
         GameDao db;
@@ -72,6 +70,18 @@ class MySqlDataGameTest {
         //assertDoesNotThrow(() -> dataAccess.createGame("mygame"));
 
 
+    }
+
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataAuth.class})
+    void listGameBad(Class<? extends GameDao> dbClass) throws ResponseException {
+        GameDao dataAccess = getDataAccess(dbClass);
+
+        //var user = new AuthData("a", null);
+        //assertThrows(dataAccess.createAuth(user));
+        assertThrows(ResponseException.class, () -> {
+            dataAccess.createGame(null);
+        });
     }
 
 

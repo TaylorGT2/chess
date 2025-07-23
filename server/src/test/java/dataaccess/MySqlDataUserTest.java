@@ -1,5 +1,6 @@
 package dataaccess;
 
+import model.AuthData;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -56,6 +57,17 @@ class MySqlDataUserTest {
 
 
     @ParameterizedTest
+    @ValueSource(classes = {MySqlDataUser.class})
+    void adduserBad(Class<? extends UserDAO> dbClass) throws ResponseException {
+        UserDAO dataAccess = getDataAccess(dbClass);
+
+        assertThrows(NullPointerException.class, () -> {
+            dataAccess.adduser(null);
+        });
+    }
+
+
+    @ParameterizedTest
     @ValueSource(classes = {MySqlDataUser.class, MemoryDataAccess.class})
     void deleteAllUsers(Class<? extends UserDAO> dbClass) throws Exception {
         UserDAO dataAccess = getDataAccess(dbClass);
@@ -69,6 +81,8 @@ class MySqlDataUserTest {
         assertEquals(0, actual.size());
     }
 
+
+
     @ParameterizedTest
     @ValueSource(classes = {MySqlDataUser.class, MemoryDataAccess.class})
     void login(Class<? extends UserDAO> dbClass) throws Exception {
@@ -81,6 +95,16 @@ class MySqlDataUserTest {
 
         //var actual = dataAccess.listUsers();
         //assertEquals(0, actual.size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataUser.class})
+    void loginBad(Class<? extends UserDAO> dbClass) throws ResponseException {
+        UserDAO dataAccess = getDataAccess(dbClass);
+
+        assertThrows(NullPointerException.class, () -> {
+            dataAccess.checkMatching(null);
+        });
     }
 
 

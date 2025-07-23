@@ -23,7 +23,8 @@ public class Client {
     private String visitorName = null;
     private final ServerFacade server;
     private final String serverUrl;
-    private final NotificationHandler notificationHandler;
+    private NotificationHandler notificationHandler;
+    public Repl r;
     //private WebSocketFacade ws;
     private State state = State.SIGNEDOUT;
 
@@ -31,6 +32,13 @@ public class Client {
         this.server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
         this.notificationHandler = notificationHandler;
+
+    }
+
+    public Client(String serverUrl, Repl r) {
+        this.server = new ServerFacade(serverUrl);
+        this.serverUrl = serverUrl;
+        this.r = r;
     }
 
     public String eval(String input) {
@@ -44,6 +52,7 @@ public class Client {
              //   case "list" -> listPets();
                 case "login" -> signOut();
                 case "register" -> register(params);
+                case "r" -> register(params);
              //   case "adoptall" -> adoptAllPets();
 
                 case "quit" -> "quit";
@@ -81,6 +90,8 @@ public class Client {
             var password = params[1];
             var userData = getUser(username);
 
+            var loginable = server.login(userData);
+
             //ws = new WebSocketFacade(serverUrl, notificationHandler);
             //ws.enterPetShop(visitorName);
             return String.format("You signed in as %s.", visitorName);
@@ -92,17 +103,19 @@ public class Client {
     public String help() {
         if (state == State.SIGNEDOUT) {
             return """
-                    - signIn <yourname>
-                    - quit
+                    - Login as an existing user: "l", "login" <USERNAME> <PASSWORD>
+                    - Register a new user: "r", "register" <USERNAME> <PASSWORD> <EMAIL>
+                    - Exit the program: "q", "quit"
+                    - Print this message: "h", "help"
                     """;
         }
         return """
-                - list
-                - adopt <pet id>
-                - rescue <name> <CAT|DOG|FROG|FISH>
-                - adoptAll
-                - signOut
-                - quit
+                - Print this message: "h", "help"
+                - Ends session: "logout"
+                - Creates a new game: "create" <GAMENAME>
+                - Lists all the games: "list"
+                - Play a Game: "play"
+                - Observe a game: "watch"
                 """;
     }
 
@@ -111,7 +124,7 @@ public class Client {
         //ws.leavePetShop(visitorName);
         //ws = null;
         state = State.SIGNEDOUT;
-        return String.format("%s left the shop", visitorName);
+        return String.format("%s left the session", visitorName);
     }
 
     private UserData getUser(String username) throws ResponseException {

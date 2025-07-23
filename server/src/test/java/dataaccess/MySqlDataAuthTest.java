@@ -48,19 +48,22 @@ class MySqlDataAuthTest {
         assertDoesNotThrow(() -> dataAccess.createAuth(user));
     }
 
-//    @ParameterizedTest
-//    @ValueSource(classes = {MySqlDataAuth.class, MemoryAuthDataAccess.class})
-//    void createAuthBad(Class<? extends AuthDAO> dbClass) throws ResponseException {
-//        AuthDAO dataAccess = getDataAccess(dbClass);
-//
-//        AuthData user = null;
-////        assertDoesNotThrow(() -> dataAccess.createAuth(user));
-//
-//
-//        assertThrows(ResponseException.class, () -> {
-//            dataAccess.createAuth(user);
-//        });
-//    }
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataAuth.class})
+    void createAuthBad(Class<? extends AuthDAO> dbClass) throws ResponseException {
+        AuthDAO dataAccess = getDataAccess(dbClass);
+
+        var user = new AuthData("a", null);
+        //assertThrows(dataAccess.createAuth(user));
+        assertThrows(NullPointerException.class, () -> {
+            dataAccess.createAuth(null);
+        });
+    }
+
+
+
+
+
 
 
     @ParameterizedTest
@@ -81,6 +84,19 @@ class MySqlDataAuthTest {
 
 
         //assertDoesNotThrow(() -> dataAccess.createAuth(user));
+    }
+
+
+    @ParameterizedTest
+    @ValueSource(classes = {MySqlDataAuth.class})
+    void logoutBad(Class<? extends AuthDAO> dbClass) throws ResponseException {
+        AuthDAO dataAccess = getDataAccess(dbClass);
+
+        var user = new AuthData("a", null);
+        //assertThrows(dataAccess.createAuth(user));
+        assertThrows(ResponseException.class, () -> {
+            dataAccess.deleteAuth(null);
+        });
     }
 
 
