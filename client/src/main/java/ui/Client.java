@@ -26,12 +26,16 @@ public class Client {
     private NotificationHandler notificationHandler;
     public Repl r;
     //private WebSocketFacade ws;
+
+    String bestToken;
+
     private State state = State.SIGNEDOUT;
 
     public Client(String serverUrl, NotificationHandler notificationHandler) {
         this.server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
         this.notificationHandler = notificationHandler;
+        this.bestToken="";
 
     }
 
@@ -39,11 +43,13 @@ public class Client {
         this.server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
         this.r = r;
+        this.bestToken="";
     }
 
     public Client(String serverUrl){
         this.server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
+        this.bestToken="";
     }
 
     public String eval(String input) {
@@ -54,7 +60,8 @@ public class Client {
             return switch (cmd) {
                 case "help" -> login(params);
 
-                case "login" -> signOut();
+                case "login" -> login(params);
+                case "logout" -> signOut();
                 case "register" -> register(params);
                 case "r" -> register(params);
 
@@ -80,7 +87,7 @@ public class Client {
 
             //ws = new WebSocketFacade(serverUrl, notificationHandler);
             //ws.enterPetShop(visitorName);
-            return String.format("You signed in as %s.", visitorName);
+            return String.format("You signed in as %s.", username);
         }
         throw new ResponseException(400, "Expected: <username> <password> <email>");
     }
@@ -92,13 +99,16 @@ public class Client {
             visitorName = String.join("-", params);
             var username = params[0];
             var password = params[1];
-            var userData = getUser(username);
+            UserData logging = new UserData(username,password, "fill");
+            //var userData = getUser(username);
 
-            var loginable = server.login(userData);
+            var loginable = server.login(logging);
+
+            bestToken=loginable.authToken();
 
             //ws = new WebSocketFacade(serverUrl, notificationHandler);
             //ws.enterPetShop(visitorName);
-            return String.format("You signed in as %s.", visitorName);
+            return String.format("You signed in as %s.", username);
         }
         throw new ResponseException(400, "Expected: <username> <password>");
     }
@@ -127,7 +137,9 @@ public class Client {
         assertSignedIn();
         //ws.leavePetShop(visitorName);
         //ws = null;
+        server.logout(bestToken);
         state = State.SIGNEDOUT;
+
         return String.format("%s left the session", visitorName);
     }
 

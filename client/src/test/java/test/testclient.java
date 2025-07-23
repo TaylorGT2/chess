@@ -102,7 +102,7 @@ public class testclient {
 
             }
         });
-        server = new Server(service, authSer, gameSer);
+        server = new Server();
         server.run(0);
         var url = "http://localhost:" + server.port();
         client = new Client(url);
@@ -122,6 +122,18 @@ public class testclient {
         //client.rescuePet("sally", "cat");
 
         var result = assertDoesNotThrow(() -> client.register("aadfs","bdfsa","cccc"));
+        //assertEquals("joe says ribbit", result);
+    }
+
+    @Test
+    void logout() throws Exception {
+        //var id = getId(client.rescuePet("joe", "frog"));
+        //client.rescuePet("sally", "cat");
+        server.
+
+        client.register("a6","b6","c6");
+
+        var result = assertDoesNotThrow(() -> client.signOut());
         //assertEquals("joe says ribbit", result);
     }
 
