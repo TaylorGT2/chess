@@ -1,17 +1,13 @@
 package ui;
 
-//public class Repl {
-//}
-//package client;
+
 
 import websocket.NotificationHandler;
-import webSocketMessages.Notification;
+import websocketmessages.Notification;
 
-//import com.sun.nio.sctp.NotificationHandler;
+
 
 import java.util.Scanner;
-
-import static ui.EscapeSequences.*;
 
 public class Repl implements NotificationHandler {
     private final Client client;

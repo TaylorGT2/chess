@@ -40,14 +40,7 @@ public class ServerFacade {
         var path = "/db";
         this.makeRequest("DELETE", path, null, null);
     }
-//
-//    public UserData getUser(String username) throws ResponseException {
-//        var path = "/session";
-//        record userResponse(UserData use) {
-//        }
-//        this.makeRequest("POST",path,null,userResponse.class);
-//        return userResponse.class;
-//    }
+
 
     public GameData[] listGames() throws ResponseException {
         var path = "/game";
