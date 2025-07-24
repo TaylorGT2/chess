@@ -2,6 +2,7 @@ package ui;
 
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.google.gson.Gson;
@@ -26,17 +27,23 @@ public class Client {
     private final String serverUrl;
     private NotificationHandler notificationHandler;
     public Repl r;
+
+    ArrayList<Integer> gameList;
     //private WebSocketFacade ws;
 
     String bestToken;
 
     private State state = State.SIGNEDOUT;
 
+    public Integer fakeGameID;
+
     public Client(String serverUrl, NotificationHandler notificationHandler) {
         this.server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
         this.notificationHandler = notificationHandler;
         this.bestToken="";
+        gameList = new ArrayList<>();
+        fakeGameID=1;
 
     }
 
@@ -45,12 +52,16 @@ public class Client {
         this.serverUrl = serverUrl;
         this.r = r;
         this.bestToken="";
+        gameList = new ArrayList<>();
+        fakeGameID=1;
     }
 
     public Client(String serverUrl){
         this.server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
         this.bestToken="";
+        gameList = new ArrayList<>();
+        fakeGameID=1;
     }
 
     public String eval(String input) {
@@ -105,13 +116,24 @@ public class Client {
         throw new ResponseException(400, "Expected: <username> <password> <email>");
     }
 
-    public String watch(){
+    public String watch(String... params) throws ResponseException{
+        if (params.length >= 1) {
 
-        ChessBoardBuilder b = new ChessBoardBuilder();
-        //b.drawHeaders(b.out);
-        //b.drawChessBoard(b.out);
-        b.totalWhiteBoard(b.out);
-        return "behold";
+            String reqGame = params[0];
+            Integer check = Integer.parseInt(reqGame);
+            gameList.size();
+            if(gameList.contains(check)) {
+
+                ChessBoardBuilder b = new ChessBoardBuilder();
+                //b.drawHeaders(b.out);
+                //b.drawChessBoard(b.out);
+                b.totalWhiteBoard(b.out);
+                return "behold";
+            }
+            throw new ResponseException(404, "Please use a valid list number");
+        }
+        throw new ResponseException(404, "Expected: <GameNumber>");
+        //return "behold";
 
     }
 
@@ -124,6 +146,7 @@ public class Client {
         for (var game: games) {
             game.gameName();
             result.append(numbering);
+            //gameList
             //result.append(gson.toJson(game)).append('\n');
             result.append(game.gameName()).append('\n');
             numbering+=1;
@@ -152,6 +175,8 @@ public class Client {
             GameData game = new GameData(0,null,null,name,null);
             var gameData = server.createGame(game, bestToken);
             //login(username,password);
+            gameList.add(fakeGameID);
+            fakeGameID+=1;
 
             //ws = new WebSocketFacade(serverUrl, notificationHandler);
             //ws.enterPetShop(visitorName);
@@ -181,7 +206,25 @@ public class Client {
 
             //ws = new WebSocketFacade(serverUrl, notificationHandler);
             //ws.enterPetShop(visitorName);
-            return String.format("You created a game");
+
+            if(playerColor=="WHITE"){
+                ChessBoardBuilder b = new ChessBoardBuilder();
+                //b.drawHeaders(b.out);
+                //b.drawChessBoard(b.out);
+                b.totalWhiteBoard(b.out);
+                return "behold";
+            }
+            else{
+                ChessBoardBuilder b = new ChessBoardBuilder();
+                //b.drawHeaders(b.out);
+                //b.drawChessBoard(b.out);
+                b.totalBlackBoard(b.out);
+                return "behold";
+            }
+
+
+
+            //return String.format("You entered a game");
         }
         throw new ResponseException(400, "Expected: <gameNum> <BLACK|WHITE");
     }
