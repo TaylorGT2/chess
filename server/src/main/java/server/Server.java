@@ -95,6 +95,10 @@ public class Server {
         Spark.awaitStop();
     }
 
+    public int port() {
+        return Spark.port();
+    }
+
 
 
 
@@ -238,7 +242,7 @@ public class Server {
 
     private String logout(Request req, Response res) throws ResponseException {
 
-
+       // var authToken = req.params("authorization:");
         var authToken = req.headers("Authorization");
 
         serviceAuth.deleteAuth(authToken);
@@ -257,10 +261,6 @@ public class Server {
         serviceGame.clear();
         res.status(200);
         return "";
-    }
-
-    public int port() {
-        return Spark.port();
     }
 
 

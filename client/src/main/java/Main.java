@@ -13,7 +13,7 @@ public class Main {
 
         Repl thing = new Repl(serviceUrl);
         thing.run();
-        thing.notify(null);
+        //thing.notify(null);
 
 
 

@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class testclient {
 
-    static private Server server;
+    static public Server server;
     static Client client;
 
     @BeforeAll
@@ -120,22 +120,42 @@ public class testclient {
     void register() throws Exception {
         //var id = getId(client.rescuePet("joe", "frog"));
         //client.rescuePet("sally", "cat");
+        client.clear();
 
         var result = assertDoesNotThrow(() -> client.register("aadfs","bdfsa","cccc"));
         //assertEquals("joe says ribbit", result);
     }
 
     @Test
-    void logout() throws Exception {
+    void logout() throws ResponseException {
         //var id = getId(client.rescuePet("joe", "frog"));
         //client.rescuePet("sally", "cat");
-        server.
+        //server.deleteAllUsers();
+        client.clear();
 
-        client.register("a6","b6","c6");
+        client.register("a8","b8","c8");
 
         var result = assertDoesNotThrow(() -> client.signOut());
         //assertEquals("joe says ribbit", result);
     }
+
+
+    @Test
+    void game() throws ResponseException {
+        //var id = getId(client.rescuePet("joe", "frog"));
+        //client.rescuePet("sally", "cat");
+        //server.deleteAllUsers();
+        client.clear();
+
+        client.register("a8","b8","c8");
+
+        var result = assertDoesNotThrow(() -> client.createGame("gameName"));
+        //assertEquals("joe says ribbit", result);
+    }
+
+
+
+
 
 
 

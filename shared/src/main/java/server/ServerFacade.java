@@ -21,30 +21,35 @@ public class ServerFacade {
 
     public UserData addUser(UserData user) throws ResponseException {
         var path = "/user";
-        return this.makeRequest("POST", path, user, UserData.class);
+        return this.makeRequest("POST", path,null, user, UserData.class);
     }
 
     public AuthData login(UserData check) throws ResponseException {
         var path = "/session";
-        return this.makeRequest("POST", path, check, AuthData.class);
+        return this.makeRequest("POST", path,null, check, AuthData.class);
     }
 
     public void logout(String authToken) throws ResponseException{
-        var path = String.format("/session/%s", authToken);
-        this.makeRequest("DELETE", path, null, null);
+        var path = String.format("/session");
+        this.makeRequest("DELETE", path, authToken, null, null);
 
+    }
+
+    public GameData createGame(GameData gg, String authToken) throws ResponseException{
+        var path = "/game";
+        return this.makeRequest("POST",path,authToken,gg,GameData.class);
     }
 
 
 
     public void deleteGame(int id) throws ResponseException {
         var path = String.format("/game/%s", id);
-        this.makeRequest("DELETE", path, null, null);
+        this.makeRequest("DELETE", path, null, null,null);
     }
 
     public void deleteAllUsers() throws ResponseException {
         var path = "/db";
-        this.makeRequest("DELETE", path, null, null);
+        this.makeRequest("DELETE", path, null, null,null);
     }
 
 
@@ -52,7 +57,7 @@ public class ServerFacade {
         var path = "/game";
         record ListGameResponse(GameData[] games) {
         }
-        var response = this.makeRequest("GET", path, null, ListGameResponse.class);
+        var response = this.makeRequest("GET", path, null,null, ListGameResponse.class);
         return response.games();
     }
 
@@ -60,7 +65,7 @@ public class ServerFacade {
         var path = "/session";
         record Listuser(UserData[] user) {
         }
-        var response = this.makeRequest("GET", path, null, Listuser.class);
+        var response = this.makeRequest("GET", path, null,null, Listuser.class);
         return response.user();
     }
 
@@ -69,7 +74,7 @@ public class ServerFacade {
 
 
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
+    private <T> T makeRequest(String method, String path, String authToken, Object request, Class<T> responseClass) throws ResponseException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -77,6 +82,9 @@ public class ServerFacade {
             http.setDoOutput(true);
 
             writeBody(request, http);
+            if(authToken!=null) {
+                http.addRequestProperty("authorization", authToken);
+            }
             http.connect();
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);

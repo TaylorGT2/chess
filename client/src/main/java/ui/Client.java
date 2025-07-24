@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import com.google.gson.Gson;
 import com.sun.nio.sctp.NotificationHandler;
+import model.GameData;
 import model.UserData;
 import model.AuthData;
 import exception.ResponseException;
@@ -65,6 +66,8 @@ public class Client {
                 case "register" -> register(params);
                 case "r" -> register(params);
 
+                case "play" -> createGame(params);
+
 
                 case "quit" -> "quit";
                 default -> help();
@@ -90,6 +93,24 @@ public class Client {
             return String.format("You signed in as %s.", username);
         }
         throw new ResponseException(400, "Expected: <username> <password> <email>");
+    }
+
+
+    public String createGame(String... params) throws ResponseException {
+        if (params.length >= 1) {
+            state = State.SIGNEDIN;
+            visitorName = String.join("-", params);
+            var name = params[0];
+
+            GameData game = new GameData(0,null,null,name,null);
+            var gameData = server.createGame(game, bestToken);
+            //login(username,password);
+
+            //ws = new WebSocketFacade(serverUrl, notificationHandler);
+            //ws.enterPetShop(visitorName);
+            return String.format("You created a game as %s.", name);
+        }
+        throw new ResponseException(400, "Expected: <gameName>");
     }
 
 
@@ -141,6 +162,10 @@ public class Client {
         state = State.SIGNEDOUT;
 
         return String.format("%s left the session", visitorName);
+    }
+
+    public void clear() throws ResponseException{
+        server.deleteAllUsers();
     }
 
     private UserData getUser(String username) throws ResponseException {
