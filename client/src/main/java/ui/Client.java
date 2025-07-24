@@ -66,7 +66,9 @@ public class Client {
                 case "register" -> register(params);
                 case "r" -> register(params);
 
-                case "play" -> createGame(params);
+                case "create" -> createGame(params);
+
+                case "list" -> listGames();
 
 
                 case "quit" -> "quit";
@@ -94,6 +96,24 @@ public class Client {
         }
         throw new ResponseException(400, "Expected: <username> <password> <email>");
     }
+
+    public String listGames() throws ResponseException {
+        assertSignedIn();
+        var games = server.listGames();
+        var result = new StringBuilder();
+        var gson = new Gson
+    }
+
+//    public String listPets() throws ResponseException {
+//        assertSignedIn();
+//        var pets = server.listPets();
+//        var result = new StringBuilder();
+//        var gson = new Gson();
+//        for (var pet : pets) {
+//            result.append(gson.toJson(pet)).append('\n');
+//        }
+//        return result.toString();
+//    }
 
 
     public String createGame(String... params) throws ResponseException {

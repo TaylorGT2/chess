@@ -81,10 +81,11 @@ public class ServerFacade {
             http.setRequestMethod(method);
             http.setDoOutput(true);
 
-            writeBody(request, http);
+            //writeBody(request, http);
             if(authToken!=null) {
                 http.addRequestProperty("authorization", authToken);
             }
+            writeBody(request, http);
             http.connect();
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
