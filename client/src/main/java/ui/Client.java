@@ -72,6 +72,12 @@ public class Client {
 
                 case "watch" -> watch();
 
+                case "play" -> playGame(params);
+
+                case "clear" -> clear();
+
+
+
 
                 case "quit" -> "quit";
                 default -> help();
@@ -101,9 +107,10 @@ public class Client {
 
     public String watch(){
 
-//        ChessBoardBuilder b = new ChessBoardBuilder();
-//        b.drawHeaders(b.out);
-//        b.drawChessBoard(b.out);
+        ChessBoardBuilder b = new ChessBoardBuilder();
+        //b.drawHeaders(b.out);
+        //b.drawChessBoard(b.out);
+        b.totalWhiteBoard(b.out);
         return "behold";
 
     }
@@ -113,8 +120,13 @@ public class Client {
         var games = server.listGames(bestToken);
         var result = new StringBuilder();
         var gson = new Gson();
+        int numbering = 1;
         for (var game: games) {
-            result.append(gson.toJson(game)).append('\n');
+            game.gameName();
+            result.append(numbering);
+            //result.append(gson.toJson(game)).append('\n');
+            result.append(game.gameName()).append('\n');
+            numbering+=1;
         }
         return result.toString();
     }
@@ -147,6 +159,32 @@ public class Client {
         }
         throw new ResponseException(400, "Expected: <gameName>");
     }
+
+    public String playGame(String... params) throws ResponseException {
+        if (params.length >= 2) {
+            state = State.SIGNEDIN;
+            //visitorName = String.join("-", params);
+            var gameNumber = params[0];
+            int gameNum = Integer.parseInt(gameNumber);
+
+            var gameID = 8+4*gameNum;
+
+            var playerColor = params[1];
+            String[] ingredients = {String.valueOf(gameID),playerColor};
+            String good = new Gson().toJson(params);
+
+            //GameData game = new GameData(0,null,null,name,null);
+            //String goodParams = params.toString();
+            server.playGame(good, bestToken);
+            //login(username,password);
+
+            //ws = new WebSocketFacade(serverUrl, notificationHandler);
+            //ws.enterPetShop(visitorName);
+            return String.format("You created a game");
+        }
+        throw new ResponseException(400, "Expected: <gameNum> <BLACK|WHITE");
+    }
+
 
 
     public String login(String... params) throws ResponseException {
@@ -199,8 +237,9 @@ public class Client {
         return String.format("%s left the session", visitorName);
     }
 
-    public void clear() throws ResponseException{
+    public String clear() throws ResponseException{
         server.deleteAllUsers();
+        return "done";
     }
 
     private UserData getUser(String username) throws ResponseException {

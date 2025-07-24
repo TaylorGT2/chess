@@ -59,20 +59,20 @@ public class ChessBoardBuilder {
     private static Random rand = new Random();
 
 
-    public static void main(String[] args) {
-        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-
-        out.print(ERASE_SCREEN);
-
-        //drawHeaders(out);
-
-        realHeaders(out);
-
-        drawChessBoard(out);
-
-        out.print(SET_BG_COLOR_BLACK);
-        out.print(SET_TEXT_COLOR_WHITE);
-    }
+//    public static void main(String[] args) {
+//        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+//
+//        out.print(ERASE_SCREEN);
+//
+//        //drawHeaders(out);
+//
+//        realHeaders(out);
+//
+//        drawChessBoard(out);
+//
+//        out.print(SET_BG_COLOR_BLACK);
+//        out.print(SET_TEXT_COLOR_WHITE);
+//    }
 
     public static void totalBlackBoard(PrintStream out){
         out.print(ERASE_SCREEN);
@@ -127,11 +127,11 @@ public class ChessBoardBuilder {
     }
 
 
-//    PrintStream out;
-//    public ChessBoardBuilder(){
-//        this.out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-//        out.print(ERASE_SCREEN);
-//    }
+    PrintStream out;
+    public ChessBoardBuilder(){
+        this.out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        out.print(ERASE_SCREEN);
+    }
 
 
 

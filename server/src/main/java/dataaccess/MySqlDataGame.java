@@ -28,7 +28,7 @@ public class MySqlDataGame implements GameDao{
 
     public MySqlDataGame() throws ResponseException {
         configureDatabase();
-        gameID = 0;
+        gameID = 1;
     }
 
 
@@ -142,7 +142,7 @@ public class MySqlDataGame implements GameDao{
         var json = new Gson().toJson(current);
         var id = executeUpdate(statement, gameName, chess, json, null, null);
         String bigChess = "I need to learn serialization";
-        gameID = gameID+4;
+        gameID = gameID+1;
         return new GameData(id, null, null, gameName, game);
     }
 

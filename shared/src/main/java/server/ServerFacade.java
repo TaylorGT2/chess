@@ -61,6 +61,13 @@ public class ServerFacade {
         return response.games();
     }
 
+    public void playGame(String params, String authToken) throws ResponseException{
+        var path = "/game";
+        this.makeRequest("PUT", path, authToken,params, null);
+    }
+
+
+
     public UserData[] listUsers() throws ResponseException {
         var path = "/session";
         record Listuser(UserData[] user) {
