@@ -6,6 +6,7 @@ import exception.ResponseException;
 import model.UserData;
 import model.AuthData;
 import model.GameData;
+import reqres.LoginRequest;
 
 import java.io.*;
 import java.net.*;
@@ -61,9 +62,18 @@ public class ServerFacade {
         return response.games();
     }
 
-    public void playGame(String params, String authToken) throws ResponseException{
+    public void playGame(int gameID, String playerColor, String authToken) throws ResponseException{
         var path = "/game";
-        this.makeRequest("PUT", path, authToken,params, null);
+
+
+//        public record LoginRequest(
+//                int gameID,
+//                String playerColor){
+//        }
+//        record playGameReq()
+
+        var play = new LoginRequest(gameID, playerColor);
+        this.makeRequest("PUT", path, authToken,play, null);
     }
 
 

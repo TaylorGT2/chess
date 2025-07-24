@@ -167,7 +167,8 @@ public class Client {
             var gameNumber = params[0];
             int gameNum = Integer.parseInt(gameNumber);
 
-            var gameID = 8+4*gameNum;
+            //var gameID = 8+4*gameNum;
+            var gameID = gameNum;;
 
             var playerColor = params[1];
             String[] ingredients = {String.valueOf(gameID),playerColor};
@@ -175,7 +176,7 @@ public class Client {
 
             //GameData game = new GameData(0,null,null,name,null);
             //String goodParams = params.toString();
-            server.playGame(good, bestToken);
+            server.playGame(gameID,playerColor, bestToken);
             //login(username,password);
 
             //ws = new WebSocketFacade(serverUrl, notificationHandler);

@@ -176,7 +176,7 @@ public class testclient {
         client.register("a8","b8","c8");
         client.createGame("gameName");
 
-        var result = assertDoesNotThrow(() -> client.playGame("12","WHITE"));
+        var result = assertDoesNotThrow(() -> client.playGame("1","WHITE"));
         //assertEquals("joe says ribbit", result);
     }
 
