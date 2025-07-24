@@ -37,6 +37,25 @@ public class ChessBoardBuilder {
     private static final String N = " N ";
     private static final String N2 = " n ";
 
+
+    private static final String NUM1 = " 1 ";
+    private static final String NUM2 = " 2 ";
+    private static final String NUM3 = " 3 ";
+    private static final String NUM4 = " 4 ";
+    private static final String NUM5 = " 5 ";
+    private static final String NUM6 = " 6 ";
+    private static final String NUM7 = " 7 ";
+    private static final String NUM8 = " 8 ";
+
+    private static final String L1 = " a ";
+    private static final String L2 = " b ";
+    private static final String L3 = " c ";
+    private static final String L4 = " d ";
+    private static final String L5 = " e ";
+    private static final String L6 = " f ";
+    private static final String L7 = " g ";
+    private static final String L8 = " h ";
+
     private static Random rand = new Random();
 
 
@@ -65,14 +84,17 @@ public class ChessBoardBuilder {
     public static void drawHeaders(PrintStream out) {
 
         setBlack(out);
+        int space = 2;
 
-        String[] headers = { "1", "2", "3", "4", "5", "6", "7", "8" };
+        String[] headers = { "a", "b", "c", "d", "e", "f", "g", "h" };
         for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
             drawHeader(out, headers[boardCol]);
-
-            if (boardCol < BOARD_SIZE_IN_SQUARES - 1) {
-                out.print(EMPTY.repeat(LINE_WIDTH_IN_PADDED_CHARS));
+            if(space%2==0) {
+                if (boardCol < BOARD_SIZE_IN_SQUARES - 1) {
+                    out.print(EMPTY.repeat(LINE_WIDTH_IN_PADDED_CHARS));
+                }
             }
+            space+=1;
         }
 
         out.println();
@@ -104,13 +126,18 @@ public class ChessBoardBuilder {
 
 
     private static void setWhite(PrintStream out) {
-        out.print(SET_BG_COLOR_WHITE);
-        out.print(SET_TEXT_COLOR_WHITE);
+//        out.print(SET_BG_COLOR_WHITE);
+//        out.print(SET_TEXT_COLOR_WHITE);
+        out.print(SET_BG_COLOR_RED);
+        out.print(SET_TEXT_COLOR_RED);
     }
 
     private static void setRed(PrintStream out) {
-        out.print(SET_BG_COLOR_RED);
-        out.print(SET_TEXT_COLOR_RED);
+//        out.print(SET_BG_COLOR_RED);
+//        out.print(SET_TEXT_COLOR_RED);
+
+        out.print(SET_BG_COLOR_WHITE);
+        out.print(SET_TEXT_COLOR_WHITE);
     }
 
 
@@ -301,10 +328,11 @@ public class ChessBoardBuilder {
 
 
     private static void printPlayer(PrintStream out, String player, Boolean bac) {
-        out.print(SET_BG_COLOR_WHITE);
+        out.print(SET_BG_COLOR_RED);
         out.print(SET_TEXT_COLOR_BLACK);
         if(bac==true){
-            out.print(SET_BG_COLOR_RED);
+            //out.print(SET_BG_COLOR_RED);
+            out.print(SET_BG_COLOR_WHITE);
         }
 
         out.print(player);
