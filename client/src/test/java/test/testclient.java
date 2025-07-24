@@ -153,6 +153,20 @@ public class testclient {
         //assertEquals("joe says ribbit", result);
     }
 
+    @Test
+    void createGame() throws ResponseException {
+        //var id = getId(client.rescuePet("joe", "frog"));
+        //client.rescuePet("sally", "cat");
+        //server.deleteAllUsers();
+        client.clear();
+
+        client.register("a8","b8","c8");
+        client.createGame("gameName");
+
+        var result = assertDoesNotThrow(() -> client.listGames());
+        //assertEquals("joe says ribbit", result);
+    }
+
 
 
 

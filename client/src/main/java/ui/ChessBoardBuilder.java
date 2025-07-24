@@ -40,7 +40,7 @@ public class ChessBoardBuilder {
     private static Random rand = new Random();
 
 
-        public static void main(String[] args) {
+    public static void main(String[] args) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
         out.print(ERASE_SCREEN);
@@ -54,8 +54,15 @@ public class ChessBoardBuilder {
     }
 
 
+//    PrintStream out;
+//    public ChessBoardBuilder(){
+//        this.out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+//        out.print(ERASE_SCREEN);
+//    }
 
-    private static void drawHeaders(PrintStream out) {
+
+
+    public static void drawHeaders(PrintStream out) {
 
         setBlack(out);
 
@@ -109,34 +116,172 @@ public class ChessBoardBuilder {
 
 
 
-    private static void drawChessBoard(PrintStream out) {
+    public static void drawChessBoard(PrintStream out) {
 
-        printPlayer(out,K);
+        //printPlayer(out,K,true);
 
         for(int second = 0; second<BOARD_SIZE_IN_SQUARES;++second) {
 
             for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; ++boardRow) {
 
+
                 if(second%2==0) {
 
                     if (boardRow % 2 == 0) {
 
-                        setRed(out);
-                        out.print(EMPTY.repeat((int) (SQUARE_SIZE_IN_PADDED_CHARS)));
+                        if(second==6){
+                            printPlayer(out,P2,true);
+                        }
+                        else {
+                            if(second==0){
+                                if(boardRow==0){
+                                    printPlayer(out,R,true);
+                                }
+                                if(boardRow==1){
+                                    printPlayer(out,N,false);
+                                }
+                                if(boardRow==2){
+                                    printPlayer(out,B,true);
+                                }
+                                if(boardRow==3){
+                                    printPlayer(out,Q,false);
+                                }
+                                if(boardRow==4){
+                                    printPlayer(out,K,true);
+                                }
+                                if(boardRow==5){
+                                    printPlayer(out,B,false);
+                                }
+                                if(boardRow==6){
+                                    printPlayer(out,N,true);
+                                }
+                                if(boardRow==7){
+                                    printPlayer(out,R,false);
+                                }
+                            }
+
+                            else {
+
+
+                                setRed(out);
+                                out.print(EMPTY.repeat((int) (SQUARE_SIZE_IN_PADDED_CHARS)));
+                            }
+                        }
                     } else {
-                        setWhite(out);
-                        out.print(EMPTY.repeat((int) (SQUARE_SIZE_IN_PADDED_CHARS)));
+                        if(second==6){
+                            printPlayer(out,P2,false);
+                        }
+                        else {
+                            if(second==0){
+
+                                if(boardRow==0){
+                                    printPlayer(out,R,true);
+                                }
+                                if(boardRow==1){
+                                    printPlayer(out,N,false);
+                                }
+                                if(boardRow==2){
+                                    printPlayer(out,B,true);
+                                }
+                                if(boardRow==3){
+                                    printPlayer(out,Q,false);
+                                }
+                                if(boardRow==4){
+                                    printPlayer(out,K,true);
+                                }
+                                if(boardRow==5){
+                                    printPlayer(out,B,false);
+                                }
+                                if(boardRow==6){
+                                    printPlayer(out,N,true);
+                                }
+                                if(boardRow==7){
+                                    printPlayer(out,R,false);
+                                }
+                            }
+                            else {
+                                setWhite(out);
+                                out.print(EMPTY.repeat((int) (SQUARE_SIZE_IN_PADDED_CHARS)));
+                            }
+                        }
                     }
 
                 }
                 else{
                     if (boardRow % 2 == 0) {
+                        if(second==1){
+                            printPlayer(out,P,false);
+                        }
+                        else {
+                            if(second==7){
+                                if(boardRow==0){
+                                    printPlayer(out,R2,false);
+                                }
+                                if(boardRow==1){
+                                    printPlayer(out,N2,true);
+                                }
+                                if(boardRow==2){
+                                    printPlayer(out,B2,false);
+                                }
+                                if(boardRow==3){
+                                    printPlayer(out,Q2,true);
+                                }
+                                if(boardRow==4){
+                                    printPlayer(out,K2,false);
+                                }
+                                if(boardRow==5){
+                                    printPlayer(out,B2,true);
+                                }
+                                if(boardRow==6){
+                                    printPlayer(out,N2,false);
+                                }
+                                if(boardRow==7){
+                                    printPlayer(out,R2,true);
+                                }
+                            }
+                            else {
 
-                        setWhite(out);
-                        out.print(EMPTY.repeat((int) (SQUARE_SIZE_IN_PADDED_CHARS)));
+                                setWhite(out);
+                                out.print(EMPTY.repeat((int) (SQUARE_SIZE_IN_PADDED_CHARS)));
+                            }
+                        }
                     } else {
-                        setRed(out);
-                        out.print(EMPTY.repeat((int) (SQUARE_SIZE_IN_PADDED_CHARS)));
+
+                        if(second==1){
+                            printPlayer(out,P,true);
+                        }
+                        else {
+                            if(second==7){
+                                if(boardRow==0){
+                                    printPlayer(out,R2,false);
+                                }
+                                if(boardRow==1){
+                                    printPlayer(out,N2,true);
+                                }
+                                if(boardRow==2){
+                                    printPlayer(out,B2,false);
+                                }
+                                if(boardRow==3){
+                                    printPlayer(out,Q2,true);
+                                }
+                                if(boardRow==4){
+                                    printPlayer(out,K2,false);
+                                }
+                                if(boardRow==5){
+                                    printPlayer(out,B2,true);
+                                }
+                                if(boardRow==6){
+                                    printPlayer(out,N2,false);
+                                }
+                                if(boardRow==7){
+                                    printPlayer(out,R2,true);
+                                }
+                            }
+                            else {
+                                setRed(out);
+                                out.print(EMPTY.repeat((int) (SQUARE_SIZE_IN_PADDED_CHARS)));
+                            }
+                        }
                     }
 
                 }
@@ -155,9 +300,12 @@ public class ChessBoardBuilder {
 
 
 
-    private static void printPlayer(PrintStream out, String player) {
+    private static void printPlayer(PrintStream out, String player, Boolean bac) {
         out.print(SET_BG_COLOR_WHITE);
         out.print(SET_TEXT_COLOR_BLACK);
+        if(bac==true){
+            out.print(SET_BG_COLOR_RED);
+        }
 
         out.print(player);
 

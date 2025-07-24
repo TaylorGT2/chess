@@ -70,6 +70,8 @@ public class Client {
 
                 case "list" -> listGames();
 
+                case "watch" -> watch();
+
 
                 case "quit" -> "quit";
                 default -> help();
@@ -97,11 +99,24 @@ public class Client {
         throw new ResponseException(400, "Expected: <username> <password> <email>");
     }
 
+    public String watch(){
+
+//        ChessBoardBuilder b = new ChessBoardBuilder();
+//        b.drawHeaders(b.out);
+//        b.drawChessBoard(b.out);
+        return "behold";
+
+    }
+
     public String listGames() throws ResponseException {
         assertSignedIn();
-        var games = server.listGames();
+        var games = server.listGames(bestToken);
         var result = new StringBuilder();
-        var gson = new Gson
+        var gson = new Gson();
+        for (var game: games) {
+            result.append(gson.toJson(game)).append('\n');
+        }
+        return result.toString();
     }
 
 //    public String listPets() throws ResponseException {
