@@ -90,6 +90,7 @@ public class ChessBoardBuilder {
         out.print(ERASE_SCREEN);
 
         //drawHeaders(out);
+        //this needs to be rebuilt
 
         realHeaders(out);
 
