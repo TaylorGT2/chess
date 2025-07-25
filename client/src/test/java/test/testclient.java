@@ -128,70 +128,112 @@ public class testclient {
 
     @Test
     void logout() throws ResponseException {
-        //var id = getId(client.rescuePet("joe", "frog"));
-        //client.rescuePet("sally", "cat");
-        //server.deleteAllUsers();
+
         client.clear();
 
         client.register("a8","b8","c8");
 
         var result = assertDoesNotThrow(() -> client.signOut());
-        //assertEquals("joe says ribbit", result);
+
     }
 
 
     @Test
     void game() throws ResponseException {
-        //var id = getId(client.rescuePet("joe", "frog"));
-        //client.rescuePet("sally", "cat");
-        //server.deleteAllUsers();
+
         client.clear();
 
         client.register("a8","b8","c8");
 
         var result = assertDoesNotThrow(() -> client.createGame("gameName"));
-        //assertEquals("joe says ribbit", result);
+
     }
+
+
+
+
 
     @Test
     void createGame() throws ResponseException {
-        //var id = getId(client.rescuePet("joe", "frog"));
-        //client.rescuePet("sally", "cat");
-        //server.deleteAllUsers();
+
         client.clear();
 
         client.register("a8","b8","c8");
         client.createGame("gameName");
 
         var result = assertDoesNotThrow(() -> client.listGames());
-        //assertEquals("joe says ribbit", result);
+
     }
+
+    @Test
+    void createGameBad() throws ResponseException {
+
+        client.clear();
+
+        client.register("a8","b8","c8");
+        client.createGame("gameName");
+
+        var result = assertDoesNotThrow(() -> client.listGames());
+        assertThrows(NullPointerException.class, () -> {
+            client.createGame(null);
+        });
+
+    }
+
+
+
     @Test
     void playGame() throws ResponseException {
-        //var id = getId(client.rescuePet("joe", "frog"));
-        //client.rescuePet("sally", "cat");
-        //server.deleteAllUsers();
+
         client.clear();
 
         client.register("a8","b8","c8");
         client.createGame("gameName");
 
         var result = assertDoesNotThrow(() -> client.playGame("1","WHITE"));
-        //assertEquals("joe says ribbit", result);
+
+    }
+
+
+    @Test
+    void playGameBad() throws ResponseException {
+
+        client.clear();
+
+        client.register("a8","b8","c8");
+        client.createGame("gameName");
+
+        //var result = assertDoesNotThrow(() -> client.playGame("1","WHITE"));
+        assertThrows(ResponseException.class, () -> {
+            client.playGame("1","WHIT");
+        });
+
     }
 
     @Test
     void watch() throws ResponseException {
-        //var id = getId(client.rescuePet("joe", "frog"));
-        //client.rescuePet("sally", "cat");
-        //server.deleteAllUsers();
+
         client.clear();
 
         client.register("a8","b8","c8");
         client.createGame("gameName");
 
         var result = assertDoesNotThrow(() -> client.watch("1"));
-        //assertEquals("joe says ribbit", result);
+
+    }
+    @Test
+    void watchBad() throws ResponseException {
+
+        client.clear();
+
+        client.register("a8","b8","c8");
+        client.createGame("gameName");
+
+        //var result = assertThrows(() -> client.watch("a"));
+        assertThrows(NumberFormatException.class, () -> {
+            client.watch("a");
+        });
+
     }
 
 
