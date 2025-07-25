@@ -1,10 +1,4 @@
-package client;
-
-
-
-
-import org.junit.jupiter.api.*;
-import server.Server;
+package server;
 
 
 
@@ -25,42 +19,14 @@ import ui.Client;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ServerFacadeTests {
 
-    private static Server server;
 
-    //static public Server server;
+class ServerFacadeTest {
+
+    static public Server server;
     static Client client;
-
-//    @BeforeAll
-//    public static void init() {
-//        server = new Server();
-//        var port = server.run(0);
-//        System.out.println("Started test HTTP server on " + port);
-//    }
-//
-//    @AfterAll
-//    static void stopServer() {
-//        server.stop();
-//    }
-//
-//
-//    @Test
-//    public void sampleTest() {
-//        Assertions.assertTrue(true);
-//    }
-
-
-
-
-
-
-
-
-
 
 
     @BeforeAll
@@ -151,32 +117,6 @@ public class ServerFacadeTests {
     static void stopServer() {
         server.stop();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     @Test
