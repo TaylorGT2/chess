@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import com.sun.nio.sctp.NotificationHandler;
 import model.GameData;
 import model.UserData;
-import model.AuthData;
 import exception.ResponseException;
 import server.ServerFacade;
 //import client.websocket.NotificationHandler;
@@ -23,7 +22,7 @@ import server.ServerFacade;
 public class Client {
 
     private String visitorName = null;
-    private final ServerFacade server;
+    public ServerFacade server;
     private final String serverUrl;
     private NotificationHandler notificationHandler;
     public Repl r;
@@ -31,7 +30,7 @@ public class Client {
     ArrayList<Integer> gameList;
     //private WebSocketFacade ws;
 
-    String bestToken;
+    public String bestToken;
 
     private State state = State.SIGNEDOUT;
 
@@ -234,9 +233,10 @@ public class Client {
     public String login(String... params) throws ResponseException {
         if (params.length >= 2) {
             state = State.SIGNEDIN;
-            visitorName = String.join("-", params);
+            //visitorName = String.join("-", params);
             var username = params[0];
             var password = params[1];
+            visitorName=username;
             UserData logging = new UserData(username,password, "fill");
             //var userData = getUser(username);
 

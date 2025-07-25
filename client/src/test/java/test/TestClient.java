@@ -10,6 +10,7 @@ import model.UserData;
 import model.AuthData;
 import org.junit.jupiter.api.*;
 import server.Server;
+import server.ServerFacade;
 import service.GameService;
 import service.UserService;
 import service.AuthService;
@@ -23,6 +24,7 @@ public class TestClient {
 
     static public Server server;
     static Client client;
+
 
     @BeforeAll
     static void startServer() throws Exception {
@@ -118,6 +120,13 @@ public class TestClient {
     void register() throws Exception {
 
         client.clear();
+        ServerFacade fakeServe = client.server;
+
+        UserData testUser = new UserData("a","b", "c");
+
+        //asssertDoesNotThrow(()->fakeServe.addUser(testUser));
+
+        assertDoesNotThrow(() -> fakeServe.addUser(testUser));
 
         var result = assertDoesNotThrow(() -> client.register("aadfs","bdfsa","cccc"));
 
@@ -126,9 +135,17 @@ public class TestClient {
     @Test
     void registerBad() throws Exception {
 
+        ServerFacade fakeServe = client.server;
+
         client.clear();
 
+        UserData testUser = new UserData("a","b", null);
+
         //var result = assertDoesNotThrow(() -> client.register("aadfs","bdfsa","cccc"));
+
+        assertThrows(ResponseException.class, () -> {
+            fakeServe.addUser(testUser);
+        });
 
         assertThrows(ResponseException.class, () -> {
             client.register("aadfs","bdfsa",null);
@@ -139,18 +156,29 @@ public class TestClient {
     @Test
     void logout() throws ResponseException {
 
+        ServerFacade fakeServe = client.server;
+
         client.clear();
 
         client.register("a8","b8","c8");
 
-        var result = assertDoesNotThrow(() -> client.signOut());
+        String authToken = client.bestToken;
+
+        assertDoesNotThrow(() -> fakeServe.logout(authToken));
+        //var result = assertDoesNotThrow(() -> client.signOut());
 
     }
 
     @Test
     void logoutBad() throws ResponseException {
+        ServerFacade fakeServe = client.server;
 
         client.clear();
+
+
+        assertThrows(ResponseException.class, () -> {
+            fakeServe.logout("abc");
+        });
 
 
         assertThrows(ResponseException.class, () -> {
@@ -163,11 +191,18 @@ public class TestClient {
 
     @Test
     void game() throws ResponseException {
+        ServerFacade fakeServe = client.server;
 
         client.clear();
 
-        client.register("a8","b8","c8");
+        //String authToken = client.bestToken;
 
+        GameData test = new GameData(1,null,null,"name",null);
+
+        client.register("a8","b8","c8");
+        String authToken = client.bestToken;
+
+        assertDoesNotThrow(() -> fakeServe.createGame(test,authToken));
         var result = assertDoesNotThrow(() -> client.createGame("gameName"));
 
     }
@@ -178,18 +213,21 @@ public class TestClient {
 
     @Test
     void createGame() throws ResponseException {
+        ServerFacade fakeServe = client.server;
 
         client.clear();
 
         client.register("a8","b8","c8");
+        String authToken = client.bestToken;
         client.createGame("gameName");
-
+        assertDoesNotThrow(() -> fakeServe.listGames(authToken));
         var result = assertDoesNotThrow(() -> client.listGames());
 
     }
 
     @Test
     void createGameBad() throws ResponseException {
+        ServerFacade fakeServe = client.server;
 
         client.clear();
 
@@ -197,6 +235,9 @@ public class TestClient {
         client.createGame("gameName");
 
         var result = assertDoesNotThrow(() -> client.listGames());
+        assertThrows(ResponseException.class, () -> {
+            fakeServe.createGame(null,null);
+        });
         assertThrows(NullPointerException.class, () -> {
             client.createGame(null);
         });
@@ -207,19 +248,27 @@ public class TestClient {
 
     @Test
     void playGame() throws ResponseException {
+        ServerFacade fakeServe = client.server;
 
         client.clear();
 
         client.register("a8","b8","c8");
         client.createGame("gameName");
 
-        var result = assertDoesNotThrow(() -> client.playGame("1","WHITE"));
+        String authToken = client.bestToken;
+
+
+
+        assertDoesNotThrow(() -> fakeServe.playGame(1,"WHITE",authToken));
+
+        //var result = assertDoesNotThrow(() -> client.playGame("1","WHITE"));
 
     }
 
 
     @Test
     void playGameBad() throws ResponseException {
+        ServerFacade fakeServe = client.server;
 
         client.clear();
 
@@ -235,6 +284,7 @@ public class TestClient {
 
     @Test
     void watch() throws ResponseException {
+        ServerFacade fakeServe = client.server;
 
         client.clear();
 
@@ -246,6 +296,7 @@ public class TestClient {
     }
     @Test
     void watchBad() throws ResponseException {
+        ServerFacade fakeServe = client.server;
 
         client.clear();
 
