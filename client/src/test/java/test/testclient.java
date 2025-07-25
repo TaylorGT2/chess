@@ -118,12 +118,24 @@ public class testclient {
 
     @Test
     void register() throws Exception {
-        //var id = getId(client.rescuePet("joe", "frog"));
-        //client.rescuePet("sally", "cat");
+
         client.clear();
 
         var result = assertDoesNotThrow(() -> client.register("aadfs","bdfsa","cccc"));
-        //assertEquals("joe says ribbit", result);
+
+    }
+
+    @Test
+    void registerBad() throws Exception {
+
+        client.clear();
+
+        //var result = assertDoesNotThrow(() -> client.register("aadfs","bdfsa","cccc"));
+
+        assertThrows(ResponseException.class, () -> {
+            client.register("aadfs","bdfsa",null);
+        });
+
     }
 
     @Test
@@ -134,6 +146,19 @@ public class testclient {
         client.register("a8","b8","c8");
 
         var result = assertDoesNotThrow(() -> client.signOut());
+
+    }
+
+    @Test
+    void logoutBad() throws ResponseException {
+
+        client.clear();
+
+
+        assertThrows(ResponseException.class, () -> {
+            client.signOut();
+        });
+
 
     }
 
