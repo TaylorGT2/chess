@@ -16,12 +16,10 @@ import service.AuthService;
 import ui.Client;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class testclient {
+public class TestClient {
 
     static public Server server;
     static Client client;
