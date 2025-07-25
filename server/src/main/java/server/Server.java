@@ -222,8 +222,9 @@ public class Server {
             if(playerColor==null){
                 throw new ResponseException(400,"Error: bad request");
             }
-            if(playerColor.equals("WHITE")||playerColor.equals("BLACK")) {
+            if(playerColor.equalsIgnoreCase("WHITE")||playerColor.equalsIgnoreCase("BLACK")) {
                 String username = auth.username();
+                playerColor = playerColor.toUpperCase();
                 serviceGame.joinGame(gameID, playerColor, username);
 
                 res.body(new Gson().toJson(username));
