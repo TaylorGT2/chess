@@ -5,13 +5,21 @@ package ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import chess.ChessBoard;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import com.google.gson.Gson;
-import com.sun.nio.sctp.NotificationHandler;
+//import com.sun.nio.sctp.NotificationHandler;
 import model.GameData;
 import model.UserData;
 import exception.ResponseException;
 import server.ServerFacade;
-//import client.websocket.NotificationHandler;
+import websocket.NotificationHandler;
+import websocket.WebSocketFacade;
+
+import static chess.ChessGame.TeamColor.BLACK;
+import static chess.ChessGame.TeamColor.WHITE;
+import static chess.ChessPiece.PieceType.*;
 
 
 //import server.ServerFacade;
@@ -27,6 +35,8 @@ public class Client {
     private NotificationHandler notificationHandler;
     public Repl r;
 
+    private WebSocketFacade ws;
+
     ArrayList<Integer> gameList;
     //private WebSocketFacade ws;
 
@@ -36,6 +46,9 @@ public class Client {
 
     public Integer fakeGameID;
 
+
+    public ChessBoard board;
+
     public Client(String serverUrl, NotificationHandler notificationHandler) {
         this.server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
@@ -43,6 +56,7 @@ public class Client {
         this.bestToken="";
         gameList = new ArrayList<>();
         fakeGameID=1;
+        board = new ChessBoard();
 
     }
 
@@ -53,6 +67,7 @@ public class Client {
         this.bestToken="";
         gameList = new ArrayList<>();
         fakeGameID=1;
+        board = new ChessBoard();
     }
 
     public Client(String serverUrl){
@@ -61,6 +76,7 @@ public class Client {
         this.bestToken="";
         gameList = new ArrayList<>();
         fakeGameID=1;
+        board = new ChessBoard();
     }
 
     public String eval(String input) {
@@ -115,6 +131,86 @@ public class Client {
         throw new ResponseException(400, "Expected: <username> <password> <email>");
     }
 
+    public void makeBoard(){
+        ChessBoardBuilder b = new ChessBoardBuilder();
+        b.totalWhiteBoard(b.out);
+        boolean color = true;
+
+        for(int i = 0; i<8; i++){
+            for(int j = 0; j<8; j++){
+
+                ChessPiece p = board.getPiece(new ChessPosition(i,j));
+                if(p==null&&color==true){
+                    b.setRed(b.out);
+                    b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
+                }
+                else if(p==null&&color==false){
+                    b.setWhite(b.out);
+                    b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
+                }
+                else if(p.getPieceType()==ROOK && p.getTeamColor() == BLACK){
+                    b.printPlayer(b.out," r ",color);
+                }
+                else if(p.getPieceType()==BISHOP && p.getTeamColor() == BLACK){
+                    b.printPlayer(b.out," b ",color);
+                }
+                else if(p.getPieceType()==KNIGHT && p.getTeamColor() == BLACK){
+                    b.printPlayer(b.out," n ",color);
+                }
+                else if(p.getPieceType()==QUEEN && p.getTeamColor() == BLACK){
+                    b.printPlayer(b.out," q ",color);
+                }
+                else if(p.getPieceType()==KING && p.getTeamColor() == BLACK){
+                    b.printPlayer(b.out," k ",color);
+                }
+                else if(p.getPieceType()==PAWN && p.getTeamColor() == BLACK){
+                    b.printPlayer(b.out," p ",color);
+                }
+                else if(p.getPieceType()==ROOK && p.getTeamColor() == WHITE){
+                    b.printPlayer(b.out," R ",color);
+                }
+                else if(p.getPieceType()==BISHOP && p.getTeamColor() == WHITE){
+                    b.printPlayer(b.out," B ",color);
+                }
+                else if(p.getPieceType()==KNIGHT && p.getTeamColor() == WHITE){
+                    b.printPlayer(b.out," N ",color);
+                }
+                else if(p.getPieceType()==QUEEN && p.getTeamColor() == WHITE){
+                    b.printPlayer(b.out," Q ",color);
+                }
+                else if(p.getPieceType()==KING && p.getTeamColor() == WHITE){
+                    b.printPlayer(b.out," K ",color);
+                }
+                else if(p.getPieceType()==PAWN && p.getTeamColor() == WHITE){
+                    b.printPlayer(b.out," P ",color);
+                }
+
+                if(color == true){
+                    color = false;
+                }
+                else{
+                    color = true;
+                }
+
+            }
+            b.out.println();
+            if(color == true){
+                color = false;
+            }
+            else{
+                color = true;
+            }
+
+        }
+
+
+
+        //b.drawHeaders(b.out);
+        //b.drawChessBoard(b.out);
+        //b.totalWhiteBoard(b.out);
+        //return "behold";
+    }
+
     public String watch(String... params) throws ResponseException{
         if (params.length >= 1) {
 
@@ -122,12 +218,9 @@ public class Client {
             Integer check = Integer.parseInt(reqGame);
             gameList.size();
             if(gameList.contains(check)) {
-
-                ChessBoardBuilder b = new ChessBoardBuilder();
-                //b.drawHeaders(b.out);
-                //b.drawChessBoard(b.out);
-                b.totalWhiteBoard(b.out);
+                makeBoard();
                 return "behold";
+
             }
             throw new ResponseException(404, "Please use a valid list number");
         }
@@ -186,7 +279,7 @@ public class Client {
 
     public String playGame(String... params) throws ResponseException {
         if (params.length >= 2) {
-            state = State.SIGNEDIN;
+            state = State.PLAYING;
             //visitorName = String.join("-", params);
             var gameNumber = params[0];
             int gameNum = Integer.parseInt(gameNumber);
@@ -205,6 +298,13 @@ public class Client {
 
             //ws = new WebSocketFacade(serverUrl, notificationHandler);
             //ws.enterPetShop(visitorName);
+
+
+
+
+            ws = new WebSocketFacade(serverUrl, notificationHandler);
+            ws.connect(bestToken,gameID);
+
 
             if(playerColor=="WHITE"){
                 ChessBoardBuilder b = new ChessBoardBuilder();
@@ -244,6 +344,11 @@ public class Client {
 
             bestToken=loginable.authToken();
 
+
+//            ws = new WebSocketFacade(serverUrl, notificationHandler);
+//            ws.connect(bestToken,gameID);
+
+
             //ws = new WebSocketFacade(serverUrl, notificationHandler);
             //ws.enterPetShop(visitorName);
             return String.format("You signed in as %s.", username);
@@ -258,6 +363,16 @@ public class Client {
                     - Login as an existing user: "l", "login" <USERNAME> <PASSWORD>
                     - Register a new user: "r", "register" <USERNAME> <PASSWORD> <EMAIL>
                     - Exit the program: "q", "quit"
+                    - Print this message: "h", "help"
+                    """;
+        }
+        if (state == State.PLAYING) {
+            return """
+                    - Redraw Chess Board: "redraw"
+                    - Resign: "resign"
+                    - Highlight Legal Moves: "highlight" <piece>
+                    - Make move: "move" <move>
+                    - Exit the game: "leave"
                     - Print this message: "h", "help"
                     """;
         }
@@ -294,10 +409,6 @@ public class Client {
         }
         return null;
     }
-
-
-
-
 
     private void assertSignedIn() throws ResponseException {
         if (state == State.SIGNEDOUT) {

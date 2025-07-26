@@ -11,11 +11,11 @@ public class ChessBoardBuilder {
 
 
     private static final int BOARD_SIZE_IN_SQUARES = 8;
-    private static final int SQUARE_SIZE_IN_PADDED_CHARS = 1;
+    public static final int SQUARE_SIZE_IN_PADDED_CHARS = 1;
     private static final int LINE_WIDTH_IN_PADDED_CHARS = 1;
 
 
-    private static final String EMPTY = "   ";
+    public static final String EMPTY = "   ";
     private static final String X = " X ";
     private static final String O = " O ";
 
@@ -94,7 +94,7 @@ public class ChessBoardBuilder {
 
         realHeaders(out);
 
-        drawChessBoard(out);
+        //drawChessBoard(out);
 
         out.print(SET_BG_COLOR_BLACK);
         out.print(SET_TEXT_COLOR_WHITE);
@@ -174,20 +174,20 @@ public class ChessBoardBuilder {
     }
 
 
-    private static void setBlack(PrintStream out) {
+    public static void setBlack(PrintStream out) {
         out.print(SET_BG_COLOR_BLACK);
         out.print(SET_TEXT_COLOR_BLACK);
     }
 
 
-    private static void setWhite(PrintStream out) {
+    public static void setWhite(PrintStream out) {
 //        out.print(SET_BG_COLOR_WHITE);
 //        out.print(SET_TEXT_COLOR_WHITE);
         out.print(SET_BG_COLOR_RED);
         out.print(SET_TEXT_COLOR_RED);
     }
 
-    private static void setRed(PrintStream out) {
+    public static void setRed(PrintStream out) {
 //        out.print(SET_BG_COLOR_RED);
 //        out.print(SET_TEXT_COLOR_RED);
 
@@ -670,7 +670,7 @@ public class ChessBoardBuilder {
 
 
 
-    private static void printPlayer(PrintStream out, String player, Boolean bac) {
+    public static void printPlayer(PrintStream out, String player, Boolean bac) {
         out.print(SET_BG_COLOR_RED);
         out.print(SET_TEXT_COLOR_BLACK);
         if(bac==true){
