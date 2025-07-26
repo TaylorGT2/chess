@@ -35,8 +35,8 @@ public class WebSocketHandler {
             // playing fast a loose
             UserGameCommand command = new Gson().fromJson(msg, UserGameCommand.class);
 
-            String username = getUsername(command.getAuthToken());
-
+            //String username = getUsername(command.getAuthToken());
+            String username = command.getAuthToken();
             saveSession(command.getGameID(),session);
 
             switch (command.getCommandType()) {
@@ -45,14 +45,19 @@ public class WebSocketHandler {
                 case LEAVE -> leaveGame(session,username, LEAVE);
                 case RESIGN -> resign(session, username, RESIGN);
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     private void resign(Session session, String username, UserGameCommand.CommandType commandType) {
     }
 
-    private void leaveGame(Session session, String username, UserGameCommand.CommandType commandType) {
-
+    private void leaveGame(Session session, String username, UserGameCommand.CommandType commandType) throws IOException {
+        connections.remove(username);
+        var message = String.format("%s is gone", username);
+        var notify = new ServerMessage(NOTIFICATION);
+        connections.broadcast(username,notify);
     }
 
     private void makeMove(Session session, String username, UserGameCommand.CommandType commandType) {
@@ -70,14 +75,14 @@ public class WebSocketHandler {
 
     }
 
-    private String getUsername(String authToken) {
-        // this is a filler until I can understand
-        AuthDAO b;
-        AuthData c = b.getAuth(authToken);
-        return c.username();
-
-
-    }
+//    private String getUsername(String authToken) {
+//        // this is a filler until I can understand
+//        AuthDAO b;
+//        AuthData c = b.getAuth(authToken);
+//        return c.username();
+//
+//
+//    }
 
 
 }
