@@ -3,6 +3,7 @@ package ui;
 
 
 import websocket.NotificationHandler;
+import websocket.messages.ServerMessage;
 import websocketmessages.Notification;
 
 
@@ -37,8 +38,8 @@ public class Repl implements NotificationHandler {
         System.out.println();
     }
 
-    public void notify(Notification notification) {
-        System.out.println("\u001b[" + "31m" + notification.message());
+    public void notify(ServerMessage notification) {
+        System.out.println("\u001b[" + "31m" + "testing testing");
 
         printPrompt();
     }

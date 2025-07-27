@@ -32,7 +32,7 @@ public class WebSocketFacade extends Endpoint{
 
             });
 
-        } catch (DeploymentException | IOException | URISyntaxException e) {
+        } catch (URISyntaxException e) {
             throw new ResponseException(500,e.getMessage());
         }
     }

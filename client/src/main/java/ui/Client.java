@@ -135,9 +135,11 @@ public class Client {
         ChessBoardBuilder b = new ChessBoardBuilder();
         b.totalWhiteBoard(b.out);
         boolean color = true;
+        board = new ChessBoard();
+        board.resetBoard();
 
-        for(int i = 0; i<8; i++){
-            for(int j = 0; j<8; j++){
+        for(int i = 1; i<9; i++){
+            for(int j = 1; j<9; j++){
 
                 ChessPiece p = board.getPiece(new ChessPosition(i,j));
                 if(p==null&&color==true){
@@ -183,6 +185,10 @@ public class Client {
                 }
                 else if(p.getPieceType()==PAWN && p.getTeamColor() == WHITE){
                     b.printPlayer(b.out," P ",color);
+                }
+
+                if(j==8){
+                    b.setBlack(b.out);
                 }
 
                 if(color == true){
@@ -308,16 +314,21 @@ public class Client {
 
             if(playerColor=="WHITE"){
                 ChessBoardBuilder b = new ChessBoardBuilder();
-                //b.drawHeaders(b.out);
-                //b.drawChessBoard(b.out);
-                b.totalWhiteBoard(b.out);
+
+                //b.totalWhiteBoard(b.out);
+
+
+                makeBoard();
+
                 return "behold";
             }
             else{
                 ChessBoardBuilder b = new ChessBoardBuilder();
-                //b.drawHeaders(b.out);
-                //b.drawChessBoard(b.out);
-                b.totalBlackBoard(b.out);
+
+                //b.totalBlackBoard(b.out);
+
+                makeBoard();
+
                 return "behold";
             }
 
