@@ -65,11 +65,6 @@ public class ServerFacade {
         var path = "/game";
 
 
-//        public record LoginRequest(
-//                int gameID,
-//                String playerColor){
-//        }
-//        record playGameReq()
 
         var play = new LoginRequest(gameID, playerColor);
         this.makeRequest("PUT", path, authToken,play, null);
