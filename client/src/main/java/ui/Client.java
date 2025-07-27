@@ -131,6 +131,124 @@ public class Client {
         throw new ResponseException(400, "Expected: <username> <password> <email>");
     }
 
+
+
+    public void makeBlack(){
+        ChessBoardBuilder b = new ChessBoardBuilder();
+        b.totalBlackBoard(b.out);
+        boolean color = true;
+        board = new ChessBoard();
+        board.resetBoard();
+
+        for(int i = 8; i>0; i--){
+            for(int j = 8; j>0; j--){
+
+                ChessPiece p = board.getPiece(new ChessPosition(i,j));
+                if(p==null&&color==true){
+                    b.setRed(b.out);
+                    b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
+                }
+                else if(p==null&&color==false){
+                    b.setWhite(b.out);
+                    b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
+                }
+                else if(p.getPieceType()==ROOK && p.getTeamColor() == BLACK){
+                    b.printPlayer(b.out," r ",color);
+                }
+                else if(p.getPieceType()==BISHOP && p.getTeamColor() == BLACK){
+                    b.printPlayer(b.out," b ",color);
+                }
+                else if(p.getPieceType()==KNIGHT && p.getTeamColor() == BLACK){
+                    b.printPlayer(b.out," n ",color);
+                }
+                else if(p.getPieceType()==QUEEN && p.getTeamColor() == BLACK){
+                    b.printPlayer(b.out," q ",color);
+                }
+                else if(p.getPieceType()==KING && p.getTeamColor() == BLACK){
+                    b.printPlayer(b.out," k ",color);
+                }
+                else if(p.getPieceType()==PAWN && p.getTeamColor() == BLACK){
+                    b.printPlayer(b.out," p ",color);
+                }
+                else if(p.getPieceType()==ROOK && p.getTeamColor() == WHITE){
+                    b.printPlayer(b.out," R ",color);
+                }
+                else if(p.getPieceType()==BISHOP && p.getTeamColor() == WHITE){
+                    b.printPlayer(b.out," B ",color);
+                }
+                else if(p.getPieceType()==KNIGHT && p.getTeamColor() == WHITE){
+                    b.printPlayer(b.out," N ",color);
+                }
+                else if(p.getPieceType()==QUEEN && p.getTeamColor() == WHITE){
+                    b.printPlayer(b.out," Q ",color);
+                }
+                else if(p.getPieceType()==KING && p.getTeamColor() == WHITE){
+                    b.printPlayer(b.out," K ",color);
+                }
+                else if(p.getPieceType()==PAWN && p.getTeamColor() == WHITE){
+                    b.printPlayer(b.out," P ",color);
+                }
+
+                if(j==1){
+                    b.setBlack(b.out);
+                }
+                if(j==1&&i==1){
+                    b.printHeaderText(b.out," 8 ");
+                }
+                if(j==1&&i==2){
+                    b.printHeaderText(b.out," 7 ");
+                }
+                if(j==1&&i==3){
+                    b.printHeaderText(b.out," 6 ");
+                }
+                if(j==1&&i==4){
+                    b.printHeaderText(b.out," 5 ");
+                }
+                if(j==1&&i==5){
+                    b.printHeaderText(b.out," 4 ");
+                }
+                if(j==1&&i==6){
+                    b.printHeaderText(b.out," 3 ");
+                }
+                if(j==1&&i==7){
+                    b.printHeaderText(b.out," 2 ");
+                }
+                if(j==1&&i==8){
+                    b.printHeaderText(b.out," 1 ");
+                }
+
+                if(color == true){
+                    color = false;
+                }
+                else{
+                    color = true;
+                }
+
+            }
+            b.out.println();
+            if(color == true){
+                color = false;
+            }
+            else{
+                color = true;
+            }
+
+        }
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
     public void makeBoard(){
         ChessBoardBuilder b = new ChessBoardBuilder();
         b.totalWhiteBoard(b.out);
@@ -189,6 +307,30 @@ public class Client {
 
                 if(j==8){
                     b.setBlack(b.out);
+                }
+                if(j==8&&i==1){
+                    b.printHeaderText(b.out," 8 ");
+                }
+                if(j==8&&i==2){
+                    b.printHeaderText(b.out," 7 ");
+                }
+                if(j==8&&i==3){
+                    b.printHeaderText(b.out," 6 ");
+                }
+                if(j==8&&i==4){
+                    b.printHeaderText(b.out," 5 ");
+                }
+                if(j==8&&i==5){
+                    b.printHeaderText(b.out," 4 ");
+                }
+                if(j==8&&i==6){
+                    b.printHeaderText(b.out," 3 ");
+                }
+                if(j==8&&i==7){
+                    b.printHeaderText(b.out," 2 ");
+                }
+                if(j==8&&i==8){
+                    b.printHeaderText(b.out," 1 ");
                 }
 
                 if(color == true){
@@ -315,7 +457,7 @@ public class Client {
 
 
 
-                makeBoard();
+                makeBlack();
 
                 return "behold";
             }

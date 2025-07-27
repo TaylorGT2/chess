@@ -76,6 +76,20 @@ public class ChessBoardBuilder {
     }
 
 
+    public static void totalBlackBoard(PrintStream out){
+        out.print(ERASE_SCREEN);
+
+
+
+        realHeadersBlack(out);
+
+
+
+        out.print(SET_BG_COLOR_BLACK);
+        out.print(SET_TEXT_COLOR_WHITE);
+    }
+
+
 
     public static void realHeaders(PrintStream out){
         printHeaderText(out,L1);
@@ -111,11 +125,7 @@ public class ChessBoardBuilder {
 
 
 
-
-
-
-
-    private static void printHeaderText(PrintStream out, String player) {
+    public static void printHeaderText(PrintStream out, String player) {
         out.print(SET_BG_COLOR_BLACK);
         out.print(SET_TEXT_COLOR_GREEN);
 
