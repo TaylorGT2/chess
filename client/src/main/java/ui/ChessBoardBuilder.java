@@ -95,6 +95,7 @@ public class ChessBoardBuilder {
         realHeaders(out);
 
         //drawChessBoard(out);
+        //wjat
 
         out.print(SET_BG_COLOR_BLACK);
         out.print(SET_TEXT_COLOR_WHITE);
