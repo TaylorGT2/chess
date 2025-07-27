@@ -211,10 +211,7 @@ public class Client {
 
 
 
-        //b.drawHeaders(b.out);
-        //b.drawChessBoard(b.out);
-        //b.totalWhiteBoard(b.out);
-        //return "behold";
+
     }
 
     public String watch(String... params) throws ResponseException{
@@ -231,7 +228,7 @@ public class Client {
             throw new ResponseException(404, "Please use a valid list number");
         }
         throw new ResponseException(404, "Expected: <GameNumber>");
-        //return "behold";
+
 
     }
 
@@ -252,16 +249,7 @@ public class Client {
         return result.toString();
     }
 
-//    public String listPets() throws ResponseException {
-//        assertSignedIn();
-//        var pets = server.listPets();
-//        var result = new StringBuilder();
-//        var gson = new Gson();
-//        for (var pet : pets) {
-//            result.append(gson.toJson(pet)).append('\n');
-//        }
-//        return result.toString();
-//    }
+
 
 
     public String createGame(String... params) throws ResponseException {
@@ -315,7 +303,7 @@ public class Client {
             if(playerColor=="WHITE"){
                 ChessBoardBuilder b = new ChessBoardBuilder();
 
-                //b.totalWhiteBoard(b.out);
+
 
 
                 makeBoard();
@@ -325,7 +313,7 @@ public class Client {
             else{
                 ChessBoardBuilder b = new ChessBoardBuilder();
 
-                //b.totalBlackBoard(b.out);
+
 
                 makeBoard();
 
