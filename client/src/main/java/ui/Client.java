@@ -102,7 +102,7 @@ public class Client {
 
                 case "clear" -> clear();
 
-
+                case "leave" -> leaveGame();
 
 
                 case "quit" -> "quit";
@@ -129,6 +129,11 @@ public class Client {
             return String.format("You signed in as %s.", username);
         }
         throw new ResponseException(400, "Expected: <username> <password> <email>");
+    }
+
+    public String leaveGame() throws ResponseException{
+        state = State.SIGNEDIN;
+        return "you left the game";
     }
 
 
@@ -442,7 +447,7 @@ public class Client {
             ws.connect(bestToken,gameID);
 
 
-            if(playerColor=="WHITE"){
+            if(playerColor.equals("white")){
                 ChessBoardBuilder b = new ChessBoardBuilder();
 
 
