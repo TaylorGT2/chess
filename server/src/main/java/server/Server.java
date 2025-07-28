@@ -12,6 +12,8 @@ import exception.ResponseException;
 import service.UserService;
 import service.AuthService;
 
+import server.websocket.WebSocketHandler;
+
 import java.util.Map;
 
 public class Server {
@@ -63,6 +65,8 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
+        Spark.webSocket("/ws", WebSocketHandler.class);
+
         // Register your endpoints and handle exceptions here.
         Spark.post("/user",this::register);
         Spark.delete("/db", this::deleteAllUsers);
@@ -73,6 +77,9 @@ public class Server {
 
         Spark.delete("/session",this::logout);
         Spark.post("/session",this::login);
+
+
+        //Spark.webSocket("/ws", WebSocketHandler.class);
 
 
 
