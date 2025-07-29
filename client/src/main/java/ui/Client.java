@@ -96,7 +96,7 @@ public class Client {
 
                 case "list" -> listGames();
 
-                case "watch" -> watch();
+                case "watch" -> watch(params);
 
                 case "play" -> playGame(params);
 
@@ -362,9 +362,20 @@ public class Client {
     }
 
     public String watch(String... params) throws ResponseException{
+        //int q = params.length+1;
         if (params.length >= 1) {
 
             String reqGame = params[0];
+
+
+
+            try {
+                //gameNum = Integer.parseInt(gameNumber);
+                Integer check = Integer.parseInt(reqGame);
+            }
+            catch (NumberFormatException e){
+                throw new ResponseException(404, "please use a number, not word");
+            }
             Integer check = Integer.parseInt(reqGame);
             gameList.size();
             if(gameList.contains(check)) {
@@ -390,7 +401,7 @@ public class Client {
             result.append(numbering);
             //gameList
             //result.append(gson.toJson(game)).append('\n');
-            result.append(game.gameName()).append('\n');
+            result.append(game.gameName()).append(' ').append(game.whiteUsername()).append(' ').append(game.blackUsername()).append('\n');
             numbering+=1;
         }
         return result.toString();
@@ -423,7 +434,15 @@ public class Client {
             state = State.PLAYING;
             //visitorName = String.join("-", params);
             var gameNumber = params[0];
-            int gameNum = Integer.parseInt(gameNumber);
+            int gameNum = 0;
+            try {
+                gameNum = Integer.parseInt(gameNumber);
+            }
+            catch (NumberFormatException e){
+                throw new ResponseException(404, "please use a number, not word");
+            }
+
+
 
             //var gameID = 8+4*gameNum;
             var gameID = gameNum;;
@@ -500,6 +519,15 @@ public class Client {
             return String.format("You signed in as %s.", username);
         }
         throw new ResponseException(400, "Expected: <username> <password>");
+    }
+
+    public String redraw(){
+        makeBoard();
+        return "redrawn";
+    }
+
+    public String makeMove(){
+        return "move made";
     }
 
 

@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class Server {
 
-
+    public WebSocketHandler webSocketHandler;
     public UserService service;// = new UserService(dataAccess);
 
     public AuthService serviceAuth;//= new AuthService(dataAuthAccess);
@@ -31,6 +31,7 @@ public class Server {
             this.service = service;
             this.serviceAuth = serviceAuth;
             this.serviceGame = serviceGame;
+            webSocketHandler = new WebSocketHandler();
 
     }
 
@@ -52,6 +53,8 @@ public class Server {
            this.serviceAuth = new AuthService(dataAuthAccess);
 
            this.serviceGame = new GameService(dataGameAccess);
+
+           webSocketHandler = new WebSocketHandler();
 
        }catch(Exception ex){
 
@@ -215,6 +218,12 @@ public class Server {
         var gameTicket = req.body();
         var game2 = new Gson().fromJson(req.body(), LoginRequest.class);
         int gameID = game2.gameID();
+
+        //Session session;
+
+
+        //webSocketHandler.connectTest("test");
+        //webSocketHandler.connectTest("gameloaded);
 
 
         Integer idCheck = game2.gameID();
