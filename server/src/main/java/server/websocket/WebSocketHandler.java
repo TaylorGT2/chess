@@ -24,56 +24,73 @@ import static websocket.messages.ServerMessage.ServerMessageType.*;
 
 @WebSocket
 public class WebSocketHandler {
-    private final ConnectionManager connections = new ConnectionManager();
+    public final ConnectionManager connections = new ConnectionManager();// = ConnectionManager.connections;
+
+    //private final ConnectionManager connectionsALl = connections.getConnections();
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String msg) {
-        try{
-            // playing fast a loose
-            UserGameCommand command = new Gson().fromJson(msg, UserGameCommand.class);
+    public void onMessage(Session session, String msg) throws IOException {
+        UserGameCommand commandCheck = new Gson().fromJson(msg, UserGameCommand.class);
+        if(commandCheck.getCommandType()==MAKE_MOVE){
+            makeMove(session, "testUserBob", commandCheck.getGameID(), MAKE_MOVE);
+        }
+        else {
 
-            String testToken = command.getAuthToken();
-            int gameID = command.getGameID();
 
-            boolean shutdown = false;
-            saveSession(command.getGameID(),session);
+            try {
+                // playing fast a loose
+                UserGameCommand command = new Gson().fromJson(msg, UserGameCommand.class);
 
-            try{
-                AuthDAO dataAccess = new MySqlDataAuth();
-                AuthData test = dataAccess.getAuth(testToken);
-                if(test==null){
+                String testToken = command.getAuthToken();
+                int gameID = command.getGameID();
+
+                boolean shutdown = false;
+                //saveSession(command.getGameID(), session);
+
+                try {
+                    AuthDAO dataAccess = new MySqlDataAuth();
+                    AuthData test = dataAccess.getAuth(testToken);
+                    if (test == null) {
+                        String error = "this is an error";
+                        var notify = new ServerMessage(ERROR, null);
+                        notify.setErrorMessage("errorMessage");
+                        connections.broadcast(gameID, notify);
+                        shutdown = true;
+                    }
+                } catch (ResponseException e) {
+
                     String error = "this is an error";
                     var notify = new ServerMessage(ERROR, null);
                     notify.setErrorMessage("errorMessage");
                     connections.broadcast(gameID, notify);
-                    shutdown = true;
+
                 }
-            }catch(ResponseException e){
 
-                    String error = "this is an error";
-                    var notify = new ServerMessage(ERROR, null);
-                    notify.setErrorMessage("errorMessage");
-                    connections.broadcast(gameID, notify);
-
-            }
-
-            //String username = getUsername(command.getAuthToken());
-            //int gameID = command.getGameID();
+                //String username = getUsername(command.getAuthToken());
+                //int gameID = command.getGameID();
 
 
-            //saveSession(command.getGameID(),session);
+                //saveSession(command.getGameID(),session);
 
-            if(shutdown==false) {
+                if (shutdown == false) {
 
-                switch (command.getCommandType()) {
-                    case CONNECT -> connect(session, gameID, CONNECT);
-                    case MAKE_MOVE -> makeMove(session, gameID, MAKE_MOVE);
-                    case LEAVE -> leaveGame(session, gameID, LEAVE);
-                    case RESIGN -> resign(session, gameID, RESIGN);
+                    AuthDAO dataAccess = new MySqlDataAuth();
+                    AuthData test = dataAccess.getAuth(testToken);
+
+
+                    String playerDidSomething = test.username();
+
+
+                    switch (command.getCommandType()) {
+                        case CONNECT -> connect(session, gameID, CONNECT);
+                        case MAKE_MOVE -> makeMove(session, playerDidSomething, gameID, MAKE_MOVE);
+                        case LEAVE -> leaveGame(session, gameID, LEAVE);
+                        case RESIGN -> resign(session, gameID, RESIGN);
+                    }
                 }
+            } catch (IOException | ResponseException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException | ResponseException e) {
-            throw new RuntimeException(e);
         }
 
     }
@@ -88,7 +105,15 @@ public class WebSocketHandler {
         connections.broadcast(gameID,notify);
     }
 
-    private void makeMove(Session session, int username, UserGameCommand.CommandType commandType) {
+    private void makeMove(Session session, String username, int gameID, UserGameCommand.CommandType commandType) throws IOException {
+
+        connections.add(gameID,session);
+        String error = String.format("user %s made a move", username);
+        var notify = new ServerMessage(NOTIFICATION, null);
+        notify.setErrorMessage("errorMessage");
+        connections.broadcast(gameID, notify);
+
+
 
     }
 
@@ -117,7 +142,11 @@ public class WebSocketHandler {
             else {
 
                 var notify = new ServerMessage(LOAD_GAME, game);
-                connections.broadcast(gameID, notify);
+                connections.broadcastToOne(gameID, notify, session);
+                var notifyReal = new ServerMessage(NOTIFICATION, null);
+                notifyReal.setMessage("this is a test message");
+                connections.broadcastToAll(gameID,notifyReal, session);
+
             }
         } catch (ResponseException e) {
             var notify = new ServerMessage(ERROR, game);
