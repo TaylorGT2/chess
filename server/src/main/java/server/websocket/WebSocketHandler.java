@@ -2,12 +2,13 @@ package server.websocket;
 
 import com.google.gson.Gson;
 import dataaccess.AuthDAO;
+import dataaccess.MySqlDataAuth;
 import dataaccess.MySqlDataGame;
-import dataaccess.UserDAO;
 import dataaccess.GameDao;
 
 import exception.ResponseException;
 import model.AuthData;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -15,12 +16,7 @@ import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
-import java.util.Timer;
 
-
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-
-import javax.management.Notification;
 
 import static javax.management.remote.JMXConnectorFactory.connect;
 import static websocket.commands.UserGameCommand.CommandType.*;
@@ -36,16 +32,45 @@ public class WebSocketHandler {
             // playing fast a loose
             UserGameCommand command = new Gson().fromJson(msg, UserGameCommand.class);
 
-            //String username = getUsername(command.getAuthToken());
+            String testToken = command.getAuthToken();
             int gameID = command.getGameID();
 
+            boolean shutdown = false;
             saveSession(command.getGameID(),session);
 
-            switch (command.getCommandType()) {
-                case CONNECT -> connect(session,gameID,CONNECT);
-                case MAKE_MOVE -> makeMove(session, gameID, MAKE_MOVE);
-                case LEAVE -> leaveGame(session,gameID, LEAVE);
-                case RESIGN -> resign(session, gameID, RESIGN);
+            try{
+                AuthDAO dataAccess = new MySqlDataAuth();
+                AuthData test = dataAccess.getAuth(testToken);
+                if(test==null){
+                    String error = "this is an error";
+                    var notify = new ServerMessage(ERROR, null);
+                    notify.setErrorMessage("errorMessage");
+                    connections.broadcast(gameID, notify);
+                    shutdown = true;
+                }
+            }catch(ResponseException e){
+
+                    String error = "this is an error";
+                    var notify = new ServerMessage(ERROR, null);
+                    notify.setErrorMessage("errorMessage");
+                    connections.broadcast(gameID, notify);
+
+            }
+
+            //String username = getUsername(command.getAuthToken());
+            //int gameID = command.getGameID();
+
+
+            //saveSession(command.getGameID(),session);
+
+            if(shutdown==false) {
+
+                switch (command.getCommandType()) {
+                    case CONNECT -> connect(session, gameID, CONNECT);
+                    case MAKE_MOVE -> makeMove(session, gameID, MAKE_MOVE);
+                    case LEAVE -> leaveGame(session, gameID, LEAVE);
+                    case RESIGN -> resign(session, gameID, RESIGN);
+                }
             }
         } catch (IOException | ResponseException e) {
             throw new RuntimeException(e);
@@ -73,12 +98,27 @@ public class WebSocketHandler {
 
         //GameDao check = new GameDao;
         //check.getGame(gameID);
+
+        //if()
+
+
+
         try {
             GameDao dataGameAccess = new MySqlDataGame();
-            dataGameAccess.getGame(gameID);
+            GameData test = dataGameAccess.getGame(gameID);
 
-            var notify = new ServerMessage(LOAD_GAME, game);
-            connections.broadcast(gameID, notify);
+            if(test==null){
+                String error = "this is an error";
+                var notify = new ServerMessage(ERROR, null);
+                notify.setErrorMessage("errorMessage");
+                connections.broadcast(gameID, notify);
+            }
+
+            else {
+
+                var notify = new ServerMessage(LOAD_GAME, game);
+                connections.broadcast(gameID, notify);
+            }
         } catch (ResponseException e) {
             var notify = new ServerMessage(ERROR, game);
             connections.broadcast(gameID, notify);
