@@ -51,11 +51,13 @@ public class WebSocketHandler {
                     AuthDAO dataAccess = new MySqlDataAuth();
                     AuthData test = dataAccess.getAuth(testToken);
                     if (test == null) {
+                        saveSession(command.getGameID(), session);
                         String error = "this is an error";
                         var notify = new ServerMessage(ERROR, null);
                         notify.setErrorMessage("errorMessage");
                         connections.broadcast(gameID, notify);
                         shutdown = true;
+
                     }
                 } catch (ResponseException e) {
 
@@ -136,7 +138,7 @@ public class WebSocketHandler {
                 String error = "this is an error";
                 var notify = new ServerMessage(ERROR, null);
                 notify.setErrorMessage("errorMessage");
-                connections.broadcast(gameID, notify);
+                connections.broadcastToOne(gameID, notify,session);
             }
 
             else {
