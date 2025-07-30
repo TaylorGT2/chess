@@ -14,6 +14,7 @@ import service.AuthService;
 
 import server.websocket.WebSocketHandler;
 
+import java.net.URI;
 import java.util.Map;
 
 public class Server {
@@ -24,6 +25,8 @@ public class Server {
     public AuthService serviceAuth;//= new AuthService(dataAuthAccess);
 
     public GameService serviceGame;//= new GameService(dataGameAccess);
+
+
 
     public Server(UserService service, AuthService serviceAuth, GameService serviceGame) {
 
@@ -68,7 +71,7 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-        Spark.webSocket("/ws", WebSocketHandler.class);
+        Spark.webSocket("/ws", webSocketHandler);
 
         // Register your endpoints and handle exceptions here.
         Spark.post("/user",this::register);
@@ -221,9 +224,15 @@ public class Server {
 
         //Session session;
 
+        //URI socketURI = new URI(url+"/ws");
+//        this.notificationHandler = notificationHandler;
+//
+//        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+//
+//        this.session = container.connectToServer(this,socketURI);
 
-        //webSocketHandler.connectTest("test");
-        //webSocketHandler.connectTest("gameloaded);
+
+
 
 
         Integer idCheck = game2.gameID();
