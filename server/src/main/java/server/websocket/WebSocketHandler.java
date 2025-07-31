@@ -28,6 +28,8 @@ import static websocket.messages.ServerMessage.ServerMessageType.*;
 public class WebSocketHandler {
     public final ConnectionManager connections = new ConnectionManager();// = ConnectionManager.connections;
 
+    public boolean resignation = false;
+
     //private final ConnectionManager connectionsALl = connections.getConnections();
 
     @OnWebSocketMessage
@@ -117,7 +119,7 @@ public class WebSocketHandler {
                         case CONNECT -> connect(session, gameID, CONNECT);
                         case MAKE_MOVE -> makeMove(session, playerDidSomething, gameID, command.getMove(), command);
                         case LEAVE -> leaveGame(session, gameID, LEAVE);
-                        case RESIGN -> resign(session, gameID, RESIGN);
+                        case RESIGN -> resign(session, gameID, command);
                     }
                 }
             } catch (IOException | ResponseException | InvalidMoveException e) {
@@ -127,7 +129,39 @@ public class WebSocketHandler {
 
     }
 
-    private void resign(Session session, int username, UserGameCommand.CommandType commandType) {
+    private void resign(Session session, int gameID, UserGameCommand commandType) throws ResponseException, IOException {
+
+        String testToken = commandType.getAuthToken();
+        AuthDAO dataAccess = new MySqlDataAuth();
+        AuthData test = dataAccess.getAuth(testToken);
+        String oberserving = test.username();
+
+        GameDao observerCheck = new MySqlDataGame();
+        GameData checking = observerCheck.getGame(gameID);
+
+        if(!(checking.whiteUsername().equals(oberserving)) && !(checking.blackUsername().equals(oberserving))){
+            var error2 = "Observers aren't players so they can't be quitters";
+            var errorNote = new ServerMessage(ERROR,null);
+            errorNote.setErrorMessage(error2);
+            connections.broadcastToOne(gameID, errorNote, session);
+        }
+        else if(resignation==true){
+            var error2 = "Only one quitter per game";
+            var errorNote = new ServerMessage(ERROR,null);
+            errorNote.setErrorMessage(error2);
+            connections.broadcastToOne(gameID, errorNote, session);
+        }
+        else {
+
+
+            var finished = String.format("%s resigned", test.username());
+            var notify = new ServerMessage(NOTIFICATION, null);
+            notify.setMessage(finished);
+            connections.broadcastToOne(gameID, notify, session);
+            connections.broadcastToAll(gameID, notify, session);
+            resignation = true;
+        }
+
     }
 
     private void leaveGame(Session session, int gameID, UserGameCommand.CommandType commandType) throws IOException {
