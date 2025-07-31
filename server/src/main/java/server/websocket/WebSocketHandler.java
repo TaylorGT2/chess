@@ -19,6 +19,7 @@ import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
+import java.util.Collection;
 
 
 import static javax.management.remote.JMXConnectorFactory.connect;
@@ -50,11 +51,11 @@ public class WebSocketHandler {
             AuthData test = dataAccess.getAuth(testToken);
             if (test == null) {
                 //saveSession(command.getGameID(), session);
-                connections.add(gameID,session);
+                //connections.add(gameID,session);
                 String error = "this is an error";
                 var notify = new ServerMessage(ERROR, null);
                 notify.setErrorMessage("errorMessage");
-                connections.broadcast(gameID, notify);
+                connections.broadcastToOne(gameID, notify,session);
                 shutdown = true;
 
             }
@@ -143,33 +144,40 @@ public class WebSocketHandler {
         //connections.add(gameID,session);
         String error = String.format("user %s made a move", username);
 
+
+
         GameDao dataGameAccess = new MySqlDataGame();
         GameData test = dataGameAccess.getGame(gameID);
 
         ChessGame change = test.game();
 
-        change.makeMove(move);
+        Collection<ChessMove> goodMoves = change.validMoves(move.getStartPosition());
 
-        ((MySqlDataGame) dataGameAccess).deleteGame(gameID);
-
-        dataGameAccess.updateGame(test.whiteUsername(), test.gameID(),test.gameName(),test.blackUsername(),change);
-
-        var game = new Gson().toJson(dataGameAccess.getGame(gameID));
-        var notify = new ServerMessage(LOAD_GAME, game);
-        connections.broadcastToOne(gameID, notify, session);
-        connections.broadcastToAll(gameID, notify, session);
-
+        if(!goodMoves.contains(move)){
+            var error2 = "not a good move";
+            var errorNote = new ServerMessage(ERROR,null);
+            errorNote.setErrorMessage(error2);
+            connections.broadcastToOne(gameID, errorNote, session);
+        }
+        else {
 
 
+            change.makeMove(move);
+
+            ((MySqlDataGame) dataGameAccess).deleteGame(gameID);
+
+            dataGameAccess.updateGame(test.whiteUsername(), test.gameID(), test.gameName(), test.blackUsername(), change);
+
+            var game = new Gson().toJson(dataGameAccess.getGame(gameID));
+            var notify = new ServerMessage(LOAD_GAME, game);
+            connections.broadcastToOne(gameID, notify, session);
+            connections.broadcastToAll(gameID, notify, session);
 
 
-
-
-
-
-        var notify2 = new ServerMessage(NOTIFICATION, null);
-        notify2.setMessage("errorMessage");
-        connections.broadcastToAll(gameID, notify2,session);
+            var notify2 = new ServerMessage(NOTIFICATION, null);
+            notify2.setMessage("errorMessage");
+            connections.broadcastToAll(gameID, notify2, session);
+        }
 
 
 
