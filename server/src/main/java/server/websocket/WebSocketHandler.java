@@ -41,10 +41,18 @@ public class WebSocketHandler {
 
 
 
+
+
             UserGameCommand command = new Gson().fromJson(msg, UserGameCommand.class);
 
             String testToken = command.getAuthToken();
             int gameID = command.getGameID();
+            if(resignation==true){
+                var notify = new ServerMessage(ERROR, null);
+                notify.setErrorMessage("errorMessage");
+                connections.broadcastToOne(gameID, notify,session);
+                return;
+            }
 
             boolean shutdown = false;
             //saveSession(command.getGameID(), session);
@@ -160,7 +168,7 @@ public class WebSocketHandler {
             var notify = new ServerMessage(NOTIFICATION, null);
             notify.setMessage(finished);
             connections.broadcastToOne(gameID, notify, session);
-            connections.broadcastToAll(gameID, notify, session);
+            connections.broadcastToAll(gameID, notify, session, gameID);
             resignation = true;
         }
 
@@ -191,7 +199,7 @@ public class WebSocketHandler {
         var message = String.format("%s is gone", test.username());
         var notify = new ServerMessage(NOTIFICATION, null);
         notify.setMessage(message);
-        connections.broadcastToAll(gameID,notify,session);
+        connections.broadcastToAll(gameID,notify,session, gameID);
 
         gameChange.deleteGame(gameID);
         if(user.equals(game.blackUsername())){
@@ -307,12 +315,12 @@ public class WebSocketHandler {
                 var game = new Gson().toJson(dataGameAccess.getGame(gameID));
                 var notify = new ServerMessage(LOAD_GAME, game);
                 connections.broadcastToOne(gameID, notify, session);
-                connections.broadcastToAll(gameID, notify, session);
+                connections.broadcastToAll(gameID, notify, session, gameID);
 
 
                 var notify2 = new ServerMessage(NOTIFICATION, null);
                 notify2.setMessage("Message");
-                connections.broadcastToAll(gameID, notify2, session);
+                connections.broadcastToAll(gameID, notify2, session, gameID);
 
 
                 legalMove+=1;
@@ -351,7 +359,7 @@ public class WebSocketHandler {
                 connections.broadcastToOne(gameID, notify, session);
                 var notifyReal = new ServerMessage(NOTIFICATION, null);
                 notifyReal.setMessage("this is a test message");
-                connections.broadcastToAll(gameID,notifyReal, session);
+                connections.broadcastToAll(gameID,notifyReal, session, gameID);
 
             }
         } catch (ResponseException e) {

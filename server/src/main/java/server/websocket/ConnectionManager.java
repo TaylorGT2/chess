@@ -56,7 +56,7 @@ public class ConnectionManager {
         for (var all : connections.values()) {
             for(var c : all) {
                 if (c.session.isOpen()) {
-                    c.send(notification.toString());
+                  //  c.send(notification.toString());
                     if (c.gameID != excludeVisitorName) {
                         c.send(notification.toString());
                     }
@@ -103,13 +103,13 @@ public class ConnectionManager {
 
 
 
-    public void broadcastToAll(int excludeVisitorName, ServerMessage notification, Session session) throws IOException {
+    public void broadcastToAll(int excludeVisitorName, ServerMessage notification, Session session, int gameID) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var all : connections.values()) {
             for(var c : all) {
                 if (c.session.isOpen()) {
                     //c.send(notification.toString());
-                    if (c.session != session) {
+                    if (c.session != session && c.gameID == gameID) {
                         c.send(notification.toString());
                     }
                 } else {
