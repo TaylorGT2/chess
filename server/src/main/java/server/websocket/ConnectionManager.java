@@ -39,8 +39,16 @@ public class ConnectionManager {
 
 
 
-    public void remove(int visitorName) {
-        connections.remove(visitorName);
+    public void remove(int gameID, Session session) {
+
+        ArrayList<Connection> replacement = connections.get(gameID);
+        //ArrayList<Connection>
+        connections.remove(gameID);
+        for (var c : replacement){
+            if(c.session!=session){
+                add(gameID,c.session);
+            }
+        }
     }
 
     public void broadcast(int excludeVisitorName, ServerMessage notification) throws IOException {

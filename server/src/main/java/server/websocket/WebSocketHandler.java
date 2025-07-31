@@ -118,7 +118,7 @@ public class WebSocketHandler {
                     switch (command.getCommandType()) {
                         case CONNECT -> connect(session, gameID, CONNECT);
                         case MAKE_MOVE -> makeMove(session, playerDidSomething, gameID, command.getMove(), command);
-                        case LEAVE -> leaveGame(session, gameID, LEAVE);
+                        case LEAVE -> leaveGame(session, gameID, command);
                         case RESIGN -> resign(session, gameID, command);
                     }
                 }
@@ -164,11 +164,17 @@ public class WebSocketHandler {
 
     }
 
-    private void leaveGame(Session session, int gameID, UserGameCommand.CommandType commandType) throws IOException {
-        connections.remove(gameID);
-        var message = String.format("is gone");
-        var notify = new ServerMessage(NOTIFICATION, "a user left");
-        connections.broadcast(gameID,notify);
+    private void leaveGame(Session session, int gameID, UserGameCommand commandType) throws IOException, ResponseException {
+        String testToken = commandType.getAuthToken();
+        AuthDAO dataAccess = new MySqlDataAuth();
+        AuthData test = dataAccess.getAuth(testToken);
+        String oberserving = test.username();
+
+        connections.remove(gameID, session);
+        var message = String.format("%s is gone", test.username());
+        var notify = new ServerMessage(NOTIFICATION, null);
+        notify.setMessage(message);
+        connections.broadcastToAll(gameID,notify,session);
     }
 
     private void makeMove(Session session, String username, int gameID, ChessMove move, UserGameCommand commandType) throws IOException, ResponseException, InvalidMoveException {
