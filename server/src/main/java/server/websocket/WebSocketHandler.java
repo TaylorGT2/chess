@@ -1,8 +1,6 @@
 package server.websocket;
 
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.InvalidMoveException;
+import chess.*;
 import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.MySqlDataAuth;
@@ -169,9 +167,27 @@ public class WebSocketHandler {
             boolean shutdown = false;
             if(test.blackUsername()==usernameColor){
                 // its blacks turn
+                ChessBoard b = change.getBoard();
+                ChessPiece color = b.getPiece(new ChessPosition(move.getStartPosition().getRow(),move.getStartPosition().getColumn()));
+                if(color.getTeamColor()!= ChessGame.TeamColor.BLACK){
+                    var error2 = "its not your turn error";
+                    var errorNote = new ServerMessage(ERROR,null);
+                    errorNote.setErrorMessage(error2);
+                    connections.broadcastToOne(gameID, errorNote, session);
+                    shutdown = true;
+                }
             }
             if(test.whiteUsername()==usernameColor){
                 // its whites turn
+                ChessBoard b = change.getBoard();
+                ChessPiece color = b.getPiece(new ChessPosition(move.getStartPosition().getRow(),move.getStartPosition().getColumn()));
+                if(color.getTeamColor()!= ChessGame.TeamColor.WHITE){
+                    var error2 = "its not your turn error";
+                    var errorNote = new ServerMessage(ERROR,null);
+                    errorNote.setErrorMessage(error2);
+                    connections.broadcastToOne(gameID, errorNote, session);
+                    shutdown = true;
+                }
             }
             else{
                 //its no ones turn throw an error
