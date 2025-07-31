@@ -63,7 +63,7 @@ public class WebSocketHandler {
             else {
 
 
-                makeMove(session, "testUserBob", commandCheck.getGameID(), commandCheck.getMove(), MAKE_MOVE);
+                makeMove(session, "testUserBob", commandCheck.getGameID(), commandCheck.getMove(), command);
             }
         }
         else {
@@ -117,7 +117,7 @@ public class WebSocketHandler {
 
                     switch (command.getCommandType()) {
                         case CONNECT -> connect(session, gameID, CONNECT);
-                        case MAKE_MOVE -> makeMove(session, playerDidSomething, gameID, command.getMove(), MAKE_MOVE);
+                        case MAKE_MOVE -> makeMove(session, playerDidSomething, gameID, command.getMove(), command);
                         case LEAVE -> leaveGame(session, gameID, LEAVE);
                         case RESIGN -> resign(session, gameID, RESIGN);
                     }
@@ -139,7 +139,7 @@ public class WebSocketHandler {
         connections.broadcast(gameID,notify);
     }
 
-    private void makeMove(Session session, String username, int gameID, ChessMove move, UserGameCommand.CommandType commandType) throws IOException, ResponseException, InvalidMoveException {
+    private void makeMove(Session session, String username, int gameID, ChessMove move, UserGameCommand commandType) throws IOException, ResponseException, InvalidMoveException {
 
         //connections.add(gameID,session);
         String error = String.format("user %s made a move", username);
@@ -154,29 +154,57 @@ public class WebSocketHandler {
         Collection<ChessMove> goodMoves = change.validMoves(move.getStartPosition());
 
         if(!goodMoves.contains(move)){
-            var error2 = "not a good move";
+            var error2 = "not a good move error";
             var errorNote = new ServerMessage(ERROR,null);
             errorNote.setErrorMessage(error2);
             connections.broadcastToOne(gameID, errorNote, session);
         }
         else {
 
+            String userExtract = commandType.getAuthToken();
+            AuthDAO dataAccess = new MySqlDataAuth();
+            AuthData userNameHolder = dataAccess.getAuth(userExtract);
+            String usernameColor = userNameHolder.username();
 
-            change.makeMove(move);
+            boolean shutdown = false;
+            if(test.blackUsername()==usernameColor){
+                // its blacks turn
+            }
+            if(test.whiteUsername()==usernameColor){
+                // its whites turn
+            }
+            else{
+                //its no ones turn throw an error
+                var error2 = "its not your turn error";
+                var errorNote = new ServerMessage(ERROR,null);
+                errorNote.setErrorMessage(error2);
+                connections.broadcastToOne(gameID, errorNote, session);
+                shutdown = true;
 
-            ((MySqlDataGame) dataGameAccess).deleteGame(gameID);
 
-            dataGameAccess.updateGame(test.whiteUsername(), test.gameID(), test.gameName(), test.blackUsername(), change);
-
-            var game = new Gson().toJson(dataGameAccess.getGame(gameID));
-            var notify = new ServerMessage(LOAD_GAME, game);
-            connections.broadcastToOne(gameID, notify, session);
-            connections.broadcastToAll(gameID, notify, session);
+            }
 
 
-            var notify2 = new ServerMessage(NOTIFICATION, null);
-            notify2.setMessage("errorMessage");
-            connections.broadcastToAll(gameID, notify2, session);
+
+            if(shutdown==false) {
+
+
+                change.makeMove(move);
+
+                ((MySqlDataGame) dataGameAccess).deleteGame(gameID);
+
+                dataGameAccess.updateGame(test.whiteUsername(), test.gameID(), test.gameName(), test.blackUsername(), change);
+
+                var game = new Gson().toJson(dataGameAccess.getGame(gameID));
+                var notify = new ServerMessage(LOAD_GAME, game);
+                connections.broadcastToOne(gameID, notify, session);
+                connections.broadcastToAll(gameID, notify, session);
+
+
+                var notify2 = new ServerMessage(NOTIFICATION, null);
+                notify2.setMessage("Message");
+                connections.broadcastToAll(gameID, notify2, session);
+            }
         }
 
 
