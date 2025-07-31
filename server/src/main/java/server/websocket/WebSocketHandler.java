@@ -1,5 +1,8 @@
 package server.websocket;
 
+import chess.ChessGame;
+import chess.ChessMove;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.MySqlDataAuth;
@@ -29,10 +32,38 @@ public class WebSocketHandler {
     //private final ConnectionManager connectionsALl = connections.getConnections();
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String msg) throws IOException {
+    public void onMessage(Session session, String msg) throws IOException, ResponseException, InvalidMoveException {
         UserGameCommand commandCheck = new Gson().fromJson(msg, UserGameCommand.class);
         if(commandCheck.getCommandType()==MAKE_MOVE){
-            makeMove(session, "testUserBob", commandCheck.getGameID(), MAKE_MOVE);
+
+
+
+            UserGameCommand command = new Gson().fromJson(msg, UserGameCommand.class);
+
+            String testToken = command.getAuthToken();
+            int gameID = command.getGameID();
+
+            boolean shutdown = false;
+            //saveSession(command.getGameID(), session);
+
+            AuthDAO dataAccess = new MySqlDataAuth();
+            AuthData test = dataAccess.getAuth(testToken);
+            if (test == null) {
+                //saveSession(command.getGameID(), session);
+                connections.add(gameID,session);
+                String error = "this is an error";
+                var notify = new ServerMessage(ERROR, null);
+                notify.setErrorMessage("errorMessage");
+                connections.broadcast(gameID, notify);
+                shutdown = true;
+
+            }
+
+            else {
+
+
+                makeMove(session, "testUserBob", commandCheck.getGameID(), commandCheck.getMove(), MAKE_MOVE);
+            }
         }
         else {
 
@@ -85,12 +116,12 @@ public class WebSocketHandler {
 
                     switch (command.getCommandType()) {
                         case CONNECT -> connect(session, gameID, CONNECT);
-                        case MAKE_MOVE -> makeMove(session, playerDidSomething, gameID, MAKE_MOVE);
+                        case MAKE_MOVE -> makeMove(session, playerDidSomething, gameID, command.getMove(), MAKE_MOVE);
                         case LEAVE -> leaveGame(session, gameID, LEAVE);
                         case RESIGN -> resign(session, gameID, RESIGN);
                     }
                 }
-            } catch (IOException | ResponseException e) {
+            } catch (IOException | ResponseException | InvalidMoveException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -107,13 +138,38 @@ public class WebSocketHandler {
         connections.broadcast(gameID,notify);
     }
 
-    private void makeMove(Session session, String username, int gameID, UserGameCommand.CommandType commandType) throws IOException {
+    private void makeMove(Session session, String username, int gameID, ChessMove move, UserGameCommand.CommandType commandType) throws IOException, ResponseException, InvalidMoveException {
 
-        connections.add(gameID,session);
+        //connections.add(gameID,session);
         String error = String.format("user %s made a move", username);
-        var notify = new ServerMessage(NOTIFICATION, null);
-        notify.setErrorMessage("errorMessage");
-        connections.broadcast(gameID, notify);
+
+        GameDao dataGameAccess = new MySqlDataGame();
+        GameData test = dataGameAccess.getGame(gameID);
+
+        ChessGame change = test.game();
+
+        change.makeMove(move);
+
+        ((MySqlDataGame) dataGameAccess).deleteGame(gameID);
+
+        dataGameAccess.updateGame(test.whiteUsername(), test.gameID(),test.gameName(),test.blackUsername(),change);
+
+        var game = new Gson().toJson(dataGameAccess.getGame(gameID));
+        var notify = new ServerMessage(LOAD_GAME, game);
+        connections.broadcastToOne(gameID, notify, session);
+        connections.broadcastToAll(gameID, notify, session);
+
+
+
+
+
+
+
+
+
+        var notify2 = new ServerMessage(NOTIFICATION, null);
+        notify2.setMessage("errorMessage");
+        connections.broadcastToAll(gameID, notify2,session);
 
 
 

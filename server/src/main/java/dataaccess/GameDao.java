@@ -1,5 +1,6 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.UserData;
 import model.AuthData;
 import model.GameData;
@@ -18,5 +19,9 @@ public interface GameDao {
     void joinGame(int gameID, String playerColor, String username) throws ResponseException;
 
     GameData getGame(int gameID) throws ResponseException;
+
+    // this might kill everything
+
+    void updateGame(String whiteUsername, int gameID, String name, String blackUsername, ChessGame chess) throws ResponseException;
 
 }

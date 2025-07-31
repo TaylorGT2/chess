@@ -57,6 +57,10 @@ public class MemoryGameDataAccess implements GameDao {
         users.remove(gameID);
     }
 
+    public void updateGame(String whiteUsername, int gameID, String name, String blackUsername, ChessGame chess){
+
+    }
+
     public void joinGame(int gameID, String playerColor, String username) throws ResponseException{
         GameData joining = getGame(gameID);
 
