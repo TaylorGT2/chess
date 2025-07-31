@@ -30,6 +30,8 @@ public class WebSocketHandler {
 
     public boolean resignation = false;
 
+    public int legalMove = 0;
+
     //private final ConnectionManager connectionsALl = connections.getConnections();
 
     @OnWebSocketMessage
@@ -63,7 +65,7 @@ public class WebSocketHandler {
             else {
 
 
-                makeMove(session, "testUserBob", commandCheck.getGameID(), commandCheck.getMove(), command);
+                makeMove(session, "test", commandCheck.getGameID(), commandCheck.getMove(), command);
             }
         }
         else {
@@ -168,13 +170,37 @@ public class WebSocketHandler {
         String testToken = commandType.getAuthToken();
         AuthDAO dataAccess = new MySqlDataAuth();
         AuthData test = dataAccess.getAuth(testToken);
-        String oberserving = test.username();
+        String user = test.username();
+
+
+        GameDao gameChange = new MySqlDataGame();
+        GameData game = gameChange.getGame(gameID);
+
+//        if(user.equals(game.blackUsername())){
+//            gameChange.updateGame(game.whiteUsername(),gameID, game.gameName(), null, game.game());
+//        }
+//        if(user.equals(game.whiteUsername())){
+//            gameChange.updateGame(null,gameID, game.gameName(), game.blackUsername(), game.game());
+//        }
+
+
+
+        //dataGameAccess.updateGame(test.whiteUsername(), test.gameID(), test.gameName(), test.blackUsername(), change);
 
         connections.remove(gameID, session);
         var message = String.format("%s is gone", test.username());
         var notify = new ServerMessage(NOTIFICATION, null);
         notify.setMessage(message);
         connections.broadcastToAll(gameID,notify,session);
+
+        gameChange.deleteGame(gameID);
+        if(user.equals(game.blackUsername())){
+            gameChange.updateGame(game.whiteUsername(),gameID, game.gameName(), null, game.game());
+        }
+        if(user.equals(game.whiteUsername())){
+            gameChange.updateGame(null,gameID, game.gameName(), game.blackUsername(), game.game());
+        }
+
     }
 
     private void makeMove(Session session, String username, int gameID, ChessMove move, UserGameCommand commandType) throws IOException, ResponseException, InvalidMoveException {
@@ -205,30 +231,57 @@ public class WebSocketHandler {
             String usernameColor = userNameHolder.username();
 
             boolean shutdown = false;
-            if(test.blackUsername()==usernameColor){
+            if(test.blackUsername().equals(usernameColor) || test.whiteUsername().equals(usernameColor)){
                 // its blacks turn
                 ChessBoard b = change.getBoard();
                 ChessPiece color = b.getPiece(new ChessPosition(move.getStartPosition().getRow(),move.getStartPosition().getColumn()));
-                if(color.getTeamColor()!= ChessGame.TeamColor.BLACK){
+                ChessGame.TeamColor trueColor = ChessGame.TeamColor.BLACK;
+                if(test.blackUsername().equals(usernameColor)){
+                    trueColor = ChessGame.TeamColor.BLACK;
+                }
+                else{
+                    trueColor = ChessGame.TeamColor.WHITE;
+                }
+
+
+                if(color.getTeamColor() != trueColor){
                     var error2 = "its not your turn error";
                     var errorNote = new ServerMessage(ERROR,null);
                     errorNote.setErrorMessage(error2);
                     connections.broadcastToOne(gameID, errorNote, session);
                     shutdown = true;
                 }
-            }
-            if(test.whiteUsername()==usernameColor){
-                // its whites turn
-                ChessBoard b = change.getBoard();
-                ChessPiece color = b.getPiece(new ChessPosition(move.getStartPosition().getRow(),move.getStartPosition().getColumn()));
-                if(color.getTeamColor()!= ChessGame.TeamColor.WHITE){
+                else if(test.blackUsername().equals(usernameColor)&&legalMove%2==0){
                     var error2 = "its not your turn error";
                     var errorNote = new ServerMessage(ERROR,null);
                     errorNote.setErrorMessage(error2);
                     connections.broadcastToOne(gameID, errorNote, session);
                     shutdown = true;
                 }
+                else if(test.whiteUsername().equals(usernameColor)&&legalMove%2!=0){
+                    var error2 = "its not your turn error";
+                    var errorNote = new ServerMessage(ERROR,null);
+                    errorNote.setErrorMessage(error2);
+                    connections.broadcastToOne(gameID, errorNote, session);
+                    shutdown = true;
+                }
+
+
             }
+
+
+//            else if(test.whiteUsername().equals(usernameColor)){
+//                // its whites turn
+//                ChessBoard b = change.getBoard();
+//                ChessPiece color = b.getPiece(new ChessPosition(move.getStartPosition().getRow(),move.getStartPosition().getColumn()));
+//                if(color.getTeamColor()!= ChessGame.TeamColor.WHITE){
+//                    var error2 = "its not your turn error";
+//                    var errorNote = new ServerMessage(ERROR,null);
+//                    errorNote.setErrorMessage(error2);
+//                    connections.broadcastToOne(gameID, errorNote, session);
+//                    shutdown = true;
+//                }
+//            }
             else{
                 //its no ones turn throw an error
                 var error2 = "its not your turn error";
@@ -260,6 +313,9 @@ public class WebSocketHandler {
                 var notify2 = new ServerMessage(NOTIFICATION, null);
                 notify2.setMessage("Message");
                 connections.broadcastToAll(gameID, notify2, session);
+
+
+                legalMove+=1;
             }
         }
 

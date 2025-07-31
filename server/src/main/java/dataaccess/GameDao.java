@@ -22,6 +22,8 @@ public interface GameDao {
 
     // this might kill everything
 
+    void deleteGame(int gameID) throws ResponseException;
+
     void updateGame(String whiteUsername, int gameID, String name, String blackUsername, ChessGame chess) throws ResponseException;
 
 }

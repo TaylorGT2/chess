@@ -53,7 +53,7 @@ public class MemoryGameDataAccess implements GameDao {
         }
     }
 
-    private void deleteGame(int gameID){
+    public void deleteGame(int gameID){
         users.remove(gameID);
     }
 
