@@ -68,32 +68,32 @@ public class ServerFacadeTests {
                 return List.of();
             }
         });
-        var gameSer = new GameService(new GameDao() {
-            @Override
-            public void clear() throws ResponseException {
-
-            }
-
-            @Override
-            public GameData createGame(String gameName) throws ResponseException {
-                return null;
-            }
-
-            @Override
-            public Collection<GameData> listGames() throws ResponseException {
-                return List.of();
-            }
-
-            @Override
-            public void joinGame(int gameID, String playerColor, String username) throws ResponseException {
-
-            }
-
-            @Override
-            public GameData getGame(int gameID) throws ResponseException {
-                return null;
-            }
-        });
+//        var gameSer = new GameService(new GameDao() {
+//            @Override
+//            public void clear() throws ResponseException {
+//
+//            }
+//
+//            @Override
+//            public GameData createGame(String gameName) throws ResponseException {
+//                return null;
+//            }
+//
+//            @Override
+//            public Collection<GameData> listGames() throws ResponseException {
+//                return List.of();
+//            }
+//
+//            @Override
+//            public void joinGame(int gameID, String playerColor, String username) throws ResponseException {
+//
+//            }
+//
+//            @Override
+//            public GameData getGame(int gameID) throws ResponseException {
+//                return null;
+//            }
+//        });
 
         var authSer = new AuthService(new AuthDAO() {
             @Override
