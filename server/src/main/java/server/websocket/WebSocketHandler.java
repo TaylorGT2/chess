@@ -97,7 +97,7 @@ public class WebSocketHandler {
                         String error = "this is an error";
                         var notify = new ServerMessage(ERROR, null);
                         notify.setErrorMessage("errorMessage");
-                        connections.broadcast(gameID, notify);
+                        connections.broadcastToOne(gameID, notify,session);
                         shutdown = true;
 
                     }
@@ -106,7 +106,9 @@ public class WebSocketHandler {
                     String error = "this is an error";
                     var notify = new ServerMessage(ERROR, null);
                     notify.setErrorMessage("errorMessage");
-                    connections.broadcast(gameID, notify);
+                    connections.broadcastToOne(gameID, notify, session);
+
+
 
                 }
 
@@ -313,7 +315,12 @@ public class WebSocketHandler {
                 dataGameAccess.updateGame(test.whiteUsername(), test.gameID(), test.gameName(), test.blackUsername(), change);
 
                 var game = new Gson().toJson(dataGameAccess.getGame(gameID));
-                var notify = new ServerMessage(LOAD_GAME, game);
+
+                GameData full = dataGameAccess.getGame(gameID);
+
+                ChessGame g = full.game();
+                //game = dataGameAccess.getGame(gameID).game();
+                var notify = new ServerMessage(LOAD_GAME, g);
                 connections.broadcastToOne(gameID, notify, session);
                 connections.broadcastToAll(gameID, notify, session, gameID);
 
@@ -341,10 +348,18 @@ public class WebSocketHandler {
         //if()
 
 
+        GameDao dataGameAccess = new MySqlDataGame();
+        GameData test = dataGameAccess.getGame(gameID);
+        ChessGame g = new ChessGame();
+        if(test!=null) {
+            g = test.game();
+        }
+
+
 
         try {
-            GameDao dataGameAccess = new MySqlDataGame();
-            GameData test = dataGameAccess.getGame(gameID);
+            //GameDao dataGameAccess = new MySqlDataGame();
+            //GameData test = dataGameAccess.getGame(gameID);
 
             if(test==null){
                 String error = "this is an error";
@@ -355,16 +370,16 @@ public class WebSocketHandler {
 
             else {
 
-                var notify = new ServerMessage(LOAD_GAME, game);
+                var notify = new ServerMessage(LOAD_GAME, g);
                 connections.broadcastToOne(gameID, notify, session);
                 var notifyReal = new ServerMessage(NOTIFICATION, null);
                 notifyReal.setMessage("this is a test message");
                 connections.broadcastToAll(gameID,notifyReal, session, gameID);
 
             }
-        } catch (ResponseException e) {
-            var notify = new ServerMessage(ERROR, game);
-            connections.broadcast(gameID, notify);
+        } catch (Exception e) {
+            var notify = new ServerMessage(ERROR, null);
+            connections.broadcastToOne(gameID, notify, session);
         }
     }
     // This might have something to do with loadinig the games...
@@ -379,10 +394,10 @@ public class WebSocketHandler {
         try {
             var game = String.format("joined");
             //var notification = new ServerMessage(NOTIFICATION, "connectTest");
-            var load = new ServerMessage(LOAD_GAME, game);
+            //var load = new ServerMessage(LOAD_GAME, game);
             //connections.add(gameID,session);
             //connections.add
-            connections.broadcast(gameID, load);
+            //connections.broadcast(gameID, load);
             //connections.broadcast(gameID, notification);
         } catch (Exception ex) {
             throw new ResponseException(500, ex.getMessage());

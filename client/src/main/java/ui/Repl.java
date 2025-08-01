@@ -2,6 +2,8 @@ package ui;
 
 
 
+import chess.ChessBoard;
+import chess.ChessGame;
 import websocket.NotificationHandler;
 import websocket.messages.ServerMessage;
 import websocketmessages.Notification;
@@ -43,6 +45,29 @@ public class Repl implements NotificationHandler {
 
         printPrompt();
     }
+
+    public void loadGame(ServerMessage notification){
+
+        ChessGame load = notification.getGame();
+
+        ChessBoard b = load.getBoard();
+
+        client.board = b;
+
+        if(client.color == "black"){
+            client.makeBlack();
+        }
+        else{
+            client.makeBoard();
+        }
+
+        System.out.println("new board");
+
+        printPrompt();
+
+
+    }
+
 
     private void printPrompt() {
         System.out.print("\n" + "\u001b[" + ">>> " + "\u001b[" + "32m");

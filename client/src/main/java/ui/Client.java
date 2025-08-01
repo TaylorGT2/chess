@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import chess.ChessBoard;
+import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import com.google.gson.Gson;
@@ -46,8 +47,13 @@ public class Client {
 
     public Integer fakeGameID;
 
+    public Integer goodGame =1;
+
 
     public ChessBoard board;
+    //board = board.resetBoard();
+
+    String color = "banana";
 
     public Client(String serverUrl, NotificationHandler notificationHandler) {
         this.server = new ServerFacade(serverUrl);
@@ -104,6 +110,12 @@ public class Client {
 
                 case "leave" -> leaveGame();
 
+                case "resign" -> resign();
+
+                //case "leave" -> leaveGame();
+
+                case "move" -> makeMove(params);
+
 
                 case "quit" -> "quit";
                 default -> help();
@@ -133,6 +145,10 @@ public class Client {
 
     public String leaveGame() throws ResponseException{
         state = State.SIGNEDIN;
+
+        ws = new WebSocketFacade(serverUrl, notificationHandler);
+        ws.leave(bestToken,goodGame);
+
         return "you left the game";
     }
 
@@ -142,8 +158,8 @@ public class Client {
         ChessBoardBuilder b = new ChessBoardBuilder();
         b.totalBlackBoard(b.out);
         boolean color = true;
-        board = new ChessBoard();
-        board.resetBoard();
+        //board = new ChessBoard();
+        //board.resetBoard();
 
         for(int i = 8; i>0; i--){
             for(int j = 8; j>0; j--){
@@ -258,8 +274,8 @@ public class Client {
         ChessBoardBuilder b = new ChessBoardBuilder();
         b.totalWhiteBoard(b.out);
         boolean color = true;
-        board = new ChessBoard();
-        board.resetBoard();
+        //board = new ChessBoard();
+        //board.resetBoard();
 
         for(int i = 1; i<9; i++){
             for(int j = 1; j<9; j++){
@@ -356,9 +372,6 @@ public class Client {
 
         }
 
-
-
-
     }
 
     public String watch(String... params) throws ResponseException{
@@ -421,12 +434,22 @@ public class Client {
             //login(username,password);
             gameList.add(fakeGameID);
             fakeGameID+=1;
+            board = new ChessBoard();
+            board.resetBoard();
 
             //ws = new WebSocketFacade(serverUrl, notificationHandler);
             //ws.enterPetShop(visitorName);
             return String.format("You created a game as %s.", name);
         }
         throw new ResponseException(400, "Expected: <gameName>");
+    }
+
+    public String resign() throws ResponseException {
+        ws = new WebSocketFacade(serverUrl, notificationHandler);
+        ws.resign(bestToken,goodGame);
+
+
+        return "this is probably wrong";
     }
 
     public String playGame(String... params) throws ResponseException {
@@ -445,9 +468,12 @@ public class Client {
 
 
             //var gameID = 8+4*gameNum;
-            var gameID = gameNum;;
+            var gameID = gameNum;
+            goodGame=gameID;
 
             var playerColor = params[1];
+
+            color = playerColor.toLowerCase();
             String[] ingredients = {String.valueOf(gameID),playerColor};
             String good = new Gson().toJson(params);
 
@@ -526,7 +552,129 @@ public class Client {
         return "redrawn";
     }
 
-    public String makeMove(){
+    public String makeMove(String... params) throws ResponseException {
+        String letter = params[0];
+        String num = params[1];
+
+        String letter2 = params[2];
+        String num2 = params[3];
+
+        int col = 15;
+        int row = 15;
+
+        int colEnd = 15;
+        int rowEnd = 15;
+
+
+            if(letter.equals("a")){
+                col=1;
+            }
+            if(letter.equals("b")){
+                col=2;
+            }
+            if(letter.equals("c")){
+                col=3;
+            }
+            if(letter.equals("d")){
+                col=4;
+            }
+            if(letter.equals("e")){
+                col=5;
+            }
+            if(letter.equals("f")){
+                col=6;
+            }
+            if(letter.equals("g")){
+                col=7;
+            }
+            if(letter.equals("h")){
+                col=8;
+            }
+
+            if(letter2.equals("a")){
+                colEnd=1;
+            }
+            if(letter2.equals("b")){
+                colEnd=2;
+            }
+            if(letter2.equals("c")){
+                colEnd=3;
+            }
+            if(letter2.equals("d")){
+                colEnd=4;
+            }
+            if(letter2.equals("e")){
+                colEnd=5;
+            }
+            if(letter2.equals("f")){
+                colEnd=6;
+            }
+            if(letter2.equals("g")){
+                colEnd=7;
+            }
+            if(letter2.equals("h")){
+                colEnd=8;
+            }
+
+            if(num.equals("8")){
+                row=1;
+            }
+            if(num.equals("7")){
+                row=2;
+            }
+            if(num.equals("6")){
+                row=3;
+            }
+            if(num.equals("5")){
+                row=4;
+            }
+            if(num.equals("4")){
+                row=5;
+            }
+            if(num.equals("3")){
+                row=6;
+            }
+            if(num.equals("2")){
+                row=7;
+            }
+            if(num.equals("1")){
+                row=8;
+            }
+
+
+            if(num2.equals("8")){
+                rowEnd=1;
+            }
+            if(num2.equals("7")){
+                rowEnd=2;
+            }
+            if(num2.equals("6")){
+                rowEnd=3;
+            }
+            if(num2.equals("5")){
+                rowEnd=4;
+            }
+            if(num2.equals("4")){
+                rowEnd=5;
+            }
+            if(num2.equals("3")){
+                rowEnd=6;
+            }
+            if(num2.equals("2")){
+                rowEnd=7;
+            }
+            if(num2.equals("1")){
+                rowEnd=8;
+            }
+
+            ChessMove move = new ChessMove(new ChessPosition(row,col),new ChessPosition(rowEnd,colEnd),null);
+
+
+        ws = new WebSocketFacade(serverUrl, notificationHandler);
+        ws.makeMove(bestToken,goodGame,move);
+
+
+
         return "move made";
     }
 
