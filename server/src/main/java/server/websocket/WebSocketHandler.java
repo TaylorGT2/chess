@@ -385,16 +385,26 @@ public class WebSocketHandler {
         ChessGame g = new ChessGame();
 
 
-        if(username.equals(test.whiteUsername())){
-            title = "white";
-        }
-        if(username.equals(test.blackUsername())){
-            title = "black";
-        }
+//        if(username.equals(test.whiteUsername())){
+//            title = "white";
+//        }
+//        if(username.equals(test.blackUsername())){
+//            title = "black";
+//        }
 
 
         if(test!=null) {
             g = test.game();
+
+            if(username.equals(test.whiteUsername())){
+                title = "white";
+            }
+            if(username.equals(test.blackUsername())){
+                title = "black";
+            }
+
+
+
         }
 
 
