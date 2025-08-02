@@ -143,7 +143,7 @@ public class WebSocketHandler {
 
 
                     switch (command.getCommandType()) {
-                        case CONNECT -> connect(session, gameID, CONNECT);
+                        case CONNECT -> connect(session, gameID, command);
                         case MAKE_MOVE -> makeMove(session, playerDidSomething, gameID, command.getMove(), command);
                         case LEAVE -> leaveGame(session, gameID, command);
                         case RESIGN -> resign(session, gameID, command);
@@ -360,7 +360,7 @@ public class WebSocketHandler {
 
     }
 
-    private void connect(Session session, int gameID, UserGameCommand.CommandType commandType) throws IOException, ResponseException {
+    private void connect(Session session, int gameID, UserGameCommand commandType) throws IOException, ResponseException {
         connections.add(gameID,session);
         var game = "abc";
 
@@ -369,10 +369,30 @@ public class WebSocketHandler {
 
         //if()
 
+        String token = commandType.getAuthToken();
+
+        AuthDAO dataAccess = new MySqlDataAuth();
+        AuthData userhome = dataAccess.getAuth(token);
+
+        String username = userhome.username();
+
+        String title = "observer";
+
+
 
         GameDao dataGameAccess = new MySqlDataGame();
         GameData test = dataGameAccess.getGame(gameID);
         ChessGame g = new ChessGame();
+
+
+        if(username.equals(test.whiteUsername())){
+            title = "white";
+        }
+        if(username.equals(test.blackUsername())){
+            title = "black";
+        }
+
+
         if(test!=null) {
             g = test.game();
         }
@@ -392,10 +412,12 @@ public class WebSocketHandler {
 
             else {
 
+
+                String fullmess = String.format("%s has joined the game as %s", username, title);
                 var notify = new ServerMessage(LOAD_GAME, g);
                 connections.broadcastToOne(gameID, notify, session);
                 var notifyReal = new ServerMessage(NOTIFICATION, null);
-                notifyReal.setMessage("this is a test message");
+                notifyReal.setMessage(fullmess);
                 connections.broadcastToAll(gameID,notifyReal, session, gameID);
 
             }

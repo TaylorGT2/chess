@@ -53,7 +53,7 @@ public class Client {
     public ChessBoard board;
     //board = board.resetBoard();
 
-    String color = "banana";
+    public String color = "banana";
 
     public Client(String serverUrl, NotificationHandler notificationHandler) {
         this.server = new ServerFacade(serverUrl);
@@ -146,7 +146,7 @@ public class Client {
     public String leaveGame() throws ResponseException{
         state = State.SIGNEDIN;
 
-        ws = new WebSocketFacade(serverUrl, notificationHandler);
+        ws = new WebSocketFacade(serverUrl, notificationHandler, this);
         ws.leave(bestToken,goodGame);
 
         return "you left the game";
@@ -445,7 +445,7 @@ public class Client {
     }
 
     public String resign() throws ResponseException {
-        ws = new WebSocketFacade(serverUrl, notificationHandler);
+        ws = new WebSocketFacade(serverUrl, notificationHandler, this);
         ws.resign(bestToken,goodGame);
 
 
@@ -488,7 +488,7 @@ public class Client {
 
 
 
-            ws = new WebSocketFacade(serverUrl, notificationHandler);
+            ws = new WebSocketFacade(serverUrl, notificationHandler, this);
             ws.connect(bestToken,gameID);
 
 
@@ -670,7 +670,7 @@ public class Client {
             ChessMove move = new ChessMove(new ChessPosition(row,col),new ChessPosition(rowEnd,colEnd),null);
 
 
-        ws = new WebSocketFacade(serverUrl, notificationHandler);
+        ws = new WebSocketFacade(serverUrl, notificationHandler, this);
         ws.makeMove(bestToken,goodGame,move);
 
 

@@ -116,6 +116,7 @@ public class ConnectionManager {
                     //c.send(notification.toString());
                     if (c.session != session && c.gameID == gameID) {
                         c.send(notification.toString());
+
                     }
                 } else {
                     removeList.add(all);

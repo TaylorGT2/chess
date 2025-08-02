@@ -1,8 +1,11 @@
 package websocket;
 
+import chess.ChessBoard;
+import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
 import exception.ResponseException;
+import ui.Client;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 import websocketmessages.Notification;
@@ -12,11 +15,14 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static ui.EscapeSequences.SET_TEXT_COLOR_GREEN;
+import static ui.EscapeSequences.SET_TEXT_COLOR_WHITE;
+
 public class WebSocketFacade extends Endpoint{
-    Session session;
+    public Session session;
     NotificationHandler notificationHandler;
 
-    public WebSocketFacade(String url, NotificationHandler notificationHandler) throws ResponseException{
+    public WebSocketFacade(String url, NotificationHandler notificationHandler, Client client) throws ResponseException{
         try{
             url = url.replace("http","ws");
             URI socketURI = new URI(url+"/ws");
@@ -24,16 +30,53 @@ public class WebSocketFacade extends Endpoint{
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 
+
+
             this.session = container.connectToServer(this,socketURI);
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message){
+
+                    System.out.println(message);
+                    System.out.println("A message was received");
                     ServerMessage notification = new Gson().fromJson(message,ServerMessage.class);
-                    notificationHandler.notify(notification);
+                    //notificationHandler.notify(notification);
 
                     if(notification.getServerMessageType()== ServerMessage.ServerMessageType.LOAD_GAME){
-                        notificationHandler.loadGame(notification);
+                        //notificationHandler.loadGame(notification);
+
+                        ChessGame load = notification.getGame();
+
+                        ChessBoard b = load.getBoard();
+
+                        client.board = b;
+
+                        if(client.color.equals("black")){
+                            client.makeBlack();
+                        }
+                        else{
+                            client.makeBoard();
+                        }
+
+                        System.out.print(SET_TEXT_COLOR_GREEN);
+
+                        System.out.println("new board");
+
+                        printPrompt();
+
+
+
                     }
+                    if(notification.getServerMessageType()== ServerMessage.ServerMessageType.NOTIFICATION){
+
+                        System.out.print(SET_TEXT_COLOR_GREEN);
+
+                        System.out.println("Incoming super important message!!!!");
+                        System.out.println(notification.getMessage());
+                        System.out.println("Message was sent!!");
+
+                    }
+
 
 
 
@@ -75,6 +118,10 @@ public class WebSocketFacade extends Endpoint{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void printPrompt() {
+        System.out.print("\n" + "\u001b[" + ">>> " + "\u001b[" + "32m");
     }
 
 
