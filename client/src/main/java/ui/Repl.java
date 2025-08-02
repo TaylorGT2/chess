@@ -54,7 +54,7 @@ public class Repl implements NotificationHandler {
 
         client.board = b;
 
-        if(client.color == "black"){
+        if(client.color.equals("black")){
             client.makeBlack();
         }
         else{
