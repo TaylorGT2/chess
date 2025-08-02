@@ -116,6 +116,8 @@ public class Client {
 
                 case "move" -> makeMove(params);
 
+                case "redraw" -> redraw();
+
 
                 case "quit" -> "quit";
                 default -> help();
@@ -693,7 +695,7 @@ public class Client {
                     - Redraw Chess Board: "redraw"
                     - Resign: "resign"
                     - Highlight Legal Moves: "highlight" <piece>
-                    - Make move: "move" <move>
+                    - Make move: "move" <startcol> <start row> <endcol> <endrow>
                     - Exit the game: "leave"
                     - Print this message: "h", "help"
                     """;
