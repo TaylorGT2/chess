@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.Collection;
 
 
+import static chess.ChessGame.TeamColor.BLACK;
+import static chess.ChessGame.TeamColor.WHITE;
 import static javax.management.remote.JMXConnectorFactory.connect;
 import static websocket.commands.UserGameCommand.CommandType.*;
 import static websocket.messages.ServerMessage.ServerMessageType.*;
@@ -262,12 +264,12 @@ public class WebSocketHandler {
                 // its blacks turn
                 ChessBoard b = change.getBoard();
                 ChessPiece color = b.getPiece(new ChessPosition(move.getStartPosition().getRow(),move.getStartPosition().getColumn()));
-                ChessGame.TeamColor trueColor = ChessGame.TeamColor.BLACK;
+                ChessGame.TeamColor trueColor = BLACK;
                 if(test.blackUsername().equals(usernameColor)){
-                    trueColor = ChessGame.TeamColor.BLACK;
+                    trueColor = BLACK;
                 }
                 else{
-                    trueColor = ChessGame.TeamColor.WHITE;
+                    trueColor = WHITE;
                 }
 
 
@@ -341,6 +343,22 @@ public class WebSocketHandler {
                 GameData full = dataGameAccess.getGame(gameID);
 
                 ChessGame g = full.game();
+
+                String message = String.format("move made: %s",move.toString());
+
+                if(g.isInCheck(BLACK)||g.isInCheck(WHITE)){
+                    message = message + " and check";
+
+                }
+                if(g.isInCheckmate(BLACK)||g.isInCheckmate(WHITE)){
+                    message = message + " and checkmate";
+
+                }
+                if(g.isInStalemate(BLACK)||g.isInStalemate(WHITE)){
+                    message = message + " and stalemate";
+
+                }
+
                 //game = dataGameAccess.getGame(gameID).game();
                 var notify = new ServerMessage(LOAD_GAME, g);
                 connections.broadcastToOne(gameID, notify, session);
@@ -348,7 +366,7 @@ public class WebSocketHandler {
 
 
                 var notify2 = new ServerMessage(NOTIFICATION, null);
-                notify2.setMessage("Message");
+                notify2.setMessage(message);
                 connections.broadcastToAll(gameID, notify2, session, gameID);
 
 
