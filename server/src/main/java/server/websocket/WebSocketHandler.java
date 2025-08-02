@@ -26,17 +26,27 @@ import static websocket.messages.ServerMessage.ServerMessageType.*;
 
 @WebSocket
 public class WebSocketHandler {
-    public final ConnectionManager connections = new ConnectionManager();// = ConnectionManager.connections;
-
+    //public final ConnectionManager connections = new ConnectionManager();// = ConnectionManager.connections;
+    public ConnectionManager connections;
     public boolean resignation = false;
 
     public int legalMove = 0;
+
+    public WebSocketHandler(ConnectionManager connections){
+        this.connections=connections;
+    }
 
     //private final ConnectionManager connectionsALl = connections.getConnections();
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws IOException, ResponseException, InvalidMoveException {
         UserGameCommand commandCheck = new Gson().fromJson(msg, UserGameCommand.class);
+
+        int b = connections.connections.size();
+
+        //connections = new ConnectionManager();
+
+
         if(commandCheck.getCommandType()==MAKE_MOVE){
 
 
@@ -261,20 +271,23 @@ public class WebSocketHandler {
                     connections.broadcastToOne(gameID, errorNote, session);
                     shutdown = true;
                 }
-                else if(test.blackUsername().equals(usernameColor)&&legalMove%2==0){
-                    var error2 = "its not your turn error";
-                    var errorNote = new ServerMessage(ERROR,null);
-                    errorNote.setErrorMessage(error2);
-                    connections.broadcastToOne(gameID, errorNote, session);
-                    shutdown = true;
-                }
-                else if(test.whiteUsername().equals(usernameColor)&&legalMove%2!=0){
-                    var error2 = "its not your turn error";
-                    var errorNote = new ServerMessage(ERROR,null);
-                    errorNote.setErrorMessage(error2);
-                    connections.broadcastToOne(gameID, errorNote, session);
-                    shutdown = true;
-                }
+
+
+//                else if(test.blackUsername().equals(usernameColor)&&legalMove%2==0){
+//                    var error2 = "its not your turn error";
+//                    var errorNote = new ServerMessage(ERROR,null);
+//                    errorNote.setErrorMessage(error2);
+//                    connections.broadcastToOne(gameID, errorNote, session);
+//                    shutdown = true;
+//                }
+//                else if(test.whiteUsername().equals(usernameColor)&&legalMove%2!=0){
+//
+//                    var error2 = "its not your turn error";
+//                    var errorNote = new ServerMessage(ERROR,null);
+//                    errorNote.setErrorMessage(error2);
+//                    connections.broadcastToOne(gameID, errorNote, session);
+//                    shutdown = true;
+//                }
 
 
             }

@@ -6,6 +6,8 @@ import dataaccess.*;
 import model.UserData;
 import model.AuthData;
 import model.GameData;
+import server.websocket.Connection;
+import server.websocket.ConnectionManager;
 import service.GameService;
 import spark.*;
 import exception.ResponseException;
@@ -15,7 +17,9 @@ import service.AuthService;
 import server.websocket.WebSocketHandler;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
 
@@ -26,7 +30,9 @@ public class Server {
 
     public GameService serviceGame;//= new GameService(dataGameAccess);
 
+    public ConcurrentHashMap<Integer, ArrayList<Connection>> connections = new ConcurrentHashMap<>();
 
+    //ConnectionManager m;
 
     public Server(UserService service, AuthService serviceAuth, GameService serviceGame) {
 
@@ -34,7 +40,7 @@ public class Server {
             this.service = service;
             this.serviceAuth = serviceAuth;
             this.serviceGame = serviceGame;
-            webSocketHandler = new WebSocketHandler();
+            webSocketHandler = new WebSocketHandler(new ConnectionManager(connections));
 
     }
 
@@ -57,7 +63,7 @@ public class Server {
 
            this.serviceGame = new GameService(dataGameAccess);
 
-           webSocketHandler = new WebSocketHandler();
+           webSocketHandler = new WebSocketHandler(new ConnectionManager(connections));
 
        }catch(Exception ex){
 

@@ -10,7 +10,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager {
     // this might need to be an array list of  connections
-    public ConcurrentHashMap<Integer, ArrayList<Connection>> connections = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<Integer, ArrayList<Connection>> connections;// = new ConcurrentHashMap<>();
+
+    public ConnectionManager(ConcurrentHashMap<Integer, ArrayList<Connection>> connections){
+        this.connections=connections;
+    }
 
     public void add(int gameID, Session session) {
 
@@ -89,9 +93,9 @@ public class ConnectionManager {
         }
 
         // Clean up any connections that were left open.
-        for (var c : removeList) {
-            connections.remove(c.gameID);
-        }
+//        for (var c : removeList) {
+//            connections.remove(c.gameID);
+//        }
     }
 
 
@@ -104,8 +108,9 @@ public class ConnectionManager {
 
 
     public void broadcastToAll(int excludeVisitorName, ServerMessage notification, Session session, int gameID) throws IOException {
-        var removeList = new ArrayList<Connection>();
+        var removeList = new ArrayList<ArrayList<Connection>>();
         for (var all : connections.values()) {
+
             for(var c : all) {
                 if (c.session.isOpen()) {
                     //c.send(notification.toString());
@@ -113,14 +118,18 @@ public class ConnectionManager {
                         c.send(notification.toString());
                     }
                 } else {
-                    removeList.add(c);
+                    removeList.add(all);
                 }
             }
         }
 
         // Clean up any connections that were left open.
-        for (var c : removeList) {
-            connections.remove(c.gameID);
-        }
+//        for (var c : removeList) {
+//            for(var deadGame:c)
+//            connections.remove(deadGame.gameID);
+//        }
+
+        //ConcurrentHashMap<Integer, ArrayList<Connection>> c4 = new ConcurrentHashMap<>();
+        //connections = c4;
     }
 }
