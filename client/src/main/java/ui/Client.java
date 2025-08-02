@@ -449,7 +449,7 @@ public class Client {
         ws.resign(bestToken,goodGame);
 
 
-        return "this is probably wrong";
+        return "you resigned";
     }
 
     public String playGame(String... params) throws ResponseException {
