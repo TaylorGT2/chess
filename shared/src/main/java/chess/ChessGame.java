@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 public class ChessGame {
 
-    int turnNumber;
+    int turnNumber=0;
     TeamColor turn;
     ChessBoard board;
     ChessGame game;
@@ -87,6 +87,10 @@ public class ChessGame {
 
 
     }
+
+    public int getTurnNumber(){return turnNumber;}
+
+    public void setTurnNumber(int num){turnNumber=num;}
 
     /**
      * Makes a move in a chess game
