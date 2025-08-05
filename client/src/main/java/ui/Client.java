@@ -8,7 +8,7 @@ import java.util.Collection;
 
 import chess.*;
 import com.google.gson.Gson;
-//import com.sun.nio.sctp.NotificationHandler;
+
 import model.GameData;
 import model.UserData;
 import exception.ResponseException;
@@ -22,10 +22,7 @@ import static chess.ChessPiece.PieceType.*;
 import static ui.EscapeSequences.moveCursorToLocation;
 
 
-//import server.ServerFacade;
 
-
-//import client.websocket.WebSocketFacade;
 
 public class Client {
 
@@ -38,7 +35,7 @@ public class Client {
     private WebSocketFacade ws;
 
     ArrayList<Integer> gameList;
-    //private WebSocketFacade ws;
+
 
     public String bestToken;
 
@@ -50,7 +47,7 @@ public class Client {
 
 
     public ChessBoard board;
-    //board = board.resetBoard();
+
 
     public String color = "banana";
 
@@ -111,7 +108,7 @@ public class Client {
 
                 case "resign" -> resign();
 
-                //case "leave" -> leaveGame();
+
 
                 case "move" -> makeMove(params);
 
@@ -139,8 +136,7 @@ public class Client {
             var userData = server.addUser(use);
             login(username,password);
 
-            //ws = new WebSocketFacade(serverUrl, notificationHandler);
-            //ws.enterPetShop(visitorName);
+
             return String.format("You signed in as %s.", username);
         }
         throw new ResponseException(400, "Expected: <username> <password> <email>");
@@ -160,14 +156,10 @@ public class Client {
         String letter = params[0];
         String num = params[1];
 
-     //   String letter2 = params[2];
-      //  String num2 = params[3];
 
         int col = 15;
         int row = 15;
 
-//        int colEnd = 15;
-//        int rowEnd = 15;
 
         if(color.equals("white")||color.equals("black")) {
 
@@ -244,12 +236,7 @@ public class Client {
             makeWhiteLit(all,start);
         }
 
-//        for(var move:all){
-//            moveCursorToLocation(move.getEndPosition().getRow(),move.getEndPosition().getColumn());
-//            b.setGreen(b.out);
-//            b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
-//
-//        }
+
 
         return "i hope your happy";
     }
@@ -260,8 +247,7 @@ public class Client {
         ChessBoardBuilder b = new ChessBoardBuilder();
         b.totalBlackBoard(b.out);
         boolean color = true;
-        //board = new ChessBoard();
-        //board.resetBoard();
+
 
         for(int i = 1; i<9; i++){
             for(int j = 8; j>0; j--){
@@ -369,8 +355,7 @@ public class Client {
         ChessBoardBuilder b = new ChessBoardBuilder();
         b.totalBlackBoard(b.out);
         boolean color = true;
-        //board = new ChessBoard();
-        //board.resetBoard();
+
 
         for(int i = 1; i<9; i++){
             for(int j = 8; j>0; j--){
@@ -378,10 +363,7 @@ public class Client {
                 ChessPiece p = board.getPiece(new ChessPosition(i,j));
                 ChessPosition green = new ChessPosition(i,j);
                 ChessMove test = new ChessMove(start,green,null);
-//                if(all.contains(test)){
-//                    b.setRed(b.out);
-//                    b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
-//                }
+
                 if(p==null&&color==true&&!all.contains(test)){
                     b.setRed(b.out);
                     b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
@@ -530,8 +512,7 @@ public class Client {
         ChessBoardBuilder b = new ChessBoardBuilder();
         b.totalBlackBoard(b.out);
         boolean color = true;
-        //board = new ChessBoard();
-        //board.resetBoard();
+
 
         for(int i = 8; i>0; i--){
             for(int j = 1; j<9; j++){
@@ -539,10 +520,7 @@ public class Client {
                 ChessPiece p = board.getPiece(new ChessPosition(i,j));
                 ChessPosition green = new ChessPosition(i,j);
                 ChessMove test = new ChessMove(start,green,null);
-//                if(all.contains(test)){
-//                    b.setRed(b.out);
-//                    b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
-//                }
+
                 if(p==null&&color==true&&!all.contains(test)){
                     b.setRed(b.out);
                     b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
@@ -697,8 +675,7 @@ public class Client {
         ChessBoardBuilder b = new ChessBoardBuilder();
         b.totalWhiteBoard(b.out);
         boolean color = true;
-        //board = new ChessBoard();
-        //board.resetBoard();
+
 
         for(int i = 8; i>0; i--){
             for(int j = 1; j<9; j++){
@@ -798,7 +775,7 @@ public class Client {
     }
 
     public String watch(String... params) throws ResponseException{
-        //int q = params.length+1;
+
         if (params.length >= 1) {
 
             String reqGame = params[0];
@@ -806,7 +783,7 @@ public class Client {
 
 
             try {
-                //gameNum = Integer.parseInt(gameNumber);
+
                 Integer check = Integer.parseInt(reqGame);
             }
             catch (NumberFormatException e){
@@ -835,8 +812,7 @@ public class Client {
         for (var game: games) {
             game.gameName();
             result.append(numbering);
-            //gameList
-            //result.append(gson.toJson(game)).append('\n');
+
             result.append(game.gameName()).append(' ').append(game.whiteUsername()).append(' ').append(game.blackUsername()).append('\n');
             numbering+=1;
         }
@@ -854,14 +830,12 @@ public class Client {
 
             GameData game = new GameData(0,null,null,name,null);
             var gameData = server.createGame(game, bestToken);
-            //login(username,password);
+
             gameList.add(fakeGameID);
             fakeGameID+=1;
             board = new ChessBoard();
             board.resetBoard();
 
-            //ws = new WebSocketFacade(serverUrl, notificationHandler);
-            //ws.enterPetShop(visitorName);
             return String.format("You created a game as %s.", name);
         }
         throw new ResponseException(400, "Expected: <gameName>");
@@ -878,7 +852,7 @@ public class Client {
     public String playGame(String... params) throws ResponseException {
         if (params.length >= 2) {
             state = State.PLAYING;
-            //visitorName = String.join("-", params);
+
             var gameNumber = params[0];
             int gameNum = 0;
             try {
@@ -890,7 +864,6 @@ public class Client {
 
 
 
-            //var gameID = 8+4*gameNum;
             var gameID = gameNum;
             goodGame=gameID;
 
@@ -900,13 +873,8 @@ public class Client {
             String[] ingredients = {String.valueOf(gameID),playerColor};
             String good = new Gson().toJson(params);
 
-            //GameData game = new GameData(0,null,null,name,null);
-            //String goodParams = params.toString();
-            server.playGame(gameID,playerColor, bestToken);
-            //login(username,password);
 
-            //ws = new WebSocketFacade(serverUrl, notificationHandler);
-            //ws.enterPetShop(visitorName);
+            server.playGame(gameID,playerColor, bestToken);
 
 
 
@@ -915,31 +883,10 @@ public class Client {
             ws.connect(bestToken,gameID);
 
 
-//            if(playerColor.equals("white")){
-//                ChessBoardBuilder b = new ChessBoardBuilder();
-//
-//
-//
-//
-//                makeBoard();
-//
-//                return "behold";
-//            }
-//            else{
-//                ChessBoardBuilder b = new ChessBoardBuilder();
-//
-//
-//
-//                makeBlack();
-//
-//                return "behold";
-//            }
-
             return "behold";
 
 
 
-            //return String.format("You entered a game");
         }
         throw new ResponseException(400, "Expected: <gameNum> <BLACK|WHITE");
     }
@@ -949,24 +896,18 @@ public class Client {
     public String login(String... params) throws ResponseException {
         if (params.length >= 2) {
             state = State.SIGNEDIN;
-            //visitorName = String.join("-", params);
+
             var username = params[0];
             var password = params[1];
             visitorName=username;
             UserData logging = new UserData(username,password, "fill");
-            //var userData = getUser(username);
+
 
             var loginable = server.login(logging);
 
             bestToken=loginable.authToken();
 
 
-//            ws = new WebSocketFacade(serverUrl, notificationHandler);
-//            ws.connect(bestToken,gameID);
-
-
-            //ws = new WebSocketFacade(serverUrl, notificationHandler);
-            //ws.enterPetShop(visitorName);
             return String.format("You signed in as %s.", username);
         }
         throw new ResponseException(400, "Expected: <username> <password>");
@@ -1260,8 +1201,7 @@ public class Client {
 
     public String signOut() throws ResponseException {
         assertSignedIn();
-        //ws.leavePetShop(visitorName);
-        //ws = null;
+
         server.logout(bestToken);
         state = State.SIGNEDOUT;
 

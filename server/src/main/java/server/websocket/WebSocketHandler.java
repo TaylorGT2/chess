@@ -28,7 +28,7 @@ import static websocket.messages.ServerMessage.ServerMessageType.*;
 
 @WebSocket
 public class WebSocketHandler {
-    //public final ConnectionManager connections = new ConnectionManager();// = ConnectionManager.connections;
+
     public ConnectionManager connections;
     public boolean resignation = false;
 
@@ -38,7 +38,7 @@ public class WebSocketHandler {
         this.connections=connections;
     }
 
-    //private final ConnectionManager connectionsALl = connections.getConnections();
+
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws IOException, ResponseException, InvalidMoveException {
@@ -46,7 +46,7 @@ public class WebSocketHandler {
 
         int b = connections.connections.size();
 
-        //connections = new ConnectionManager();
+
 
 
         if(commandCheck.getCommandType()==MAKE_MOVE){
@@ -73,17 +73,16 @@ public class WebSocketHandler {
             }
 
             boolean shutdown = false;
-            //saveSession(command.getGameID(), session);
+
 
             AuthDAO dataAccess = new MySqlDataAuth();
             AuthData test = dataAccess.getAuth(testToken);
             if (test == null) {
-                //saveSession(command.getGameID(), session);
-                //connections.add(gameID,session);
+
                 String error = "this is an error";
                 var notify = new ServerMessage(ERROR, null);
                 notify.setErrorMessage("errorMessage");
-                //connections.broadcastToOne(gameID, notify,session);
+
                 connections.errorBroadcast(session, notify);
                 shutdown = true;
 
@@ -99,14 +98,14 @@ public class WebSocketHandler {
 
 
             try {
-                // playing fast a loose
+
                 UserGameCommand command = new Gson().fromJson(msg, UserGameCommand.class);
 
                 String testToken = command.getAuthToken();
                 int gameID = command.getGameID();
 
                 boolean shutdown = false;
-                //saveSession(command.getGameID(), session);
+
 
                 try {
                     AuthDAO dataAccess = new MySqlDataAuth();
@@ -116,7 +115,7 @@ public class WebSocketHandler {
                         String error = "this is an error";
                         var notify = new ServerMessage(ERROR, null);
                         notify.setErrorMessage("errorMessage");
-                        //connections.broadcastToOne(gameID, notify,session);
+
                         connections.errorBroadcast(session, notify);
                         shutdown = true;
 
@@ -127,17 +126,11 @@ public class WebSocketHandler {
                     var notify = new ServerMessage(ERROR, null);
                     notify.setErrorMessage("errorMessage");
                     connections.errorBroadcast(session, notify);
-                    //connections.broadcastToOne(gameID, notify, session);
 
 
 
                 }
 
-                //String username = getUsername(command.getAuthToken());
-                //int gameID = command.getGameID();
-
-
-                //saveSession(command.getGameID(),session);
 
                 if (shutdown == false) {
 
@@ -176,14 +169,14 @@ public class WebSocketHandler {
             var error2 = "Observers aren't players so they can't be quitters";
             var errorNote = new ServerMessage(ERROR,null);
             errorNote.setErrorMessage(error2);
-            //connections.broadcastToOne(gameID, errorNote, session);
+
             connections.errorBroadcast(session, errorNote);
         }
         else if(checking.gameName().equals("RERERESIGNED")){
             var error2 = "Only one quitter per game";
             var errorNote = new ServerMessage(ERROR,null);
             errorNote.setErrorMessage(error2);
-            //connections.broadcastToOne(gameID, errorNote, session);
+
             connections.errorBroadcast(session, errorNote);
         }
         else {
@@ -211,16 +204,6 @@ public class WebSocketHandler {
         GameDao gameChange = new MySqlDataGame();
         GameData game = gameChange.getGame(gameID);
 
-//        if(user.equals(game.blackUsername())){
-//            gameChange.updateGame(game.whiteUsername(),gameID, game.gameName(), null, game.game());
-//        }
-//        if(user.equals(game.whiteUsername())){
-//            gameChange.updateGame(null,gameID, game.gameName(), game.blackUsername(), game.game());
-//        }
-
-
-
-        //dataGameAccess.updateGame(test.whiteUsername(), test.gameID(), test.gameName(), test.blackUsername(), change);
 
         connections.remove(gameID, session);
         var message = String.format("%s is gone", test.username());
@@ -240,7 +223,7 @@ public class WebSocketHandler {
 
     private void makeMove(Session session, String username, int gameID, ChessMove move, UserGameCommand commandType) throws IOException, ResponseException, InvalidMoveException {
 
-        //connections.add(gameID,session);
+
         String error = String.format("user %s made a move", username);
 
 
@@ -256,8 +239,7 @@ public class WebSocketHandler {
             var error2 = "not a good move error";
             var errorNote = new ServerMessage(ERROR,null);
             errorNote.setErrorMessage(error2);
-            //connections.broadcastToOne(gameID, errorNote, session);
-            //connections.broadcastToAll(gameID,errorNote,session,gameID);
+
             connections.errorBroadcast(session, errorNote);
             //return;
         }
@@ -269,7 +251,7 @@ public class WebSocketHandler {
                 var error2 = "not a good move error";
                 var errorNote = new ServerMessage(ERROR, null);
                 errorNote.setErrorMessage(error2);
-                //connections.broadcastToOne(gameID, errorNote, session);
+
                 connections.errorBroadcast(session, errorNote);
             } else {
 
@@ -279,8 +261,7 @@ public class WebSocketHandler {
                 String usernameColor = userNameHolder.username();
 
                 boolean shutdown = false;
-                //usernameColor.equals(test.blackUsername())
-                //usernameColor.equals(test.whiteUsername())
+
                 if (usernameColor.equals(test.blackUsername()) || usernameColor.equals(test.whiteUsername())) {
                     // its blacks turn
                     ChessBoard b = change.getBoard();
@@ -297,14 +278,14 @@ public class WebSocketHandler {
                         var error2 = "its not your turn error";
                         var errorNote = new ServerMessage(ERROR, null);
                         errorNote.setErrorMessage(error2);
-                        //connections.broadcastToOne(gameID, errorNote, session);
+
                         connections.errorBroadcast(session, errorNote);
                         shutdown = true;
                     } else if (usernameColor.equals(test.blackUsername()) && change.getTurnNumber() % 2 == 0) {
                         var error2 = "its not your turn error";
                         var errorNote = new ServerMessage(ERROR, null);
                         errorNote.setErrorMessage(error2);
-                        //connections.broadcastToOne(gameID, errorNote, session);
+
                         connections.errorBroadcast(session, errorNote);
                         shutdown = true;
                     } else if (usernameColor.equals(test.whiteUsername()) && change.getTurnNumber() % 2 != 0) {
@@ -312,7 +293,7 @@ public class WebSocketHandler {
                         var error2 = "its not your turn error";
                         var errorNote = new ServerMessage(ERROR, null);
                         errorNote.setErrorMessage(error2);
-                        //connections.broadcastToOne(gameID, errorNote, session);
+
                         connections.errorBroadcast(session, errorNote);
                         shutdown = true;
                     }
@@ -321,24 +302,13 @@ public class WebSocketHandler {
                 }
 
 
-//            else if(test.whiteUsername().equals(usernameColor)){
-//                // its whites turn
-//                ChessBoard b = change.getBoard();
-//                ChessPiece color = b.getPiece(new ChessPosition(move.getStartPosition().getRow(),move.getStartPosition().getColumn()));
-//                if(color.getTeamColor()!= ChessGame.TeamColor.WHITE){
-//                    var error2 = "its not your turn error";
-//                    var errorNote = new ServerMessage(ERROR,null);
-//                    errorNote.setErrorMessage(error2);
-//                    connections.broadcastToOne(gameID, errorNote, session);
-//                    shutdown = true;
-//                }
-//            }
+
                 else {
-                    //its no ones turn throw an error
+
                     var error2 = "its not your turn error";
                     var errorNote = new ServerMessage(ERROR, null);
                     errorNote.setErrorMessage(error2);
-                    //connections.broadcastToOne(gameID, errorNote, session);
+
                     connections.errorBroadcast(session, errorNote);
                     shutdown = true;
 
@@ -378,11 +348,6 @@ public class WebSocketHandler {
 
                     }
 
-                    //game = dataGameAccess.getGame(gameID).game();
-
-//                var notify = new ServerMessage(LOAD_GAME, g);
-//                connections.broadcastToOne(gameID, notify, session);
-
 
                     var notify = new ServerMessage(LOAD_GAME, g);
                     connections.broadcastToOne(gameID, notify, session);
@@ -407,10 +372,6 @@ public class WebSocketHandler {
         connections.add(gameID,session);
         var game = "abc";
 
-        //GameDao check = new GameDao;
-        //check.getGame(gameID);
-
-        //if()
 
         String token = commandType.getAuthToken();
 
@@ -428,12 +389,7 @@ public class WebSocketHandler {
         ChessGame g = new ChessGame();
 
 
-//        if(username.equals(test.whiteUsername())){
-//            title = "white";
-//        }
-//        if(username.equals(test.blackUsername())){
-//            title = "black";
-//        }
+
 
 
         if(test!=null) {
@@ -453,15 +409,14 @@ public class WebSocketHandler {
 
 
         try {
-            //GameDao dataGameAccess = new MySqlDataGame();
-            //GameData test = dataGameAccess.getGame(gameID);
+
 
             if(test==null){
                 String error = "this is an error";
                 var notify = new ServerMessage(ERROR, null);
                 notify.setErrorMessage("errorMessage");
                 connections.errorBroadcast(session, notify);
-                //connections.broadcastToOne(gameID, notify,session);
+
             }
 
             else {
@@ -478,10 +433,10 @@ public class WebSocketHandler {
         } catch (Exception e) {
             var notify = new ServerMessage(ERROR, null);
             connections.errorBroadcast(session, notify);
-            //connections.broadcastToOne(gameID, notify, session);
+
         }
     }
-    // This might have something to do with loadinig the games...
+
     private void saveSession(Integer gameID, Session session) {
 
         connections.add(gameID,session);
@@ -492,12 +447,7 @@ public class WebSocketHandler {
     public void connectTest(int gameID) throws ResponseException {
         try {
             var game = String.format("joined");
-            //var notification = new ServerMessage(NOTIFICATION, "connectTest");
-            //var load = new ServerMessage(LOAD_GAME, game);
-            //connections.add(gameID,session);
-            //connections.add
-            //connections.broadcast(gameID, load);
-            //connections.broadcast(gameID, notification);
+
         } catch (Exception ex) {
             throw new ResponseException(500, ex.getMessage());
         }

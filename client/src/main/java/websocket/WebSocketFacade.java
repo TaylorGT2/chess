@@ -40,7 +40,7 @@ public class WebSocketFacade extends Endpoint{
                     System.out.println(message);
                     System.out.println("A message was received");
                     ServerMessage notification = new Gson().fromJson(message,ServerMessage.class);
-                    //notificationHandler.notify(notification);
+
 
                     if(notification.getServerMessageType()== ServerMessage.ServerMessageType.LOAD_GAME){
                         //notificationHandler.loadGame(notification);

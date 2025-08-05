@@ -28,12 +28,7 @@ public class UserGameCommand {
         this.move = move;
     }
 
-//    public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
-//        this.commandType = commandType;
-//        this.authToken = authToken;
-//        this.gameID = gameID;
-//        this.move = null;
-//    }
+
 
     public enum CommandType {
         CONNECT,

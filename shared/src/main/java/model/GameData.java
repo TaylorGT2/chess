@@ -17,9 +17,7 @@ public record GameData(int gameID, String whiteUsername, String blackUsername, S
         return new GameData(this.gameID(), this.whiteUsername(),this.blackUsername(),gameName,this.game());
     }
 
-//    public void loadMove(ChessGame game){
-//        this.game = game;
-//    }
+
 
 
 

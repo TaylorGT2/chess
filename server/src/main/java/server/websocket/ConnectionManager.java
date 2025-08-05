@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager {
-    // this might need to be an array list of  connections
+
     public ConcurrentHashMap<Integer, ArrayList<Connection>> connections;// = new ConcurrentHashMap<>();
 
     public ConnectionManager(ConcurrentHashMap<Integer, ArrayList<Connection>> connections){
@@ -19,7 +19,7 @@ public class ConnectionManager {
     public void add(int gameID, Session session) {
 
         if(connections.get(gameID)!=null){
-            // add to inner list
+
             connections.get(gameID).add(new Connection(gameID, session));
         }
         else {
@@ -46,7 +46,7 @@ public class ConnectionManager {
     public void remove(int gameID, Session session) {
 
         ArrayList<Connection> replacement = connections.get(gameID);
-        //ArrayList<Connection>
+
         connections.remove(gameID);
         for (var c : replacement){
             if(c.session!=session){
@@ -70,7 +70,7 @@ public class ConnectionManager {
             }
         }
 
-        // Clean up any connections that were left open.
+
         for (var c : removeList) {
             connections.remove(c.gameID);
         }
@@ -89,7 +89,7 @@ public class ConnectionManager {
         for (var all : connections.values()) {
             for(var c : all) {
                 if (c.session.isOpen()) {
-                    //c.send(notification.toString());
+
                     if (c.session == session) {
                         c.send(notification.toString());
                     }
@@ -99,10 +99,7 @@ public class ConnectionManager {
             }
         }
 
-        // Clean up any connections that were left open.
-//        for (var c : removeList) {
-//            connections.remove(c.gameID);
-//        }
+
     }
 
 
@@ -135,13 +132,6 @@ public class ConnectionManager {
             }
         }
 
-        // Clean up any connections that were left open.
-//        for (var c : removeList) {
-//            for(var deadGame:c)
-//            connections.remove(deadGame.gameID);
-//        }
 
-        //ConcurrentHashMap<Integer, ArrayList<Connection>> c4 = new ConcurrentHashMap<>();
-        //connections = c4;
     }
 }
