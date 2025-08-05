@@ -235,7 +235,7 @@ public class Client {
             return "pick a real piece";
         }
 
-        Collection<ChessMove> all = cheese.validMoves(start);
+        Collection<ChessMove> all = cheese.validMoves2(board,start,cheese);
         ChessBoardBuilder b = new ChessBoardBuilder();
         if(color.equals("black")) {
             makeBlackLit(all, start);
@@ -634,31 +634,31 @@ public class Client {
                     b.printPlayerHigh(b.out," P ",color);
                 }
 
-                if(j==1){
+                if(j==8){
                     b.setBlack(b.out);
                 }
-                if(j==1&&i==1){
+                if(j==8&&i==1){
                     b.printHeaderText(b.out," 1 ");
                 }
-                if(j==1&&i==2){
+                if(j==8&&i==2){
                     b.printHeaderText(b.out," 2 ");
                 }
-                if(j==1&&i==3){
+                if(j==8&&i==3){
                     b.printHeaderText(b.out," 3 ");
                 }
-                if(j==1&&i==4){
+                if(j==8&&i==4){
                     b.printHeaderText(b.out," 4 ");
                 }
-                if(j==1&&i==5){
+                if(j==8&&i==5){
                     b.printHeaderText(b.out," 5 ");
                 }
-                if(j==1&&i==6){
+                if(j==8&&i==6){
                     b.printHeaderText(b.out," 6 ");
                 }
-                if(j==1&&i==7){
+                if(j==8&&i==7){
                     b.printHeaderText(b.out," 7 ");
                 }
-                if(j==1&&i==8){
+                if(j==8&&i==8){
                     b.printHeaderText(b.out," 8 ");
                 }
 

@@ -68,6 +68,7 @@ public class WebSocketHandler {
                 var notify = new ServerMessage(ERROR, null);
                 notify.setErrorMessage("errorMessage");
                 connections.broadcastToOne(gameID, notify,session);
+
                 return;
             }
 
@@ -82,7 +83,7 @@ public class WebSocketHandler {
                 String error = "this is an error";
                 var notify = new ServerMessage(ERROR, null);
                 notify.setErrorMessage("errorMessage");
-                connections.broadcastToOne(gameID, notify,session);
+                //connections.broadcastToOne(gameID, notify,session);
                 connections.errorBroadcast(session, notify);
                 shutdown = true;
 
@@ -115,7 +116,8 @@ public class WebSocketHandler {
                         String error = "this is an error";
                         var notify = new ServerMessage(ERROR, null);
                         notify.setErrorMessage("errorMessage");
-                        connections.broadcastToOne(gameID, notify,session);
+                        //connections.broadcastToOne(gameID, notify,session);
+                        connections.errorBroadcast(session, notify);
                         shutdown = true;
 
                     }
@@ -124,7 +126,8 @@ public class WebSocketHandler {
                     String error = "this is an error";
                     var notify = new ServerMessage(ERROR, null);
                     notify.setErrorMessage("errorMessage");
-                    connections.broadcastToOne(gameID, notify, session);
+                    connections.errorBroadcast(session, notify);
+                    //connections.broadcastToOne(gameID, notify, session);
 
 
 
@@ -173,13 +176,15 @@ public class WebSocketHandler {
             var error2 = "Observers aren't players so they can't be quitters";
             var errorNote = new ServerMessage(ERROR,null);
             errorNote.setErrorMessage(error2);
-            connections.broadcastToOne(gameID, errorNote, session);
+            //connections.broadcastToOne(gameID, errorNote, session);
+            connections.errorBroadcast(session, errorNote);
         }
         else if(checking.gameName().equals("RERERESIGNED")){
             var error2 = "Only one quitter per game";
             var errorNote = new ServerMessage(ERROR,null);
             errorNote.setErrorMessage(error2);
-            connections.broadcastToOne(gameID, errorNote, session);
+            //connections.broadcastToOne(gameID, errorNote, session);
+            connections.errorBroadcast(session, errorNote);
         }
         else {
 
@@ -251,7 +256,7 @@ public class WebSocketHandler {
             var error2 = "not a good move error";
             var errorNote = new ServerMessage(ERROR,null);
             errorNote.setErrorMessage(error2);
-            connections.broadcastToOne(gameID, errorNote, session);
+            //connections.broadcastToOne(gameID, errorNote, session);
             //connections.broadcastToAll(gameID,errorNote,session,gameID);
             connections.errorBroadcast(session, errorNote);
             //return;
@@ -264,7 +269,8 @@ public class WebSocketHandler {
                 var error2 = "not a good move error";
                 var errorNote = new ServerMessage(ERROR, null);
                 errorNote.setErrorMessage(error2);
-                connections.broadcastToOne(gameID, errorNote, session);
+                //connections.broadcastToOne(gameID, errorNote, session);
+                connections.errorBroadcast(session, errorNote);
             } else {
 
                 String userExtract = commandType.getAuthToken();
@@ -291,20 +297,23 @@ public class WebSocketHandler {
                         var error2 = "its not your turn error";
                         var errorNote = new ServerMessage(ERROR, null);
                         errorNote.setErrorMessage(error2);
-                        connections.broadcastToOne(gameID, errorNote, session);
+                        //connections.broadcastToOne(gameID, errorNote, session);
+                        connections.errorBroadcast(session, errorNote);
                         shutdown = true;
                     } else if (usernameColor.equals(test.blackUsername()) && change.getTurnNumber() % 2 == 0) {
                         var error2 = "its not your turn error";
                         var errorNote = new ServerMessage(ERROR, null);
                         errorNote.setErrorMessage(error2);
-                        connections.broadcastToOne(gameID, errorNote, session);
+                        //connections.broadcastToOne(gameID, errorNote, session);
+                        connections.errorBroadcast(session, errorNote);
                         shutdown = true;
                     } else if (usernameColor.equals(test.whiteUsername()) && change.getTurnNumber() % 2 != 0) {
 
                         var error2 = "its not your turn error";
                         var errorNote = new ServerMessage(ERROR, null);
                         errorNote.setErrorMessage(error2);
-                        connections.broadcastToOne(gameID, errorNote, session);
+                        //connections.broadcastToOne(gameID, errorNote, session);
+                        connections.errorBroadcast(session, errorNote);
                         shutdown = true;
                     }
 
@@ -329,7 +338,8 @@ public class WebSocketHandler {
                     var error2 = "its not your turn error";
                     var errorNote = new ServerMessage(ERROR, null);
                     errorNote.setErrorMessage(error2);
-                    connections.broadcastToOne(gameID, errorNote, session);
+                    //connections.broadcastToOne(gameID, errorNote, session);
+                    connections.errorBroadcast(session, errorNote);
                     shutdown = true;
 
 
@@ -450,7 +460,8 @@ public class WebSocketHandler {
                 String error = "this is an error";
                 var notify = new ServerMessage(ERROR, null);
                 notify.setErrorMessage("errorMessage");
-                connections.broadcastToOne(gameID, notify,session);
+                connections.errorBroadcast(session, notify);
+                //connections.broadcastToOne(gameID, notify,session);
             }
 
             else {
@@ -466,7 +477,8 @@ public class WebSocketHandler {
             }
         } catch (Exception e) {
             var notify = new ServerMessage(ERROR, null);
-            connections.broadcastToOne(gameID, notify, session);
+            connections.errorBroadcast(session, notify);
+            //connections.broadcastToOne(gameID, notify, session);
         }
     }
     // This might have something to do with loadinig the games...
