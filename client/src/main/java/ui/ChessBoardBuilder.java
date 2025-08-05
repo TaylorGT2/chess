@@ -161,6 +161,13 @@ public class ChessBoardBuilder {
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
+    public static void setBlue(PrintStream out) {
+
+
+        out.print(SET_BG_COLOR_BLUE);
+        out.print(SET_TEXT_COLOR_WHITE);
+    }
+
 
 
 
@@ -173,6 +180,19 @@ public class ChessBoardBuilder {
         if(bac==true){
 
             out.print(SET_BG_COLOR_WHITE);
+        }
+
+        out.print(player);
+
+        setWhite(out);
+    }
+
+    public static void printPlayerHigh(PrintStream out, String player, Boolean bac) {
+        out.print(SET_BG_COLOR_BLUE);
+        out.print(SET_TEXT_COLOR_BLACK);
+        if(bac==true){
+
+            out.print(SET_BG_COLOR_GREEN);
         }
 
         out.print(player);
