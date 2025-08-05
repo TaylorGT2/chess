@@ -230,17 +230,26 @@ public class Client {
         ChessGame cheese = new ChessGame();
         cheese.setBoard(board);
         ChessPosition start = new ChessPosition(row,col);
+
+        if(board.getPiece(start)==null){
+            return "pick a real piece";
+        }
+
         Collection<ChessMove> all = cheese.validMoves(start);
         ChessBoardBuilder b = new ChessBoardBuilder();
-
-        makeBoard();
-
-        for(var move:all){
-            moveCursorToLocation(move.getEndPosition().getRow(),move.getEndPosition().getColumn());
-            b.setGreen(b.out);
-            b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
-
+        if(color.equals("black")) {
+            makeBlackLit(all, start);
         }
+        else{
+            makeBoard();
+        }
+
+//        for(var move:all){
+//            moveCursorToLocation(move.getEndPosition().getRow(),move.getEndPosition().getColumn());
+//            b.setGreen(b.out);
+//            b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
+//
+//        }
 
         return "i hope your happy";
     }
