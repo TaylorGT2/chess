@@ -4,6 +4,7 @@ package ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import chess.*;
 import com.google.gson.Gson;
@@ -18,6 +19,7 @@ import websocket.WebSocketFacade;
 import static chess.ChessGame.TeamColor.BLACK;
 import static chess.ChessGame.TeamColor.WHITE;
 import static chess.ChessPiece.PieceType.*;
+import static ui.EscapeSequences.moveCursorToLocation;
 
 
 //import server.ServerFacade;
@@ -154,6 +156,92 @@ public class Client {
     }
 
     public String highlight(String... params) throws ResponseException{
+
+        String letter = params[0];
+        String num = params[1];
+
+     //   String letter2 = params[2];
+      //  String num2 = params[3];
+
+        int col = 15;
+        int row = 15;
+
+//        int colEnd = 15;
+//        int rowEnd = 15;
+
+        if(color.equals("white")||color.equals("black")) {
+
+
+            if (letter.equals("a")) {
+                col = 1;
+            }
+            if (letter.equals("b")) {
+                col = 2;
+            }
+            if (letter.equals("c")) {
+                col = 3;
+            }
+            if (letter.equals("d")) {
+                col = 4;
+            }
+            if (letter.equals("e")) {
+                col = 5;
+            }
+            if (letter.equals("f")) {
+                col = 6;
+            }
+            if (letter.equals("g")) {
+                col = 7;
+            }
+            if (letter.equals("h")) {
+                col = 8;
+            }
+
+
+
+            if (num.equals("8")) {
+                row = 8;
+            }
+            if (num.equals("7")) {
+                row = 7;
+            }
+            if (num.equals("6")) {
+                row = 6;
+            }
+            if (num.equals("5")) {
+                row = 5;
+            }
+            if (num.equals("4")) {
+                row = 4;
+            }
+            if (num.equals("3")) {
+                row = 3;
+            }
+            if (num.equals("2")) {
+                row = 2;
+            }
+            if (num.equals("1")) {
+                row = 1;
+            }
+
+
+
+        }
+        ChessGame cheese = new ChessGame();
+        cheese.setBoard(board);
+        ChessPosition start = new ChessPosition(row,col);
+        Collection<ChessMove> all = cheese.validMoves(start);
+        ChessBoardBuilder b = new ChessBoardBuilder();
+
+        makeBoard();
+
+        for(var move:all){
+            moveCursorToLocation(move.getEndPosition().getRow(),move.getEndPosition().getColumn());
+            b.setGreen(b.out);
+            b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
+
+        }
+
         return "i hope your happy";
     }
 
@@ -166,7 +254,7 @@ public class Client {
         //board = new ChessBoard();
         //board.resetBoard();
 
-        for(int i = 0; i<9; i++){
+        for(int i = 1; i<9; i++){
             for(int j = 8; j>0; j--){
 
                 ChessPiece p = board.getPiece(new ChessPosition(i,j));
@@ -219,28 +307,28 @@ public class Client {
                     b.setBlack(b.out);
                 }
                 if(j==1&&i==1){
-                    b.printHeaderText(b.out," 8 ");
+                    b.printHeaderText(b.out," 1 ");
                 }
                 if(j==1&&i==2){
-                    b.printHeaderText(b.out," 7 ");
-                }
-                if(j==1&&i==3){
-                    b.printHeaderText(b.out," 6 ");
-                }
-                if(j==1&&i==4){
-                    b.printHeaderText(b.out," 5 ");
-                }
-                if(j==1&&i==5){
-                    b.printHeaderText(b.out," 4 ");
-                }
-                if(j==1&&i==6){
-                    b.printHeaderText(b.out," 3 ");
-                }
-                if(j==1&&i==7){
                     b.printHeaderText(b.out," 2 ");
                 }
+                if(j==1&&i==3){
+                    b.printHeaderText(b.out," 3 ");
+                }
+                if(j==1&&i==4){
+                    b.printHeaderText(b.out," 4 ");
+                }
+                if(j==1&&i==5){
+                    b.printHeaderText(b.out," 5 ");
+                }
+                if(j==1&&i==6){
+                    b.printHeaderText(b.out," 6 ");
+                }
+                if(j==1&&i==7){
+                    b.printHeaderText(b.out," 7 ");
+                }
                 if(j==1&&i==8){
-                    b.printHeaderText(b.out," 1 ");
+                    b.printHeaderText(b.out," 8 ");
                 }
 
                 if(color == true){

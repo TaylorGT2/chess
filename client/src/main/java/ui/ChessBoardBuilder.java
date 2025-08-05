@@ -154,6 +154,13 @@ public class ChessBoardBuilder {
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
+    public static void setGreen(PrintStream out) {
+
+
+        out.print(SET_BG_COLOR_GREEN);
+        out.print(SET_TEXT_COLOR_WHITE);
+    }
+
 
 
 
