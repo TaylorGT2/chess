@@ -5,10 +5,7 @@ package ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import chess.ChessBoard;
-import chess.ChessMove;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 import com.google.gson.Gson;
 //import com.sun.nio.sctp.NotificationHandler;
 import model.GameData;
@@ -118,11 +115,13 @@ public class Client {
 
                 case "redraw" -> redraw();
 
+                case "legal" -> highlight(params);
+
 
                 case "quit" -> "quit";
                 default -> help();
             };
-        } catch (ResponseException ex) {
+        } catch (ResponseException | InvalidMoveException ex) {
             return ex.getMessage();
         }
     }
@@ -154,6 +153,10 @@ public class Client {
         return "you left the game";
     }
 
+    public String highlight(String... params) throws ResponseException{
+        return "i hope your happy";
+    }
+
 
 
     public void makeBlack(){
@@ -163,7 +166,7 @@ public class Client {
         //board = new ChessBoard();
         //board.resetBoard();
 
-        for(int i = 8; i>0; i--){
+        for(int i = 0; i<9; i++){
             for(int j = 8; j>0; j--){
 
                 ChessPiece p = board.getPiece(new ChessPosition(i,j));
@@ -279,7 +282,7 @@ public class Client {
         //board = new ChessBoard();
         //board.resetBoard();
 
-        for(int i = 1; i<9; i++){
+        for(int i = 8; i>0; i--){
             for(int j = 1; j<9; j++){
 
                 ChessPiece p = board.getPiece(new ChessPosition(i,j));
@@ -332,28 +335,28 @@ public class Client {
                     b.setBlack(b.out);
                 }
                 if(j==8&&i==1){
-                    b.printHeaderText(b.out," 8 ");
+                    b.printHeaderText(b.out," 1 ");
                 }
                 if(j==8&&i==2){
-                    b.printHeaderText(b.out," 7 ");
-                }
-                if(j==8&&i==3){
-                    b.printHeaderText(b.out," 6 ");
-                }
-                if(j==8&&i==4){
-                    b.printHeaderText(b.out," 5 ");
-                }
-                if(j==8&&i==5){
-                    b.printHeaderText(b.out," 4 ");
-                }
-                if(j==8&&i==6){
-                    b.printHeaderText(b.out," 3 ");
-                }
-                if(j==8&&i==7){
                     b.printHeaderText(b.out," 2 ");
                 }
+                if(j==8&&i==3){
+                    b.printHeaderText(b.out," 3 ");
+                }
+                if(j==8&&i==4){
+                    b.printHeaderText(b.out," 4 ");
+                }
+                if(j==8&&i==5){
+                    b.printHeaderText(b.out," 5 ");
+                }
+                if(j==8&&i==6){
+                    b.printHeaderText(b.out," 6 ");
+                }
+                if(j==8&&i==7){
+                    b.printHeaderText(b.out," 7 ");
+                }
                 if(j==8&&i==8){
-                    b.printHeaderText(b.out," 1 ");
+                    b.printHeaderText(b.out," 8 ");
                 }
 
                 if(color == true){
@@ -494,25 +497,27 @@ public class Client {
             ws.connect(bestToken,gameID);
 
 
-            if(playerColor.equals("white")){
-                ChessBoardBuilder b = new ChessBoardBuilder();
+//            if(playerColor.equals("white")){
+//                ChessBoardBuilder b = new ChessBoardBuilder();
+//
+//
+//
+//
+//                makeBoard();
+//
+//                return "behold";
+//            }
+//            else{
+//                ChessBoardBuilder b = new ChessBoardBuilder();
+//
+//
+//
+//                makeBlack();
+//
+//                return "behold";
+//            }
 
-
-
-
-                makeBoard();
-
-                return "behold";
-            }
-            else{
-                ChessBoardBuilder b = new ChessBoardBuilder();
-
-
-
-                makeBlack();
-
-                return "behold";
-            }
+            return "behold";
 
 
 
@@ -550,11 +555,16 @@ public class Client {
     }
 
     public String redraw(){
-        makeBoard();
+        if(color.equals("black")){
+            makeBlack();
+        }
+        else {
+            makeBoard();
+        }
         return "redrawn";
     }
 
-    public String makeMove(String... params) throws ResponseException {
+    public String makeMove(String... params) throws ResponseException, InvalidMoveException {
         String letter = params[0];
         String num = params[1];
 
@@ -567,113 +577,233 @@ public class Client {
         int colEnd = 15;
         int rowEnd = 15;
 
-
-            if(letter.equals("a")){
-                col=1;
-            }
-            if(letter.equals("b")){
-                col=2;
-            }
-            if(letter.equals("c")){
-                col=3;
-            }
-            if(letter.equals("d")){
-                col=4;
-            }
-            if(letter.equals("e")){
-                col=5;
-            }
-            if(letter.equals("f")){
-                col=6;
-            }
-            if(letter.equals("g")){
-                col=7;
-            }
-            if(letter.equals("h")){
-                col=8;
-            }
-
-            if(letter2.equals("a")){
-                colEnd=1;
-            }
-            if(letter2.equals("b")){
-                colEnd=2;
-            }
-            if(letter2.equals("c")){
-                colEnd=3;
-            }
-            if(letter2.equals("d")){
-                colEnd=4;
-            }
-            if(letter2.equals("e")){
-                colEnd=5;
-            }
-            if(letter2.equals("f")){
-                colEnd=6;
-            }
-            if(letter2.equals("g")){
-                colEnd=7;
-            }
-            if(letter2.equals("h")){
-                colEnd=8;
-            }
-
-            if(num.equals("8")){
-                row=1;
-            }
-            if(num.equals("7")){
-                row=2;
-            }
-            if(num.equals("6")){
-                row=3;
-            }
-            if(num.equals("5")){
-                row=4;
-            }
-            if(num.equals("4")){
-                row=5;
-            }
-            if(num.equals("3")){
-                row=6;
-            }
-            if(num.equals("2")){
-                row=7;
-            }
-            if(num.equals("1")){
-                row=8;
-            }
+        if(color.equals("white")||color.equals("black")) {
 
 
-            if(num2.equals("8")){
-                rowEnd=1;
+            if (letter.equals("a")) {
+                col = 1;
             }
-            if(num2.equals("7")){
-                rowEnd=2;
+            if (letter.equals("b")) {
+                col = 2;
             }
-            if(num2.equals("6")){
-                rowEnd=3;
+            if (letter.equals("c")) {
+                col = 3;
             }
-            if(num2.equals("5")){
-                rowEnd=4;
+            if (letter.equals("d")) {
+                col = 4;
             }
-            if(num2.equals("4")){
-                rowEnd=5;
+            if (letter.equals("e")) {
+                col = 5;
             }
-            if(num2.equals("3")){
-                rowEnd=6;
+            if (letter.equals("f")) {
+                col = 6;
             }
-            if(num2.equals("2")){
-                rowEnd=7;
+            if (letter.equals("g")) {
+                col = 7;
             }
-            if(num2.equals("1")){
-                rowEnd=8;
+            if (letter.equals("h")) {
+                col = 8;
             }
+
+            if (letter2.equals("a")) {
+                colEnd = 1;
+            }
+            if (letter2.equals("b")) {
+                colEnd = 2;
+            }
+            if (letter2.equals("c")) {
+                colEnd = 3;
+            }
+            if (letter2.equals("d")) {
+                colEnd = 4;
+            }
+            if (letter2.equals("e")) {
+                colEnd = 5;
+            }
+            if (letter2.equals("f")) {
+                colEnd = 6;
+            }
+            if (letter2.equals("g")) {
+                colEnd = 7;
+            }
+            if (letter2.equals("h")) {
+                colEnd = 8;
+            }
+
+            if (num.equals("8")) {
+                row = 8;
+            }
+            if (num.equals("7")) {
+                row = 7;
+            }
+            if (num.equals("6")) {
+                row = 6;
+            }
+            if (num.equals("5")) {
+                row = 5;
+            }
+            if (num.equals("4")) {
+                row = 4;
+            }
+            if (num.equals("3")) {
+                row = 3;
+            }
+            if (num.equals("2")) {
+                row = 2;
+            }
+            if (num.equals("1")) {
+                row = 1;
+            }
+
+
+            if (num2.equals("8")) {
+                rowEnd = 8;
+            }
+            if (num2.equals("7")) {
+                rowEnd = 7;
+            }
+            if (num2.equals("6")) {
+                rowEnd = 6;
+            }
+            if (num2.equals("5")) {
+                rowEnd = 5;
+            }
+            if (num2.equals("4")) {
+                rowEnd = 4;
+            }
+            if (num2.equals("3")) {
+                rowEnd = 3;
+            }
+            if (num2.equals("2")) {
+                rowEnd = 2;
+            }
+            if (num2.equals("1")) {
+                rowEnd = 1;
+            }
+
+        }
+        else{
+
+            if (letter.equals("a")) {
+                col = 1;
+            }
+            if (letter.equals("b")) {
+                col = 2;
+            }
+            if (letter.equals("c")) {
+                col = 3;
+            }
+            if (letter.equals("d")) {
+                col = 4;
+            }
+            if (letter.equals("e")) {
+                col = 5;
+            }
+            if (letter.equals("f")) {
+                col = 6;
+            }
+            if (letter.equals("g")) {
+                col = 7;
+            }
+            if (letter.equals("h")) {
+                col = 8;
+            }
+
+            if (letter2.equals("a")) {
+                colEnd = 1;
+            }
+            if (letter2.equals("b")) {
+                colEnd = 2;
+            }
+            if (letter2.equals("c")) {
+                colEnd = 3;
+            }
+            if (letter2.equals("d")) {
+                colEnd = 4;
+            }
+            if (letter2.equals("e")) {
+                colEnd = 5;
+            }
+            if (letter2.equals("f")) {
+                colEnd = 6;
+            }
+            if (letter2.equals("g")) {
+                colEnd = 7;
+            }
+            if (letter2.equals("h")) {
+                colEnd = 8;
+            }
+
+            if (num.equals("8")) {
+                row = 8;
+            }
+            if (num.equals("7")) {
+                row = 7;
+            }
+            if (num.equals("6")) {
+                row = 6;
+            }
+            if (num.equals("5")) {
+                row = 5;
+            }
+            if (num.equals("4")) {
+                row = 4;
+            }
+            if (num.equals("3")) {
+                row = 3;
+            }
+            if (num.equals("2")) {
+                row = 2;
+            }
+            if (num.equals("1")) {
+                row = 1;
+            }
+
+
+            if (num2.equals("8")) {
+                rowEnd = 8;
+            }
+            if (num2.equals("7")) {
+                rowEnd = 7;
+            }
+            if (num2.equals("6")) {
+                rowEnd = 6;
+            }
+            if (num2.equals("5")) {
+                rowEnd = 5;
+            }
+            if (num2.equals("4")) {
+                rowEnd = 4;
+            }
+            if (num2.equals("3")) {
+                rowEnd = 3;
+            }
+            if (num2.equals("2")) {
+                rowEnd = 2;
+            }
+            if (num2.equals("1")) {
+                rowEnd = 1;
+            }
+
+
+
+        }
 
             ChessMove move = new ChessMove(new ChessPosition(row,col),new ChessPosition(rowEnd,colEnd),null);
 
 
         ws = new WebSocketFacade(serverUrl, notificationHandler, this);
         ws.makeMove(bestToken,goodGame,move);
+
+       // board =
+        //ChessGame play = new ChessGame();
+
+       // play.setBoard(board);
+
+       // play.makeMove(move);
+
+      //  board = play.getBoard();
+
 
 
 

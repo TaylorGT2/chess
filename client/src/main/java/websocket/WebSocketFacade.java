@@ -80,7 +80,7 @@ public class WebSocketFacade extends Endpoint{
 
                         System.out.print(SET_TEXT_COLOR_GREEN);
 
-                        System.out.println("Incoming super important ERROR message!!!!");
+                        System.out.println("Incoming super important ERROR ERROR ERROR message!!!!");
                         System.out.println(notification.getErrorMessage());
                         System.out.println("Message was sent!!");
 

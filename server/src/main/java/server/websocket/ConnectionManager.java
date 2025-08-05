@@ -76,6 +76,13 @@ public class ConnectionManager {
         }
     }
 
+    public void errorBroadcast(Session session, ServerMessage notification) throws IOException {
+        session.getRemote().sendString(notification.toString());
+    }
+
+
+
+
 
     public void broadcastToOne(int excludeVisitorName, ServerMessage notification, Session session) throws IOException {
         var removeList = new ArrayList<Connection>();
@@ -97,6 +104,10 @@ public class ConnectionManager {
 //            connections.remove(c.gameID);
 //        }
     }
+
+
+
+
 
 
 

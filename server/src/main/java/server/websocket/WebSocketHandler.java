@@ -83,6 +83,7 @@ public class WebSocketHandler {
                 var notify = new ServerMessage(ERROR, null);
                 notify.setErrorMessage("errorMessage");
                 connections.broadcastToOne(gameID, notify,session);
+                connections.errorBroadcast(session, notify);
                 shutdown = true;
 
             }
@@ -90,7 +91,7 @@ public class WebSocketHandler {
             else {
 
 
-                makeMove(session, "test", commandCheck.getGameID(), commandCheck.getMove(), command);
+                makeMove(session, test.username(), commandCheck.getGameID(), commandCheck.getMove(), command);
             }
         }
         else {
@@ -244,62 +245,71 @@ public class WebSocketHandler {
 
         ChessGame change = test.game();
 
-        Collection<ChessMove> goodMoves = change.validMoves(move.getStartPosition());
+        ChessPosition empty = move.getStartPosition();
 
-        if(!goodMoves.contains(move)){
+        if(change.getBoard().getPiece(empty)==null){
             var error2 = "not a good move error";
             var errorNote = new ServerMessage(ERROR,null);
             errorNote.setErrorMessage(error2);
             connections.broadcastToOne(gameID, errorNote, session);
+            //connections.broadcastToAll(gameID,errorNote,session,gameID);
+            connections.errorBroadcast(session, errorNote);
+            //return;
         }
         else {
 
-            String userExtract = commandType.getAuthToken();
-            AuthDAO dataAccess = new MySqlDataAuth();
-            AuthData userNameHolder = dataAccess.getAuth(userExtract);
-            String usernameColor = userNameHolder.username();
+            Collection<ChessMove> goodMoves = change.validMoves(move.getStartPosition());
 
-            boolean shutdown = false;
-            if(test.blackUsername().equals(usernameColor) || test.whiteUsername().equals(usernameColor)){
-                // its blacks turn
-                ChessBoard b = change.getBoard();
-                ChessPiece color = b.getPiece(new ChessPosition(move.getStartPosition().getRow(),move.getStartPosition().getColumn()));
-                ChessGame.TeamColor trueColor = BLACK;
-                if(test.blackUsername().equals(usernameColor)){
-                    trueColor = BLACK;
+            if (!goodMoves.contains(move)) {
+                var error2 = "not a good move error";
+                var errorNote = new ServerMessage(ERROR, null);
+                errorNote.setErrorMessage(error2);
+                connections.broadcastToOne(gameID, errorNote, session);
+            } else {
+
+                String userExtract = commandType.getAuthToken();
+                AuthDAO dataAccess = new MySqlDataAuth();
+                AuthData userNameHolder = dataAccess.getAuth(userExtract);
+                String usernameColor = userNameHolder.username();
+
+                boolean shutdown = false;
+                //usernameColor.equals(test.blackUsername())
+                //usernameColor.equals(test.whiteUsername())
+                if (usernameColor.equals(test.blackUsername()) || usernameColor.equals(test.whiteUsername())) {
+                    // its blacks turn
+                    ChessBoard b = change.getBoard();
+                    ChessPiece color = b.getPiece(new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn()));
+                    ChessGame.TeamColor trueColor = BLACK;
+                    if (usernameColor.equals(test.blackUsername())) {
+                        trueColor = BLACK;
+                    } else {
+                        trueColor = WHITE;
+                    }
+
+
+                    if (color.getTeamColor() != trueColor) {
+                        var error2 = "its not your turn error";
+                        var errorNote = new ServerMessage(ERROR, null);
+                        errorNote.setErrorMessage(error2);
+                        connections.broadcastToOne(gameID, errorNote, session);
+                        shutdown = true;
+                    } else if (usernameColor.equals(test.blackUsername()) && change.getTurnNumber() % 2 == 0) {
+                        var error2 = "its not your turn error";
+                        var errorNote = new ServerMessage(ERROR, null);
+                        errorNote.setErrorMessage(error2);
+                        connections.broadcastToOne(gameID, errorNote, session);
+                        shutdown = true;
+                    } else if (usernameColor.equals(test.whiteUsername()) && change.getTurnNumber() % 2 != 0) {
+
+                        var error2 = "its not your turn error";
+                        var errorNote = new ServerMessage(ERROR, null);
+                        errorNote.setErrorMessage(error2);
+                        connections.broadcastToOne(gameID, errorNote, session);
+                        shutdown = true;
+                    }
+
+
                 }
-                else{
-                    trueColor = WHITE;
-                }
-
-
-                if(color.getTeamColor() != trueColor){
-                    var error2 = "its not your turn error";
-                    var errorNote = new ServerMessage(ERROR,null);
-                    errorNote.setErrorMessage(error2);
-                    connections.broadcastToOne(gameID, errorNote, session);
-                    shutdown = true;
-                }
-
-
-                else if(test.blackUsername().equals(usernameColor)&&change.getTurnNumber()%2==0){
-                    var error2 = "its not your turn error";
-                    var errorNote = new ServerMessage(ERROR,null);
-                    errorNote.setErrorMessage(error2);
-                    connections.broadcastToOne(gameID, errorNote, session);
-                    shutdown = true;
-                }
-                else if(test.whiteUsername().equals(usernameColor)&&change.getTurnNumber()%2!=0){
-
-                    var error2 = "its not your turn error";
-                    var errorNote = new ServerMessage(ERROR,null);
-                    errorNote.setErrorMessage(error2);
-                    connections.broadcastToOne(gameID, errorNote, session);
-                    shutdown = true;
-                }
-
-
-            }
 
 
 //            else if(test.whiteUsername().equals(usernameColor)){
@@ -314,63 +324,68 @@ public class WebSocketHandler {
 //                    shutdown = true;
 //                }
 //            }
-            else{
-                //its no ones turn throw an error
-                var error2 = "its not your turn error";
-                var errorNote = new ServerMessage(ERROR,null);
-                errorNote.setErrorMessage(error2);
-                connections.broadcastToOne(gameID, errorNote, session);
-                shutdown = true;
+                else {
+                    //its no ones turn throw an error
+                    var error2 = "its not your turn error";
+                    var errorNote = new ServerMessage(ERROR, null);
+                    errorNote.setErrorMessage(error2);
+                    connections.broadcastToOne(gameID, errorNote, session);
+                    shutdown = true;
 
-
-            }
-
-
-
-            if(shutdown==false) {
-
-
-                change.makeMove(move);
-
-                ((MySqlDataGame) dataGameAccess).deleteGame(gameID);
-
-                change.setTurnNumber(change.getTurnNumber()+1);
-
-                dataGameAccess.updateGame(test.whiteUsername(), test.gameID(), test.gameName(), test.blackUsername(), change);
-
-                var game = new Gson().toJson(dataGameAccess.getGame(gameID));
-
-                GameData full = dataGameAccess.getGame(gameID);
-
-                ChessGame g = full.game();
-
-                String message = String.format("move made: %s",move.toString());
-
-                if(g.isInCheck(BLACK)||g.isInCheck(WHITE)){
-                    message = message + " and check";
-
-                }
-                if(g.isInCheckmate(BLACK)||g.isInCheckmate(WHITE)){
-                    message = message + " and checkmate";
-
-                }
-                if(g.isInStalemate(BLACK)||g.isInStalemate(WHITE)){
-                    message = message + " and stalemate";
 
                 }
 
-                //game = dataGameAccess.getGame(gameID).game();
-                var notify = new ServerMessage(LOAD_GAME, g);
-                connections.broadcastToOne(gameID, notify, session);
-                connections.broadcastToAll(gameID, notify, session, gameID);
+
+                if (shutdown == false) {
 
 
-                var notify2 = new ServerMessage(NOTIFICATION, null);
-                notify2.setMessage(message);
-                connections.broadcastToAll(gameID, notify2, session, gameID);
+                    change.makeMove(move);
+
+                    ((MySqlDataGame) dataGameAccess).deleteGame(gameID);
+
+                    change.setTurnNumber(change.getTurnNumber() + 1);
+
+                    dataGameAccess.updateGame(test.whiteUsername(), test.gameID(), test.gameName(), test.blackUsername(), change);
+
+                    var game = new Gson().toJson(dataGameAccess.getGame(gameID));
+
+                    GameData full = dataGameAccess.getGame(gameID);
+
+                    ChessGame g = full.game();
+
+                    String message = String.format("%s made move: %s", username, move.toString());
+
+                    if (g.isInCheck(BLACK) || g.isInCheck(WHITE)) {
+                        message = message + " and check";
+
+                    }
+                    if (g.isInCheckmate(BLACK) || g.isInCheckmate(WHITE)) {
+                        message = message + " and checkmate";
+
+                    }
+                    if (g.isInStalemate(BLACK) || g.isInStalemate(WHITE)) {
+                        message = message + " and stalemate";
+
+                    }
+
+                    //game = dataGameAccess.getGame(gameID).game();
+
+//                var notify = new ServerMessage(LOAD_GAME, g);
+//                connections.broadcastToOne(gameID, notify, session);
 
 
-                legalMove+=1;
+                    var notify = new ServerMessage(LOAD_GAME, g);
+                    connections.broadcastToOne(gameID, notify, session);
+                    connections.broadcastToAll(gameID, notify, session, gameID);
+
+
+                    var notify2 = new ServerMessage(NOTIFICATION, null);
+                    notify2.setMessage(message);
+                    connections.broadcastToAll(gameID, notify2, session, gameID);
+
+
+                    legalMove += 1;
+                }
             }
         }
 
