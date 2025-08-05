@@ -32,14 +32,7 @@ public class ConnectionManager {
         }
     }
 
-    public ConcurrentHashMap<Integer, ArrayList<Connection>> getConnections(){
-        if(connections == null){
-            return new ConcurrentHashMap<>();
-        }
-        else {
-            return connections;
-        }
-    }
+
 
 
 
@@ -55,26 +48,6 @@ public class ConnectionManager {
         }
     }
 
-    public void broadcast(int excludeVisitorName, ServerMessage notification) throws IOException {
-        var removeList = new ArrayList<Connection>();
-        for (var all : connections.values()) {
-            for(var c : all) {
-                if (c.session.isOpen()) {
-                  //  c.send(notification.toString());
-                    if (c.gameID != excludeVisitorName) {
-                        c.send(notification.toString());
-                    }
-                } else {
-                    removeList.add(c);
-                }
-            }
-        }
-
-
-        for (var c : removeList) {
-            connections.remove(c.gameID);
-        }
-    }
 
     public void errorBroadcast(Session session, ServerMessage notification) throws IOException {
         session.getRemote().sendString(notification.toString());

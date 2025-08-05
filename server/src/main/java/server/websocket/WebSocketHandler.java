@@ -221,7 +221,8 @@ public class WebSocketHandler {
 
     }
 
-    private void makeMove(Session session, String username, int gameID, ChessMove move, UserGameCommand commandType) throws IOException, ResponseException, InvalidMoveException {
+    private void makeMove(Session session, String username, int gameID,
+                          ChessMove move, UserGameCommand commandType) throws IOException, ResponseException, InvalidMoveException {
 
 
         String error = String.format("user %s made a move", username);
@@ -444,14 +445,7 @@ public class WebSocketHandler {
     }
 
 
-    public void connectTest(int gameID) throws ResponseException {
-        try {
-            var game = String.format("joined");
 
-        } catch (Exception ex) {
-            throw new ResponseException(500, ex.getMessage());
-        }
-    }
 
 
 

@@ -40,33 +40,8 @@ public class Repl implements NotificationHandler {
         System.out.println();
     }
 
-    public void notify(ServerMessage notification) {
-        System.out.println("\u001b[" + "31m" + "testing testing");
-
-        printPrompt();
-    }
-
-    public void loadGame(ServerMessage notification){
-
-        ChessGame load = notification.getGame();
-
-        ChessBoard b = load.getBoard();
-
-        client.board = b;
-
-        if(client.color.equals("black")){
-            client.makeBlack();
-        }
-        else{
-            client.makeBoard();
-        }
-
-        System.out.println("new board");
-
-        printPrompt();
 
 
-    }
 
 
     private void printPrompt() {
