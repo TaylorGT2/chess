@@ -241,7 +241,7 @@ public class Client {
             makeBlackLit(all, start);
         }
         else{
-            makeBoard();
+            makeWhiteLit(all,start);
         }
 
 //        for(var move:all){
@@ -524,6 +524,166 @@ public class Client {
 
     }
 
+
+
+    public void makeWhiteLit(Collection<ChessMove> all, ChessPosition start){
+        ChessBoardBuilder b = new ChessBoardBuilder();
+        b.totalBlackBoard(b.out);
+        boolean color = true;
+        //board = new ChessBoard();
+        //board.resetBoard();
+
+        for(int i = 8; i>0; i--){
+            for(int j = 1; j<9; j++){
+
+                ChessPiece p = board.getPiece(new ChessPosition(i,j));
+                ChessPosition green = new ChessPosition(i,j);
+                ChessMove test = new ChessMove(start,green,null);
+//                if(all.contains(test)){
+//                    b.setRed(b.out);
+//                    b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
+//                }
+                if(p==null&&color==true&&!all.contains(test)){
+                    b.setRed(b.out);
+                    b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
+                }
+                else if(p==null&&color==true&&all.contains(test)){
+                    b.setGreen(b.out);
+                    b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
+                }
+                else if(p==null&&color==false&&!all.contains(test)){
+                    b.setWhite(b.out);
+                    b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
+                }
+                else if(p==null&&color==false&&all.contains(test)){
+                    b.setBlue(b.out);
+                    b.out.print(b.EMPTY.repeat((int) (b.SQUARE_SIZE_IN_PADDED_CHARS)));
+                }
+
+                else if(p.getPieceType()==ROOK && p.getTeamColor() == BLACK && !all.contains(test)){
+                    b.printPlayer(b.out," r ",color);
+                }
+                else if(p.getPieceType()==ROOK && p.getTeamColor() == BLACK && all.contains(test)){
+                    b.printPlayerHigh(b.out," r ",color);
+                }
+                else if(p.getPieceType()==BISHOP && p.getTeamColor() == BLACK&& !all.contains(test)){
+                    b.printPlayer(b.out," b ",color);
+                }
+                else if(p.getPieceType()==BISHOP && p.getTeamColor() == BLACK&& all.contains(test)){
+                    b.printPlayerHigh(b.out," b ",color);
+                }
+                else if(p.getPieceType()==KNIGHT && p.getTeamColor() == BLACK&&!all.contains(test)){
+                    b.printPlayer(b.out," n ",color);
+                }
+                else if(p.getPieceType()==KNIGHT && p.getTeamColor() == BLACK&&all.contains(test)){
+                    b.printPlayerHigh(b.out," n ",color);
+                }
+
+                else if(p.getPieceType()==QUEEN && p.getTeamColor() == BLACK&&!all.contains(test)){
+                    b.printPlayer(b.out," q ",color);
+                }
+                else if(p.getPieceType()==QUEEN && p.getTeamColor() == BLACK&&all.contains(test)){
+                    b.printPlayerHigh(b.out," q ",color);
+                }
+                else if(p.getPieceType()==KING && p.getTeamColor() == BLACK&&!all.contains(test)){
+                    b.printPlayer(b.out," k ",color);
+                }
+                else if(p.getPieceType()==KING && p.getTeamColor() == BLACK&&all.contains(test)){
+                    b.printPlayerHigh(b.out," k ",color);
+                }
+                else if(p.getPieceType()==PAWN && p.getTeamColor() == BLACK&&!all.contains(test)){
+                    b.printPlayer(b.out," p ",color);
+                }
+                else if(p.getPieceType()==PAWN && p.getTeamColor() == BLACK&&all.contains(test)){
+                    b.printPlayerHigh(b.out," p ",color);
+                }
+                else if(p.getPieceType()==ROOK && p.getTeamColor() == WHITE&&!all.contains(test)){
+                    b.printPlayer(b.out," R ",color);
+                }
+                else if(p.getPieceType()==ROOK && p.getTeamColor() == WHITE&&all.contains(test)){
+                    b.printPlayerHigh(b.out," R ",color);
+                }
+                else if(p.getPieceType()==BISHOP && p.getTeamColor() == WHITE&&!all.contains(test)){
+                    b.printPlayer(b.out," B ",color);
+                }
+                else if(p.getPieceType()==BISHOP && p.getTeamColor() == WHITE&&all.contains(test)){
+                    b.printPlayerHigh(b.out," B ",color);
+                }
+                else if(p.getPieceType()==KNIGHT && p.getTeamColor() == WHITE&&!all.contains(test)){
+                    b.printPlayer(b.out," N ",color);
+                }
+                else if(p.getPieceType()==KNIGHT && p.getTeamColor() == WHITE&&all.contains(test)){
+                    b.printPlayerHigh(b.out," N ",color);
+                }
+                else if(p.getPieceType()==QUEEN && p.getTeamColor() == WHITE&&!all.contains(test)){
+                    b.printPlayer(b.out," Q ",color);
+                }
+                else if(p.getPieceType()==QUEEN && p.getTeamColor() == WHITE&&all.contains(test)){
+                    b.printPlayerHigh(b.out," Q ",color);
+                }
+                else if(p.getPieceType()==KING && p.getTeamColor() == WHITE&&!all.contains(test)){
+                    b.printPlayer(b.out," K ",color);
+                }
+                else if(p.getPieceType()==KING && p.getTeamColor() == WHITE&&all.contains(test)){
+                    b.printPlayerHigh(b.out," K ",color);
+                }
+                else if(p.getPieceType()==PAWN && p.getTeamColor() == WHITE&&!all.contains(test)){
+                    b.printPlayer(b.out," P ",color);
+                }
+                else if(p.getPieceType()==PAWN && p.getTeamColor() == WHITE&&all.contains(test)){
+                    b.printPlayerHigh(b.out," P ",color);
+                }
+
+                if(j==1){
+                    b.setBlack(b.out);
+                }
+                if(j==1&&i==1){
+                    b.printHeaderText(b.out," 1 ");
+                }
+                if(j==1&&i==2){
+                    b.printHeaderText(b.out," 2 ");
+                }
+                if(j==1&&i==3){
+                    b.printHeaderText(b.out," 3 ");
+                }
+                if(j==1&&i==4){
+                    b.printHeaderText(b.out," 4 ");
+                }
+                if(j==1&&i==5){
+                    b.printHeaderText(b.out," 5 ");
+                }
+                if(j==1&&i==6){
+                    b.printHeaderText(b.out," 6 ");
+                }
+                if(j==1&&i==7){
+                    b.printHeaderText(b.out," 7 ");
+                }
+                if(j==1&&i==8){
+                    b.printHeaderText(b.out," 8 ");
+                }
+
+                if(color == true){
+                    color = false;
+                }
+                else{
+                    color = true;
+                }
+
+            }
+            b.out.println();
+            if(color == true){
+                color = false;
+            }
+            else{
+                color = true;
+            }
+
+        }
+
+
+
+
+    }
 
 
 
