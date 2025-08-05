@@ -185,8 +185,10 @@ public class WebSocketHandler {
             var finished = String.format("%s resigned", test.username());
             var notify = new ServerMessage(NOTIFICATION, null);
             notify.setMessage(finished);
-            connections.broadcastToOne(gameID, notify, session);
+            //connections.remove(gameID, session);
+           // connections.broadcastToOne(gameID, notify, session);
             connections.broadcastToAll(gameID, notify, session, gameID);
+            connections.remove(gameID, session);
             resignation = true;
             observerCheck.deleteGame(gameID);
             observerCheck.updateGame(checking.whiteUsername(),gameID, "RERERESIGNED", checking.blackUsername(), checking.game());
@@ -334,7 +336,9 @@ public class WebSocketHandler {
 
                     ChessGame g = full.game();
 
-                    String message = String.format("%s made move: %s", username, move.toString());
+                    String message = String.format("%s made move %s %s %s %s", username, move.getStartPosition().getRow(),
+                            move.getStartPosition().getColumn(), move.getEndPosition().getRow(),
+                            move.getEndPosition().getColumn());
 
                     if (g.isInCheck(BLACK) || g.isInCheck(WHITE)) {
                         message = message + " and check";

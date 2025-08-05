@@ -37,7 +37,7 @@ public class WebSocketFacade extends Endpoint{
                 @Override
                 public void onMessage(String message){
 
-                    System.out.println(message);
+                    //System.out.println(message);
                     System.out.println("A message was received");
                     ServerMessage notification = new Gson().fromJson(message,ServerMessage.class);
 

@@ -5,6 +5,7 @@ package ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Scanner;
 
 import chess.*;
 import com.google.gson.Gson;
@@ -41,7 +42,7 @@ public class Client {
 
     private State state = State.SIGNEDOUT;
 
-    public Integer fakeGameID;
+    public Integer fakeGameID=1;
 
     public Integer goodGame =1;
 
@@ -106,7 +107,11 @@ public class Client {
 
                 case "leave" -> leaveGame();
 
-                case "resign" -> resign();
+                case "resign" -> question();
+
+                case "y"->resign(params);
+
+                case "n"->resign(params);
 
 
 
@@ -123,6 +128,10 @@ public class Client {
         } catch (ResponseException | InvalidMoveException ex) {
             return ex.getMessage();
         }
+    }
+
+    public String question(){
+        return "Are you sure? y/n?";
     }
 
     public String register(String... params) throws ResponseException {
@@ -841,12 +850,25 @@ public class Client {
         throw new ResponseException(400, "Expected: <gameName>");
     }
 
-    public String resign() throws ResponseException {
-        ws = new WebSocketFacade(serverUrl, notificationHandler, this);
-        ws.resign(bestToken,goodGame);
+    public String resign(String... params) throws ResponseException {
+
+//        System.out.println("Are you sure? y/n");
+//        Scanner scanner = new Scanner(System.in);
+//        String answer = scanner.nextLine();
+
+        if(params[0].equals("y")) {
 
 
-        return "you resigned";
+            ws = new WebSocketFacade(serverUrl, notificationHandler, this);
+            ws.resign(bestToken, goodGame);
+
+            return "you resigned";
+        }
+        else {
+
+
+            return "...";
+        }
     }
 
     public String playGame(String... params) throws ResponseException {
@@ -1147,8 +1169,26 @@ public class Client {
 
 
         }
+        ChessPiece.PieceType promotionPiece = null;
+        if(params[4]!=null) {
+            if (params[4].equals("n")) {
+                promotionPiece = KNIGHT;
+            }
+            if (params[4].equals("b")) {
+                promotionPiece = BISHOP;
+            }
+            if (params[4].equals("r")) {
+                promotionPiece = ROOK;
+            }
+            if (params[4].equals("q")) {
+                promotionPiece = QUEEN;
+            }
 
-            ChessMove move = new ChessMove(new ChessPosition(row,col),new ChessPosition(rowEnd,colEnd),null);
+        }
+
+
+
+        ChessMove move = new ChessMove(new ChessPosition(row,col),new ChessPosition(rowEnd,colEnd),promotionPiece);
 
 
         ws = new WebSocketFacade(serverUrl, notificationHandler, this);
@@ -1166,7 +1206,7 @@ public class Client {
 
 
 
-        return "move made";
+        return "...";
     }
 
 
@@ -1184,7 +1224,7 @@ public class Client {
                     - Redraw Chess Board: "redraw"
                     - Resign: "resign"
                     - Highlight Legal Moves: "highlight" <piece>
-                    - Make move: "move" <startcol> <start row> <endcol> <endrow>
+                    - Make move: "move" <startcol> <start row> <endcol> <endrow> <promotion piece>
                     - Exit the game: "leave"
                     - Print this message: "h", "help"
                     """;
